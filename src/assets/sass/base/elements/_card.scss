@@ -1,0 +1,138 @@
+.card-book .card-img-top {
+    background-size: cover;
+    background-position: center;
+    height: 240px;
+}
+
+
+.card {
+    border: 1px solid $color__gray100;
+
+    .card-header {
+        background-color: $color__white;
+        border-bottom: 1px solid $color__gray100;
+        padding: 1.4rem 1.25rem;
+    }
+}
+
+.campaigns-card {
+    .card-header {
+        border-width: 2px;
+
+        h4 {
+            font-size: size(16);
+        }
+        .campaigns-datas {
+            font-size: size(11);
+            align-items: center;
+
+            li {
+                margin-right: size(20);
+                margin-top: 1px;
+            } 
+
+            li:first-child {
+                font-size: size(12);
+                margin-right: size(30);
+                margin-top: 0;
+            }
+        }
+    }
+    .card-body {
+        padding: 0;
+    }
+
+    .bb {
+        border-bottom: 1px solid $color__gray50;
+    }
+}
+
+
+.card-menu-creative {
+    padding: 0.6rem;
+
+    .card-creative-thumb {
+        line-height: 0;
+        margin-bottom: size(20);
+        
+        .badge {
+            margin-bottom: size(25);
+        }
+
+        img {
+            height: size(135);
+            width: auto;
+            margin: 0 auto;
+            display: block;
+            object-fit: contain;
+        }
+    }
+
+    .card-body {
+        padding: 0;
+
+        h5 {
+            font-size: size(13);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+    }
+    
+}
+
+.card-creative {
+    @extend .card-menu-creative;
+    
+    .card-body {
+        h5 {
+            font-size: size(14);
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            li {
+                font-size: size(12);
+                line-height: 1.5;
+                padding: 4px 0;
+                display: flex;
+
+                strong {
+                    flex: 1;
+                    max-width: 40%;
+                }
+            }
+        }
+    }
+}
+
+.card-table {
+    .table {
+        border: 0;
+        border-right: 1px solid $color__table-border;
+
+        .thead-light th {
+            border-top: 0;
+        }
+    }
+}
+
+.location-container {
+    font-size: size(12);
+
+    .locations {
+        height: 446px;
+        overflow-y: auto;
+        position: relative;
+
+        .card-header {
+            font-weight: bold;
+            background: $color__gray50;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+    }
+}
+
+

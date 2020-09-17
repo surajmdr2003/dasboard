@@ -1,0 +1,70 @@
+table {
+	margin: 0 0 1.5em;
+	width: 100%;
+}
+ 
+
+.table {
+	border:1px solid $color__table-border;
+	font-size: size(13);
+	color: $color__table-maintext;
+	margin-bottom: 0;
+	
+	.thead-light th {
+		@extend th ;
+		color: $color__table-maintext;
+		border-color: $color__table-border;
+		background-color: $color__tablehead-bg;
+		font-size: size(13);
+		line-height: 2.5;
+		border-bottom: 0;
+		padding: 1.18rem 0.75rem;
+	}
+
+	th {
+		vertical-align: middle;
+	} 
+
+	td {
+		vertical-align: middle;
+		padding: 1.9rem 0.75rem;
+		border-color: $color__table-border;
+	}
+
+	.campaign, .page-name {
+		font-weight: normal;
+	
+		.c-date {
+			font-size: size(11);
+			color: $color__table-sectext;
+		}
+	}
+	
+	.status  {
+		font-size: size(11);
+		color: $color__table-sectext;
+	} 
+
+	a {
+		font-size: size(12);
+	}
+}
+
+.table-creatives table tr td {
+	padding: size(15);
+
+	.campaign-media {
+		align-items: center;
+	
+		.table-campaign-image {
+			width: size(40);
+			height: size(50);
+			object-fit: contain;
+		}
+	
+		p {
+			margin-bottom: 0;
+		}
+	}
+	
+}

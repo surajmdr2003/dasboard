@@ -1,0 +1,25 @@
+.main-footer {
+    border-top: 1px solid $color__gray100;
+    padding: 1.5rem 0;
+    font-size: size(13);
+
+    ul li {
+        margin-right: size(45);
+
+        &:first-child {
+            margin-right: size(55);
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+        a {
+            color: $color__dark;
+
+            &:hover {
+                color: $primary;
+            }
+        }
+    }
+
+}

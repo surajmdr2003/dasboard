@@ -1,0 +1,112 @@
+section.filter-bar {
+    position: relative;
+    z-index: 1;
+    .inner-filter-bar {
+        background: $color__primary100;
+        padding: 0 0;
+        height: size(60);
+        align-items: center;
+        display: flex;
+
+        .campaigns-link {
+            padding: size(19.5) 0;
+            position: relative;
+            font-size: size(14);
+            text-transform: capitalize;
+
+            a {
+                font-weight: 600;
+                text-decoration: none;
+
+                &:after {
+                    content: '\e90d';
+                    @extend .icon-font;
+                    font-size: size(8);
+                    vertical-align: middle;
+                    margin-left: size(5);
+                    display: inline-block;
+                }
+            }
+
+            &:hover a:after {
+                transform: scaleY(-1);
+            }
+        }
+
+        h4 {
+            margin: 0;
+            font-size: size(16);
+            font-weight: normal;
+            margin: 0;
+        }
+    }
+}
+
+.campaigns-link:hover {
+    .campaign-dropdown-menu {
+        display: block;
+    }
+
+    &:after {
+        content: "";
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: -1;
+        height: 100vh;
+        pointer-events: none;
+    }
+}
+
+.campaign-dropdown-menu {
+    width: size(370);
+    padding: 0;
+    margin: 0;
+    border-color: $color__gray100;
+    border-radius: 2px;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.03);
+
+    .card-header {
+        background-color: $color__white;
+        border-color: $color__gray100;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 0;
+
+        > div {
+            flex: 1;
+            font-size: size(12);
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 2px solid transparent;
+            padding: size(19) size(20) size(17);
+            cursor: pointer;
+
+            &:hover, &.active {
+                color: $primary;
+                border-color: $primary;
+            }
+        }
+    }
+}
+
+ul.campaign-list {
+    font-size: size(13);
+    padding: 5px 0;
+    margin: 0;
+    list-style: none;
+
+    li {
+        cursor: pointer;
+        padding: 20px 15px;
+        border-bottom: 1px solid $color__gray100;
+
+        &:last-child {
+            border: 0;
+        }
+    }
+}

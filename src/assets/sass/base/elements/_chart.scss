@@ -1,0 +1,122 @@
+.card-chart {
+    height: 100%;
+    h4 {
+        font-size: size(16);
+        margin-bottom: size(50);
+    }
+
+    .card-body {
+        padding: size(25) size(20);
+    }
+}
+
+ul.progress-chart-block {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 size(10) 0;
+
+    li.progressbar-item {
+        display: flex;
+        align-items: center;
+        font-size: size(12);
+        padding: size(6) 0;
+        border-bottom: 1px solid $color__gray100;
+        
+        > div {
+            flex: 1;
+
+            &.progressbar-data {
+                max-width: size(55);
+                color: $color__gray800;
+            }
+
+            &.progressbar-graph {
+                max-width: size(100);
+            }
+            &.progressbar-label {
+                padding-left: size(30);
+            }
+        }
+
+        .progress {
+            border-radius: 2px;
+        }
+    }
+}
+
+.c3-shape.c3-bar {
+    stroke: #d0d0d0 !important;
+    fill: #f1f1f1 !important;
+    stroke-width: 1px;
+    transform: translateY(-1px);
+}
+
+.c3-shape.c3-bar._expanded_ {
+    stroke: $primary !important;
+    fill: #a8e5f2 !important;
+    stroke-width: 1px;
+    transform: translateY(-1px);
+}
+
+.c3 path, .c3 line {
+    fill: none;
+    stroke: #f0f0f0;
+}
+
+g.c3-axis text {
+    fill: #808080;
+}
+
+// .c3-legend-item {
+//     display: none;
+// }
+
+.c3-tooltip {  
+    padding: size(12);
+    border-radius: 3px;
+    background-color: #101010;
+    display: inline-block;
+    overflow: hidden;
+
+    tbody {
+        display: flex;
+        flex-direction: column-reverse;
+
+        tr {
+            border: 0;
+            border: 0;
+            display: inline-flex;
+            flex-direction: row-reverse;
+
+            th {
+                width: 100%;
+                display: flex;
+                background: transparent;
+                border: 0;
+                padding: 0;
+                font-weight: 500;
+                font-size: size(12);
+            }
+
+            td {
+                border: 0;
+                background: transparent;
+                color: $color__white;
+                padding: 0;
+                font-size: size(13);
+                font-weight: 600;
+
+                &.name {
+                    text-transform: capitalize;
+                    span {
+                        display: none;
+                    }
+                }
+                
+                &.value {
+                    margin-right: size(5);
+                }
+            }
+        }
+    }
+}

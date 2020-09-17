@@ -1,0 +1,22 @@
+.form-group {
+    margin-bottom: 1.55rem;
+
+    label {
+        @include font-size(12px);
+        color: $color__text-heading;
+        display: block;
+    }
+
+    .field-wt-icon {
+        position: relative;
+
+        [class^="icon-"], [class*=" icon-"] {
+            color: $primary;
+            position: absolute;
+            top: 50%;
+            right: size(15);
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    }
+}

@@ -1,0 +1,53 @@
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="range"],
+input[type="date"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="color"],
+textarea {
+  color: $color__text-input;
+
+  &:focus {
+    color: $color__text-input-focus;
+  }
+}
+
+select {
+  border: 1px solid $color__border-input;
+}
+
+
+.form-control {
+  @include font-size(13px);
+  color: $color__text-input;
+  border: solid 1px $color__border-input;
+  background-color: $color__background-input;
+  height: 3.75rem;
+}
+
+.forgotpassword-link {
+  position: relative;
+
+  span.tooltop {
+    position: absolute;
+    left: 100%;
+    background: $color__dark;
+    width: size(305);
+    top: calc(-100% - 35px);
+    z-index: 9;
+    padding: size(15);
+    color: $color__white;
+    font-size: size(13);
+    border-radius: 3px;
+  }
+}
+

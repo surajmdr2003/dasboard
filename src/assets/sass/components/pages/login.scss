@@ -1,0 +1,64 @@
+.login-page-container {
+    border-top: 1px solid $color__gray100;
+}
+
+.full-height {
+    height: calc(100vh - 71px);
+} 
+ 
+.login-form-block {
+    margin: 1.5rem 0 1.5rem;
+
+    @include desktop-up {
+        padding-right: 2.6rem;
+    }
+
+    @include tablet-portrait-up {
+
+    }
+    
+    .greeting-title {
+        margin-bottom: size(40);
+
+        h3 {
+            @include font-size(30px);
+            margin-bottom: 0;
+    
+            span {
+                @include font-size(20px);
+                margin-bottom: size(5);
+                display: inline-block;
+            }
+        }
+    }
+    .form-groups-wrapper {
+        margin-bottom: size(30);
+    }
+}
+
+
+.has-banner-image {
+    position: initial;
+
+    @include phone-only() {
+        display: none;
+    }
+    
+    .banner-image {
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 45%;
+        background-size: cover;
+        background-position: center;
+
+        @include tablet-portrait-up {
+            position: absolute;
+            width: 45%;
+        }
+        @include tablet-landscape-up {
+            width: 55%;
+        }
+        
+    }
+}

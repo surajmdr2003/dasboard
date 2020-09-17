@@ -1,0 +1,53 @@
+// Center block
+@mixin center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Column width with margin
+@mixin column-width($numberColumns: 3) {
+  width: map-get($columns, $numberColumns) - (($columns__margin * ($numberColumns - 1)) / $numberColumns);
+}
+
+$base-size: 16;
+//Function to convert px value into rem
+//You can replace rem with any other value you want (rem is most preferred value for web)
+@function size($target, $context: $base-size) {
+  @return ($target / $context) * 1rem; 
+}
+
+// Mixin for responsive
+@mixin phone-only {
+  @media (max-width: 576px) { @content; }
+}
+@mixin tablet-portrait-up {
+  @media (min-width: 576px) { @content; }
+}
+@mixin tablet-landscape-up {
+  @media (min-width: 768px) { @content; }
+}
+@mixin desktop-up {
+  @media (min-width: 992px) { @content; }
+}
+@mixin big-desktop-up {
+  @media (min-width: 1200px) { @content; }
+}
+
+@mixin very-big-desktop-up {
+  @media (min-width: 1367px) { @content; }
+}
+
+@mixin tablet-landscape-down {
+  @media (max-width: 768px) { @content; }
+}
+@mixin desktop-down {
+  @media (max-width: 992px) { @content; }
+}
+@mixin big-desktop-down {
+  @media (max-width: 1200px) { @content; }
+}
+
+@mixin very-big-desktop-down {
+  @media (max-width: 1367px) { @content; }
+}

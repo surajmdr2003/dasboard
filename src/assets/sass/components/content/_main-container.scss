@@ -1,0 +1,194 @@
+.main-container {
+    position: relative;
+    padding-bottom: size(100);
+
+    &.login-page-container {
+        padding-bottom: 0;
+    }
+}
+
+
+section.all-campaigns-content {
+    background: $color__gray50;
+    padding: 2.5rem 0 3rem;
+}
+
+.campaigns-chart {
+    .nav {
+        li {
+            text-align: left; 
+            padding: 1rem;
+            flex: 1; 
+            cursor: pointer;
+
+            .number {
+                font-size: size(20);
+            } 
+            .title {
+                font-size: size(12);
+                margin-bottom: size(5);
+            }
+            .percent {
+                font-size: size(11);
+                font-weight: 600;
+
+                &.up-percent {
+                    color: $color__success;
+                    &:before {
+                        @extend .icon-font;
+                        margin-right: size(3);
+                        content: "\e910";
+                    }
+                }
+                &.down-percent {
+                    color: $color__danger;
+                    &:before {
+                        @extend .icon-font;
+                        margin-right: size(3);
+                        content: '\e90a'
+                    }
+                }
+            }
+        
+            &.active {
+                background: $color__gray50;
+                border-bottom: 2px solid $primary;
+            }
+        }
+    }
+
+    .chart-block {
+        padding: 1.2rem;
+    }
+}
+
+.campiagns-info {
+    padding: size(30) size(30) size(18) size(15);
+    .campiagns-info-title { 
+        padding-bottom: size(20);
+
+        h4 {
+            font-size: size(12);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        p {
+            font-size: size(12);
+        }
+    }
+}
+
+ul.campiagns-info-data {
+    li {
+        padding: size(20) 0;
+
+        .nav-fill .nav-item {
+            text-align: left;
+            padding: 0;
+        }
+
+        h5 {
+            font-size: size(12);
+            margin-bottom: size(5);
+        }
+
+        p {
+            font-size: size(13);
+            margin: 0;
+        }
+    }
+}
+
+.filter-block, .filter-bar  {
+    margin-bottom: size(15);
+
+    .block-title {
+        font-size: size(16);
+        font-weight: 600;
+        color: $color__text-heading;
+
+        .btn-link {
+            margin-left: size(25);
+        }
+    }
+
+    .block-filter {
+        display: flex;
+        justify-content: flex-end;
+    
+        .btn-date-picker {
+            margin-left: size(30);
+        }
+    }
+
+    &.filter-bar {
+        margin-bottom: 0;
+    }
+}
+
+.top-landingpage-content {
+    .card-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+
+        img {
+            max-height: 390px;
+            width: auto;
+            margin: 10px auto;
+        }
+    }
+}
+
+
+
+.your-campaigns-content,
+.top-creatives-content,
+.top-landingpage-content,
+.target-location-content {
+    padding-top: size(70);
+}
+
+.campaigns-charts {
+    padding-top: size(40);
+}
+
+.content-block {
+    padding: size(60) 0 0;
+
+    .content-block-title {
+        font-size: size(16);
+        font-weight: 600;
+        padding-bottom: size(15);
+        border-bottom: 1px solid $color__gray100;
+    }
+
+    .content-list {
+        > li {
+            padding: size(30) size(60);
+            border-bottom: 1px solid $color__gray100;
+
+            h5 {
+                font-size: size(14);
+                margin-bottom: size(10);
+            }
+            p, .campaigns-datas {
+                font-size: size(13);
+            }
+            .campaigns-datas {
+                li:not(:first-child) {
+                    margin-left: size(20);
+                    font-size: size(12);
+                    color: $color__table-sectext;
+                }
+            }
+        }
+    }
+}
+
+.paypal-logo {
+    max-width: 80px;
+    margin-top: size(5);
+    margin-bottom: size(10);
+}

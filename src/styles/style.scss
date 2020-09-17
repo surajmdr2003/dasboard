@@ -1,0 +1,12 @@
+// Imports all necessary scss styles
+// Variables, 
+// Common styles,
+// Comppnents
+// Overrides
+@import '../../node_modules/bootstrap/scss/bootstrap.scss';
+@import 'variables';
+@import 'common';
+
+body{
+    background: red;
+} 

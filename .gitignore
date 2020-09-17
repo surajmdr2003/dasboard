@@ -1,0 +1,21 @@
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+
+.env
+.map
+.DS_Store
+
+dist/
+bundle/
+public/
+node_modules/
+
+yarn.lock
+app.config.js
+yarn-error.log
+package-lock.json
+

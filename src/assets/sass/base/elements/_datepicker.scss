@@ -1,0 +1,83 @@
+.daterangepickercontainer {
+    display: inline-block;
+
+    .fromDateTimeContainer {
+        margin: 10px;
+    }
+
+    .daterangepicker {
+        left: initial !important;
+        right: 0;
+        padding: 0;
+    }
+    .fromDateHourContainer {
+        display: none;
+    }
+    .rangecontainer {
+        width: 150px;
+        order: 3;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+        background-color: #ffffff;
+        z-index: 9;
+        position: relative; 
+
+        &:before {
+            content: "Date Presets";
+            display: block;
+            text-align: left;
+            padding: 15px 5px 5px 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        > div {
+            border: 0 !important;
+            margin: 3px !important;
+            text-align: left;
+            padding-left: 20px;
+            outline: none !important;
+            position: relative;
+
+            &[tabindex = "0"]:before {
+                content:'\e915';
+                @extend .icon-font;
+                position: absolute;
+                left: 10px;
+                top: 8px;
+                font-size: 9px;
+            }
+        }
+    }
+
+    .buttonContainer {
+        width: 100%;
+        left: 0;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .applyButton {
+        border: 1px solid #22a6de !important;
+        background: #22a6de !important;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 8px 20px;
+    }
+
+    .cancelButton {
+        padding: 8px 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .activeNotifier {
+        padding-bottom: 60px;
+    }
+
+    .monthYearContainer {
+        margin: 5px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        display: flex;
+    }
+}
