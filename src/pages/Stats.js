@@ -1,11 +1,71 @@
 import React, { Fragment } from 'react';
+import C3Chart from '@kaiouwang/react-c3js';
+import 'c3/c3.css';
+
 
 /** Components */
 import HeaderMain from '../components/HeaderMain';
 import Footer from '../components/Footer';
 import PageTitleWithFilter from '../components/PageTitleWithFilter';
+import ProgressBarBlock from '../components/ProgressBarBlock';
+
+import GraphData from '../components/GraphData';
+
+
+const primaryColor = '#22a6de';
+const secondaryColor = '#faddb1';
+
+const dataDonut = {
+    columns: [
+        ['Male', 70],
+        ['Female', 30],
+    ],
+    type : 'donut',
+    colors: {
+        Male: primaryColor,
+        Female: secondaryColor
+    },
+}
+
+const data = {
+    columns: [
+        ['Impression', ...GraphData.AgeDatas.data]
+    ],
+    type: 'bar',
+    colors: {
+        Impression: primaryColor
+    },
+};
+
+const size = {
+    height: 320
+}
+
+const legend = {
+    show: false
+}
+
+const bar = {
+    width: {
+        ratio: 0.5 // this makes bar width 50% of length between ticks
+    }
+}
+
+const axis = {
+    x: {
+        type: 'category',
+        categories:  [...GraphData.AgeDatas.label],
+        label: {
+            position: 'inner-center'
+        }
+    },
+    y: {
+        show: false,
+    }
+}
 
 const Stats = () => {
+
     return (
         <Fragment>
             <HeaderMain />
@@ -19,7 +79,7 @@ const Stats = () => {
                                     <div className="card-body">
                                         <h4>Age data</h4>
                                         <div className="chart-block">
-                                            <img src="./assets/images/bar-graph.png" alt=""/>
+                                            <C3Chart size={size} data={data} bar={bar} axis={axis} legend={legend} />
                                         </div>
                                     </div>
                                 </div>
@@ -29,7 +89,7 @@ const Stats = () => {
                                     <div className="card-body">
                                         <h4>Gender data</h4>
                                         <div className="chart-block">
-                                            <img src="./assets/images/donut-graph.png" alt=""/>
+                                             <C3Chart data={dataDonut} />
                                         </div>
                                     </div>
                                 </div>
@@ -41,98 +101,16 @@ const Stats = () => {
                                     <div className="card-body">
                                         <h4>Affinity data</h4>
                                         <ul className="progress-chart-block">
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Sports & Fitness/Sports Fans</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">7.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '80%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Media & Entertainment/Movie Lovers</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">7.9%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '75%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Technology/Technophiles</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">6.1%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Sports/Fitness/Health & Fitness Buffs
-                                                </div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Shoppers/Luxury Shoppers</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Media & Entertainment/Movie</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Lifestyles & Hobbies/Green Living </div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Shoppers/Luxury Shoppers</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Hobbies/Fashionistas</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Sports/Fitness/Health & Fitness Buffs
-                                                </div>
-                                            </li>
+                                            <ProgressBarBlock data={10.24} label={'Sports & Fitness/Sports Fans'}/>
+                                            <ProgressBarBlock data={8.05} label={'Media & Entertainment/Movie Lovers'}/>
+                                            <ProgressBarBlock data={4.24} label={'Technology/Technophiles'}/>
+                                            <ProgressBarBlock data={9.40} label={'Sports/Fitness/Health & Fitness Buffs'}/>
+                                            <ProgressBarBlock data={10.14} label={'Shoppers/Luxury Shoppers'}/>
+                                            <ProgressBarBlock data={6.00} label={'Media & Entertainment/Movie'}/>
+                                            <ProgressBarBlock data={4.50} label={'Lifestyles & Hobbies/Green Living'}/>
+                                            <ProgressBarBlock data={1.00} label={'Shoppers/Luxury Shoppers'}/>
+                                            <ProgressBarBlock data={8.85} label={'Hobbies/Fashionistas'}/>
+                                            <ProgressBarBlock data={7.00} label={'Sports/Fitness/Health & Fitness Buffs'}/>
                                         </ul>
                                     </div>
                                 </div>
@@ -142,98 +120,16 @@ const Stats = () => {
                                     <div className="card-body">
                                         <h4>In market data</h4>
                                         <ul className="progress-chart-block">
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Sports & Fitness/Sports Fans</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">7.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '80%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Media & Entertainment/Movie Lovers</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">7.9%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '75%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Technology/Technophiles</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">6.1%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Sports/Fitness/Health & Fitness Buffs
-                                                </div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Shoppers/Luxury Shoppers</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Media & Entertainment/Movie</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Lifestyles & Hobbies/Green Living </div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Shoppers/Luxury Shoppers</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Hobbies/Fashionistas</div>
-                                            </li>
-                                            <li className="progressbar-item">
-                                                <div className="progressbar-data">10.24%</div>
-                                                <div className="progressbar-graph">
-                                                    <div className="progress">
-                                                        <div className="progress-bar" role="progressbar" style={{width: '100%'}}></div>
-                                                    </div>
-                                                </div>
-                                                <div className="progressbar-label">Sports/Fitness/Health & Fitness Buffs
-                                                </div>
-                                            </li>
+                                            <ProgressBarBlock data={1.24} label={'Sports & Fitness/Sports Fans'}/>
+                                            <ProgressBarBlock data={5.05} label={'Media & Entertainment/Movie Lovers'}/>
+                                            <ProgressBarBlock data={4.24} label={'Technology/Technophiles'}/>
+                                            <ProgressBarBlock data={7.40} label={'Sports/Fitness/Health & Fitness Buffs'}/>
+                                            <ProgressBarBlock data={3.14} label={'Shoppers/Luxury Shoppers'}/>
+                                            <ProgressBarBlock data={2.00} label={'Media & Entertainment/Movie'}/>
+                                            <ProgressBarBlock data={6.50} label={'Lifestyles & Hobbies/Green Living'}/>
+                                            <ProgressBarBlock data={5.00} label={'Shoppers/Luxury Shoppers'}/>
+                                            <ProgressBarBlock data={1.85} label={'Hobbies/Fashionistas'}/>
+                                            <ProgressBarBlock data={10.00} label={'Sports/Fitness/Health & Fitness Buffs'}/>
                                         </ul>
                                     </div>
                                 </div>

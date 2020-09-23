@@ -47,7 +47,6 @@ const axis = {
     }
 }
 
-let customRange = ''; 
 
 const AllCampaingsData = () => {
     const [data, setData] = useState(initialData); // For graph data
@@ -60,8 +59,8 @@ const AllCampaingsData = () => {
                 return {
                     ...prevVal,
                     columns: [
-                        ['x', ...GraphData.date],
-                        [activeAttr, ...GraphData.impressions]
+                        ['x', ...GraphData.AllCampaignDatas.date],
+                        [activeAttr, ...GraphData.AllCampaignDatas.impressions]
                     ],
                     colors: {
                         [activeAttr]: primaryColor,
@@ -78,8 +77,8 @@ const AllCampaingsData = () => {
             return ({
                 ...prevData,
                 columns: [
-                    ['x', ...GraphData.date],
-                    [label, ...GraphData[label]]
+                    ['x', ...GraphData.AllCampaignDatas.date],
+                    [label, ...GraphData.AllCampaignDatas[label]]
                 ],
                 colors: {
                     [label]: primaryColor,

@@ -121,3 +121,10 @@ g.c3-axis text {
         }
     }
 }
+
+.c3-legend-item-tile {
+    shape-rendering: auto;
+    stroke-linecap: round;
+    stroke-dasharray: 0.1 10;
+    transform: translate(3px, 1px)
+  }
