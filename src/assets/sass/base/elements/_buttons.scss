@@ -15,6 +15,14 @@
 	padding: size(10) size(20);
 } 
 
+.btn-default {
+	border-radius: 3px;
+	font-size: size(12);
+	font-weight: 600;
+	padding: .65rem 1rem;
+	text-transform: uppercase;
+}
+
 .btn-date-picker {
 	@extend .btn-filter;
 

@@ -4,6 +4,7 @@ import 'c3/c3.css';
 import moment from 'moment';
 import GraphData from './GraphData';
 import DatePickerField from './form-fields/DatePickerField';
+import { Link } from 'react-router-dom';
 
 const primaryColor = '#22a6de';
 const initialData = {
@@ -51,7 +52,8 @@ const axis = {
 const AllCampaingsData = () => {
     const [data, setData] = useState(initialData); // For graph data
     const [activeAttr, setActive] = useState('impressions'); // For active graph (tab)
-    const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days')
+    const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days'); // For datepicker label
+    const [showRecommendation, setRecommendation] = useState(false) // For recommendation message
 
     useEffect(() => {
         const formatGraphData = () => {
@@ -150,7 +152,7 @@ const AllCampaingsData = () => {
                                 </div>
                             </div>
                             <div className="col-md-4">
-                                <div className="campiagns-info">
+                                <div className={"campiagns-info " + ((!showRecommendation) ? '' : 'd-none')}>
                                     <div className="campiagns-info-title bb">
                                         <h4>Lifetime Data</h4>
                                         <p>Based on campaigns performance</p>
@@ -211,7 +213,20 @@ const AllCampaingsData = () => {
                                         </li>
                                     </ul>
                                     <div className="text-right">
-                                        <a href="#" className="btn-link">See Recommendation</a>
+                                        <Link to="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>See Recommendation</Link>
+                                    </div>
+                                </div>
+                                <div className={"campiagns-info recommendation " + ((showRecommendation) ? '' : 'd-none')} >
+                                    <div className="campiagns-info-title bb">
+                                        <h4>RECOMMENDATIONS</h4>
+                                        <p>Based on your campaign performance</p>
+                                    </div>
+                                    <div className="campiagns-info-data">
+                                        <h5>Add responsive display ads</h5>
+                                        <p>Get more conversion at a similar CPA with responsive display ads, which automatically adapt to fit all devices</p>
+                                    </div>
+                                    <div className="text-left">
+                                        <Link to="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>Notify Sales</Link>
                                     </div>
                                 </div>
                             </div>

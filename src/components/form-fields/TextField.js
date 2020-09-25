@@ -6,26 +6,17 @@ const TextField = (props) => {
     <div className="form-group">
       {addLabel(props.identifier, props.label)}
       <div className="form-feild">
-        {addIcon(props.iconUrl)}
-        <input id={props.identifier} type={props.type} className="form-control"
+        <input 
+          id={props.identifier}
+          name={props.fieldName} 
+          type={props.type} 
+          className="form-control"
           placeholder={props.placeholder}
-          onChange={(data) => props.callback(props.fieldName, data.target.value)}
-          value={props.value} />
+          ref={props.register} />
       </div>
-      <small className="form-text text-error">{(props.value) ? '' : props.errorMsg}</small>
+      <small className="form-text text-error">{props.errorMsg}</small>
     </div>
   );
-}
-
-/**
-   * Check for Icon
-   *
-   * @param {String} iconPath
-   *
-   * @return {JSX}
-   */
-const addIcon = (iconPath) => {
-  return ((iconPath) ? <img src={iconPath} className="form-icon" /> : '');
 }
 
 /**

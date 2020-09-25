@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 
 const Navigation = () => {
     return (
@@ -10,26 +11,25 @@ const Navigation = () => {
 
             <div className="collapse navbar-collapse primary-navigation" id="navbarSupportedContent">
                 <ul className="navbar-nav mr-auto">
-                    <li><a href="./index.html">Dashboard</a></li>
-                    <li className="menu-item-has-children"><a href="./campaign.html">Campaigns</a>
+                    <li><Link to="./dashboard">Dashboard</Link></li>
+                    <li className="menu-item-has-children"><Link to="./campaign">Campaigns</Link>
                         <div className="dropdown-full-width">
                             <div className="container">
                                 <div className="row w-100">
                                     <div className="col-sm-2 br">
                                         <ul className="nav flex-column">
-                                            <li className="nav-item"><a href="#" className="nav-link">Active</a></li>
-                                            <li className="nav-item"><a href="#" className="nav-link">Inactive</a></li>
-                                            <li className="nav-item"><a href="#" className="nav-link btn-link">See All
-                                                    Campaigns</a></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Active</Link></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Inactive</Link></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link btn-link">See All Campaigns</Link></li>
                                         </ul>
                                     </div>
                                     <div className="col-sm-2 br">
                                         <ul className="nav flex-column">
-                                            <li className="nav-item"><a href="#" className="nav-link">Campaign 1</a></li>
-                                            <li className="nav-item"><a href="#" className="nav-link">Campaign 2</a></li>
-                                            <li className="nav-item"><a href="#" className="nav-link">Campaign 3</a></li>
-                                            <li className="nav-item"><a href="#" className="nav-link">Campaign 4</a></li>
-                                            <li className="nav-item"><a href="#" className="nav-link">Campaign 5</a></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Campaign 1</Link></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Campaign 2</Link></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Campaign 3</Link></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Campaign 4</Link></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Campaign 5</Link></li>
                                         </ul>
                                     </div>
                                     <div className="col-sm-8 pt-4">
@@ -60,31 +60,31 @@ const Navigation = () => {
                                                     <div className="title">Conv rate</div>
                                                 </li>
                                             </ul>
-                                            <a href="#" className="btn-link">View Performance</a>
+                                            <Link to="#" className="btn-link">View Performance</Link>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </li>
-                    <li className="menu-item-has-children"><a href="./creatives.html">Creatives</a>
+                    <li className="menu-item-has-children"><Link to="./creatives">Creatives</Link>
                         <div className="dropdown-full-width">
                             <div className="container">
                                 <div className="row">
                                     <div className="col-md-2 br">
                                         <ul className="nav flex-column">
-                                            <li className="nav-item"><a href="#" className="nav-link">Campaign 1</a></li>
-                                            <li className="nav-item"><a href="#" className="nav-link">Campaign 2</a></li>
-                                            <li className="nav-item"><a href="#" className="nav-link">Campaign 3</a></li>
-                                            <li className="nav-item"><a href="#" className="nav-link">Campaign 4</a></li>
-                                            <li className="nav-item"><a href="#" className="nav-link">Campaign 5</a></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Campaign 1</Link></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Campaign 2</Link></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Campaign 3</Link></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Campaign 4</Link></li>
+                                            <li className="nav-item"><Link to="#" className="nav-link">Campaign 5</Link></li>
                                         </ul>
                                     </div>
                                     <div className="col-md-10 pt-4">
                                         <div className="pl-3 creatives-overview">
                                             <div className="overview-title">
                                                 <h5>Top 5 Creatives
-                                                    <a href="#" className="btn-link">See All Campaigns</a>
+                                                    <Link to="#" className="btn-link">See All Campaigns</Link>
                                                 </h5>
                                             </div>
                                             <ul className="row overview-detail">
@@ -150,16 +150,16 @@ const Navigation = () => {
                             </div>
                         </div>
                     </li>
-                    <li><a href="./landing-pages.html">Landing pages</a></li>
-                    <li><a href="./targeting.html">Targeting</a></li>
-                    <li><a href="./stats.html">Stats</a></li>
-                    <li><a href="./report.html">Report</a></li>
+                    <li><Link to="./landingpages">Landing pages</Link></li>
+                    <li><Link to="./targeting">Targeting</Link></li>
+                    <li><Link to="./stats">Stats</Link></li>
+                    <li><Link to="./reports">Report</Link></li>
                 </ul>
                 <ul className="navbar-nav align-items-center secondary-menu">
                     <li><i className="icon icon-notification"></i>
                         <div className="dropdown-menu notification-dropdown-menu">
                             <div className="notification-header">
-                                Notifications <a href="./all-notifications.html" className="btn-link">See All</a>
+                                Notifications <Link to="./all-notifications.html" className="btn-link">See All</Link>
                             </div>
                             <ul className="notifications list-unstyled">
                                 <li className="media">
@@ -170,7 +170,7 @@ const Navigation = () => {
                                         <h5>Adds responsive display ads</h5>
                                         <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
                                             sollicitudin.</p>
-                                        <a href="#" className="btn-link">Notify Sales</a>
+                                        <Link to="#" className="btn-link">Notify Sales</Link>
                                     </div>
                                 </li>
                                 <li className="media">
@@ -191,7 +191,7 @@ const Navigation = () => {
                                         <h5>List-based media object</h5>
                                         <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
                                             sollicitudin. Cras purus odio,</p>
-                                        <a href="#" className="btn-link">See Report</a>
+                                        <Link to="#" className="btn-link">See Report</Link>
                                     </div>
                                 </li>
                             </ul>
@@ -207,19 +207,19 @@ const Navigation = () => {
                         </div>
                         <ul className="dropdown-menu profile-dropdown-menu">
                             <li>
-                                <a href="./login.html">Login</a>
+                                <Link to="./login">Login</Link>
                             </li>
                             <li>
-                                <a href="./your-profile.html">Profile</a>
+                                <Link to="./profile">Profile</Link>
                             </li>
                             <li>
-                                <a href="#">Payment setting</a>
+                                <Link to="#">Payment setting</Link>
                             </li>
                             <li>
-                                <a href="#">Billing history</a>
+                                <Link to="./billing">Billing history</Link>
                             </li>
                             <li>
-                                <a href="#">Contact us</a>
+                                <Link to="#">Contact us</Link>
                             </li>
                         </ul>
                     </li>

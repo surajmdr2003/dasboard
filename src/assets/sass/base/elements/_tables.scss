@@ -29,6 +29,26 @@ table {
 		vertical-align: middle;
 		padding: 1.9rem 0.75rem;
 		border-color: $color__table-border;
+
+		ul {
+			padding: 0;
+			margin: 0;
+			display: inline-flex;
+			list-style: none;
+	
+			li {
+				border-right: 1px solid #505050;
+				line-height: 1;
+				a {
+					padding: 0 size(8);
+					
+				}
+
+				&:last-child {
+					border: 0;
+				}
+			}
+		}
 	}
 
 	.campaign, .page-name {
@@ -66,5 +86,4 @@ table {
 			margin-bottom: 0;
 		}
 	}
-	
 }

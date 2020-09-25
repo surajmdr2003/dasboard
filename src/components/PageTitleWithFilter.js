@@ -67,7 +67,7 @@ const PageTitleWithFilter = (props) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-6 text-right">
                             { showFilterButtons(props.reportUrl)}
                         </div>
                     </div>

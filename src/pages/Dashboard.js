@@ -14,7 +14,7 @@ const Dashboard = () => {
         <Fragment>
             <HeaderMain />
             <div className="main-container">
-                <PageTitleWithOutFilter />
+                <PageTitleWithOutFilter title="Account Overview" />
                 <AllCampaingsData />
                 <YourCampaigns />
                 <TopCreatives />

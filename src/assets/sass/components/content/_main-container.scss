@@ -78,24 +78,34 @@ section.all-campaigns-content {
     }
 }
 
-ul.campiagns-info-data {
+.campiagns-info-data {
     li {
         padding: size(20) 0;
 
         .nav-fill .nav-item {
             text-align: left;
             padding: 0;
-        }
+        }  
+    }
 
-        h5 {
-            font-size: size(12);
-            margin-bottom: size(5);
-        }
+    h5 {
+        font-size: size(12);
+        margin-bottom: size(5);
+    }
 
-        p {
-            font-size: size(13);
-            margin: 0;
-        }
+    p {
+        font-size: size(13);
+        margin: 0;
+    }
+}
+
+.recommendation {
+    .campiagns-info-data {
+        padding-top: 2rem;
+    }
+
+    h5, p {
+        margin-bottom: size(15);
     }
 }
 
@@ -141,6 +151,9 @@ ul.campiagns-info-data {
     }
 }
 
+.main-content-wrapper {
+    padding: size(70) 0;
+}
 
 
 .your-campaigns-content,
@@ -162,6 +175,24 @@ ul.campiagns-info-data {
         font-weight: 600;
         padding-bottom: size(15);
         border-bottom: 1px solid $color__gray100;
+
+        .title-with-link {
+            max-width: 350px;
+            margin: auto;
+        }
+
+        a {
+            font-weight: 500;
+            font-size: size(12);
+            position: absolute;
+            text-decoration: none;
+            align-items: center;
+            display: flex;
+
+            i {
+                margin-right: size(8);
+            }
+        }
     }
 
     .content-list {
@@ -192,3 +223,33 @@ ul.campiagns-info-data {
     margin-top: size(5);
     margin-bottom: size(10);
 }
+
+.form-wrapper {
+    max-width: 350px;
+    margin: 40px auto;
+
+    .mt-5 {
+        margin-top: size(40) !important;
+    }
+
+    &.editprofile-form {
+        .form-group {
+            margin-bottom: size(17);
+        }
+    }
+
+    &.create-report-form {
+        .form-group {
+            margin-bottom: size(30);
+        }
+
+        .btn-primary {
+            font-size: size(12);
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: .625rem 2.25rem;
+            border-radius: 2px;
+        }
+    }
+}
+

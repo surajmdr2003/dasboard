@@ -1,65 +1,56 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 
+/** Components */
 import HeaderMain from '../components/HeaderMain';
-import PageTitleWithFilter from '../components/PageTitleWithFilter';
 import Footer from '../components/Footer';
-import CustomLoader from '../components/CustomLoader';
+import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
 
-const AdsBlock = ({row}) => (
-    <div className="campaign-media media">
-        <img src={row.avatar} className="table-campaign-image mr-3" alt="ads"/>
-        <div className="media-body">
-        <p className="mt-0">
-            MFB Fall Checking 2020 - RAF AZ {row.first_name}</p>
-        </div>
-    </div>
+
+const ActionBlock = ({row}) => (
+    <ul>
+        <li><Link to="">Print</Link></li>
+        <li><Link to="">Download</Link></li>
+    </ul>
 );
 
 const columns = [
     {
-        name: 'Ad name',
-        selector: 'avatar',
-        sortable: true,
-        className: 'fuck',
-        cell: row => <AdsBlock row={row} />,
-    },
-    {
-        name: 'size',
+        name: 'Date',
         selector: 'id',
         sortable: true,
     },
     {
-        name: 'Impressions',
+        name: 'Invoice #',
         selector: 'id',
         sortable: true,
     },
     {
-        name: 'Clicks',
+        name: 'Payment method',
         selector: 'id',
         sortable: true,
     },
     {
-        name: 'CTR',
+        name: 'Amount',
         selector: 'id',
         sortable: true,
     },
     {
-        name: 'Conversion',
+        name: 'Status',
         selector: 'id',
         sortable: true,
+        cell: row => <div className="status paid">Paid</div>,
     },
     {
-        name: 'Conv rate',
+        name: '',
         selector: 'id',
-        sortable: true,
-        cell: row => <div row={row}>{row.id}%</div>,
+        cell: row => <ActionBlock row={row}/>,
     },
 ];
 
-
-const Campaign = () => {
+const Billing = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalRows, setTotalRows] = useState(0);
@@ -102,22 +93,20 @@ const Campaign = () => {
         <Fragment>
             <HeaderMain />
             <div className="main-container">
-                <PageTitleWithFilter hasFilter={true}/>
-                <section className="main-content-wrapper table-creatives">
+                <PageTitleWithOutFilter title='Your profile' />
+                <section className="main-content-wrapper table-reports">
                     <div className="container">
-                        <DataTable
-                            columns={columns}
-                            data={data}
-                            progressPending={loading}
-                            progressComponent={<CustomLoader />}
-                            persistTableHead
-                            pagination
-                            paginationServer
-                            paginationTotalRows={totalRows}
-                            onChangeRowsPerPage={handlePerRowsChange}
-                            onChangePage={handlePageChange}
+                    <DataTable
+                        columns={columns}
+                        data={data}
+                        progressPending={loading}
+                        pagination
+                        paginationServer
+                        paginationTotalRows={totalRows}
+                        onChangeRowsPerPage={handlePerRowsChange}
+                        onChangePage={handlePageChange}
                         />
-                        </div>
+                    </div>
                 </section>
             </div>
             <Footer />
@@ -125,4 +114,4 @@ const Campaign = () => {
     );
 };
 
-export default Campaign;
+export default Billing;

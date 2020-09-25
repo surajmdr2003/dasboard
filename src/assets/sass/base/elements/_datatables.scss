@@ -1,0 +1,133 @@
+table {
+	margin: 0 0 1.5em;
+	width: 100%;
+}
+ 
+
+.rdt_Table {
+	border:1px solid $color__table-border;
+	font-size: size(13);
+	color: $color__table-maintext;
+	margin-bottom: 0;
+	
+	.rdt_TableHead .rdt_TableCol {
+		@extend th ;
+		color: $color__table-maintext;
+		border-color: $color__table-border;
+		background-color: $color__tablehead-bg;
+		font-size: size(13);
+		line-height: 2.5;
+		border-bottom: 0;
+        padding: 1.18rem 0.75rem;
+        font-weight: 600;
+	}
+
+	.rdt_TableCol {
+		vertical-align: middle;
+	} 
+
+	.rdt_TableRow {
+		vertical-align: middle;
+		padding: 1.9rem 0.75rem;
+        border-color: $color__table-border;
+        
+        > div {
+            &:first-child {
+                padding-left: 0;
+            }
+        
+            &:last-child {
+                padding-right: 0;
+            }
+        }
+
+		ul {
+			padding: 0;
+			margin: 0;
+			display: inline-flex;
+			list-style: none;
+	
+			li {
+				border-right: 1px solid #505050;
+                line-height: 1;
+                word-break: keep-all;
+				a {
+					padding: 0 size(8);
+					
+				}
+
+				&:last-child {
+					border: 0;
+				}
+			}
+		}
+	}
+
+	.campaign, .page-name {
+		font-weight: normal;
+	
+		.c-date {
+			font-size: size(11);
+			color: $color__table-sectext;
+		}
+	}
+	
+	.status  {
+		font-size: size(11);
+		color: $color__table-sectext;
+	} 
+
+	a {
+		font-size: size(12);
+	}
+}
+
+.table-creatives, .table-reports {
+    .rdt_TableRow {
+        padding: size(15);
+    
+        .campaign-media {
+            align-items: center;
+        
+            .table-campaign-image {
+                width: size(40);
+                height: size(50);
+                object-fit: cover;
+            }
+        
+            p {
+                margin-bottom: 0;
+            }
+        }
+    
+        > div:first-child {
+            padding-left: 0;
+            min-width: 230px;
+        }
+    }
+    .rdt_TableHeadRow > div:first-child {
+        min-width: 250px;
+    }
+}
+
+.rdt_TableHeader {
+    display: none !important;
+}
+
+.iKPurz {
+    justify-content: flex-start !important;
+}
+
+#pagination-first-page,
+#pagination-last-page {
+    display: none;
+}
+
+.iGZUwt {
+    margin: 0 15px !important;
+    color: $primary;
+}
+
+.jzCzGz {
+    color: $primary !important;
+}

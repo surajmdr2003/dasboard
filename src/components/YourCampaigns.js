@@ -1,7 +1,18 @@
-import React from 'react';
-import DatePickerField from './form-fields/DatePickerField';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+/** Components */
+import DatePickerField from '../components/form-fields/DatePickerField';
+import DropdownFilter from '../components/form-fields/DropdownFilter';
 
 const YourCampaigns = () => {
+    const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days')
+
+    const datepickerCallback = (startDate, endDate) => {
+        const range =(moment(startDate).format('DD MMM YY')+' to '+moment(endDate).format('DD MMM YY')).toString();
+        setFilterDateTitle(range)
+    }
+
     return (
         <section className="your-campaigns-content">
             <div className="container">
@@ -9,24 +20,13 @@ const YourCampaigns = () => {
                     <div className="col-md-5">
                         <div className="block-title">
                             Your Campaigns
-                                    <a href="#" className="btn-link">See All</a>
+                            <Link to="./campaign" className="btn-link">See All</Link>
                         </div>
                     </div>
                     <div className="col-md-7">
                         <div className="block-filter">
-                            <div className="dropdown dropdown-filter">
-                                <button className="btn btn-outline-primary dropdown-toggle" type="button"
-                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                    Filter by status
-                                        </button>
-                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a className="dropdown-item" href="#">Action</a>
-                                    <a className="dropdown-item" href="#">Another action</a>
-                                    <a className="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
-                            {/* <DatePickerField /> */}
+                            <DropdownFilter />
+                            <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
                         </div>
                     </div>
                 </div>

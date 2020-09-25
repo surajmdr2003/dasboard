@@ -19,4 +19,133 @@
             cursor: pointer;
         }
     }
+
+    .form-control::placeholder {
+        color: $color__placeholder;
+    }
+
+    .text-error {
+        color: $color__danger;
+        font-size: size(11);
+    }
+
+    .select-feild > select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        text-indent: 1px;
+        text-overflow: '';
+
+        option {
+            font-size: size(15);
+        }
+    }
+    
+    
+    .select-feild {
+        position: relative;
+    
+        &:after {
+            @extend .icon-font;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            content: '\e90d';
+            transform: translateY(-50%);
+            font-size: size(8);
+            color: $primary;
+        }
+    }
+
+    &.form-report {
+
+        label {
+            @include font-size(14px);
+            color: $color__text-heading;
+            font-weight: bold;
+            line-height: 1.43;
+            color: #202020;
+            margin-bottom: size(15);
+            position: relative;
+
+            i {
+                background: #fafafa;
+                height: size(30);
+                width: size(30);
+                display: inline-block;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                position: absolute;
+                left: -45px;
+                top: -6px;
+                color: #505050;
+            }
+        }
+
+        .daterangepickercontainer {
+            display: block;
+
+            .btn-date-picker {
+                width: 100%;
+                text-align: left;
+                font-size: 0.8125rem;
+                color: #707070;
+                border: solid 1px #d0d0d0;
+                background-color: #fff;
+                height: 3.75rem;
+
+                &:before {
+                    display: none;
+                }
+                &:after {
+                    position: absolute;
+                    right: 15px;
+                    top: 50%;
+                    content: '\e90d';
+                    transform: translateY(-50%);
+                }
+                &:hover:after {
+                    filter: none;
+                }
+            }
+        }
+    }
 }
+
+.result-block {
+    .result {
+        font-size: size(13);
+        line-height: 1.54;
+        margin-bottom: 1.2rem;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1rem 0;
+        display: inline-flex;
+        text-transform: uppercase;
+
+        li {
+            font-size: size(13);
+            font-weight: bold;
+            line-height: 1;
+            color: #22a6de;
+            border-right: 1px solid #505050;
+            padding: 0 size(5);
+
+            &:first-child() {
+                padding-left: 0;
+            }  
+            &:last-child() {
+                border: 0;
+                padding-right: 0;
+            }   
+        }
+
+        
+    }
+}
+
+

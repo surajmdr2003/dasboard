@@ -3,7 +3,7 @@ import C3Chart from '@kaiouwang/react-c3js';
 import 'c3/c3.css';
 import moment from 'moment';
 import GraphData from './GraphData';
-import DatePickerField from './form-fields/DatePickerField';
+import DatePickerField from '../components/form-fields/DatePickerField';
 
 const primaryColor = '#22a6de';
 const initialData = {
@@ -59,8 +59,8 @@ const SingleCampaingsData = () => {
                 return {
                     ...prevVal,
                     columns: [
-                        ['x', ...GraphData.date],
-                        [activeAttr, ...GraphData.impressions]
+                        ['x', ...GraphData.AllCampaignDatas.date],
+                        [activeAttr, ...GraphData.AllCampaignDatas.impressions]
                     ],
                     colors: {
                         [activeAttr]: primaryColor,
@@ -77,8 +77,8 @@ const SingleCampaingsData = () => {
             return ({
                 ...prevData,
                 columns: [
-                    ['x', ...GraphData.date],
-                    [label, ...GraphData[label]]
+                    ['x', ...GraphData.AllCampaignDatas.date],
+                    [label, ...GraphData.AllCampaignDatas[label]]
                 ],
                 colors: {
                     [label]: primaryColor,
@@ -101,9 +101,9 @@ const SingleCampaingsData = () => {
                         <div className="row">
                             <div className="col-md-6">
                                 <h4>Go Checking OU</h4>
-                                <ul class="campaigns-datas nav">
+                                <ul className="campaigns-datas nav">
                                     <li>From 12th Jan 2020 - 18th Jan 2020</li>
-                                    <li class="active-campaign">Active</li>
+                                    <li className="active-campaign">Active</li>
                                 </ul>
                             </div>
                             <div className="col-md-6 text-right">
@@ -148,48 +148,48 @@ const SingleCampaingsData = () => {
                                 </div>
                             </div>
                             <div className="col-md-4">
-                                <div class="campiagns-info">
-                                    <div class="campiagns-info-title bb">
+                                <div className="campiagns-info">
+                                    <div className="campiagns-info-title bb">
                                         <h4>CAMPAIGN DETAILS</h4>
                                         <p>Based on campaigns performance</p>
                                     </div>
-                                    <ul class="campiagns-info-data list-unstyled ">
-                                        <li class="media bb">
-                                            <span class="icon-box">
-                                                <i class="icon-Objective"></i>
+                                    <ul className="campiagns-info-data list-unstyled ">
+                                        <li className="media bb">
+                                            <span className="icon-box">
+                                                <i className="icon-Objective"></i>
                                             </span>
-                                            <div class="media-body">
-                                                <div class="data">
+                                            <div className="media-body">
+                                                <div className="data">
                                                     <h5>Objective</h5>
                                                     <p>To increase online checking online account opening.</p>
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="media bb">
-                                            <span class="icon-box">
-                                                <i class="icon-Shape"></i>
+                                        <li className="media bb">
+                                            <span className="icon-box">
+                                                <i className="icon-Shape"></i>
                                             </span>
-                                            <div class="media-body">
-                                                <div class="data">
+                                            <div className="media-body">
+                                                <div className="data">
                                                     <h5>Impression goal</h5>
                                                     <p>200,000 per month</p>
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="media bb">
-                                            <span class="icon-box">
-                                                <i class="icon-KPI"></i>
+                                        <li className="media bb">
+                                            <span className="icon-box">
+                                                <i className="icon-KPI"></i>
                                             </span>
-                                            <div class="media-body">
-                                                <div class="data">
+                                            <div className="media-body">
+                                                <div className="data">
                                                     <h5>KPI</h5>
                                                     <p>Clicks, CTR, Conversion, Account opens</p>
                                                 </div>
                                             </div>
                                         </li>
                                     </ul>
-                                    <div class="text-right">
-                                        <a href="#" class="btn-link">See Recommendation</a>
+                                    <div className="text-right">
+                                        <a href="#" className="btn-link">See Recommendation</a>
                                     </div>
                                 </div>
                             </div>
