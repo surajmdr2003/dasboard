@@ -1,39 +1,38 @@
 import React from 'react';
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
-import moment from "moment";
+import moment from 'moment';
 
 const DatePickerField = (props) => {
+  const now = new Date();
 
-  let now = new Date();
-
-  let start = moment(
+  const start = moment(
     new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
   );
 
-  let end = moment(start)
-    .add(1, "days")
-    .subtract(1, "seconds");
+  const end = moment(start)
+    .add(1, 'days')
+    .subtract(1, 'seconds');
 
-  let ranges = {
-    "Today": [moment(start), moment(end)],
-    "Yesterday": [
-      moment(start).subtract(1, "days"),
-      moment(end).subtract(1, "days")
+  const ranges = {
+    'Today': [moment(start), moment(end)],
+    'Yesterday': [
+      moment(start).subtract(1, 'days'),
+      moment(end).subtract(1, 'days'),
     ],
-    "3 Days": [moment(start).subtract(3, "days"), moment(end)],
-    "5 Days": [moment(start).subtract(5, "days"), moment(end)],
-    "1 Week": [moment(start).subtract(7, "days"), moment(end)],
-    "2 Weeks": [moment(start).subtract(14, "days"), moment(end)],
-    "1 Month": [moment(start).subtract(1, "months"), moment(end)],
-    "1 Year": [moment(start).subtract(1, "years"), moment(end)]
+    '3 Days': [moment(start).subtract(3, 'days'), moment(end)],
+    '5 Days': [moment(start).subtract(5, 'days'), moment(end)],
+    '1 Week': [moment(start).subtract(7, 'days'), moment(end)],
+    '2 Weeks': [moment(start).subtract(14, 'days'), moment(end)],
+    '1 Month': [moment(start).subtract(1, 'months'), moment(end)],
+    '1 Year': [moment(start).subtract(1, 'years'), moment(end)],
   };
 
-  let local = {
-    format: "DD-MM-YYYY",
-    sundayFirst: false
+  const local = {
+    format: 'DD-MM-YYYY',
+    sundayFirst: false,
   };
 
-  let datePickerStyle = {
+  const datePickerStyle = {
     fromDot: { backgroundColor: 'green' },
     toDot: { backgroundColor: 'red' },
     fromDate: { color: '#fff', backgroundColor: '#22a6de' },
@@ -42,7 +41,7 @@ const DatePickerField = (props) => {
     hoverCell: { color: '#22a6de', backgroundColor: '#e5f8fc' },
     customRangeButtons: { color: '#252841', backgroundColor: 'transparent' },
     customRangeSelected: { color: '#22a6de', backgroundColor: 'transparent' },
-  }
+  };
 
   return (
     <DateTimeRangeContainer

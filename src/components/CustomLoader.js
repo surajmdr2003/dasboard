@@ -26,12 +26,12 @@ const Spinner = styled.div`
 `;
 
 const CustomLoader = () => {
-    return (
+  return (
     <div style={{ padding: '24px' }}>
       <Spinner />
       <div>Fancy Loader...</div>
     </div>
-    );
+  );
 };
 
 export default CustomLoader;

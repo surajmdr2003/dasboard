@@ -6,10 +6,10 @@ const TextField = (props) => {
     <div className="form-group">
       {addLabel(props.identifier, props.label)}
       <div className="form-feild">
-        <input 
+        <input
           id={props.identifier}
-          name={props.fieldName} 
-          type={props.type} 
+          name={props.fieldName}
+          type={props.type}
           className="form-control"
           placeholder={props.placeholder}
           ref={props.register} />
@@ -17,7 +17,7 @@ const TextField = (props) => {
       <small className="form-text text-error">{props.errorMsg}</small>
     </div>
   );
-}
+};
 
 /**
  * Check for label
@@ -29,7 +29,7 @@ const TextField = (props) => {
  */
 const addLabel = (identifier, label) => {
   return ((label) ? <label htmlFor={identifier}>{label}</label> : '');
-}
+};
 
 // Component props validation
 TextField.propTypes = {
