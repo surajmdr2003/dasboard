@@ -1,24 +1,28 @@
-import React, { Fragment, useState } from 'react';
-import HeaderLogin from '../components/HeaderLogin';
-import TextField from '../components/form-fields/TextField';
-import PasswordField from '../components/form-fields/PasswordField';
+import React, { useEffect, Fragment, useState } from 'react';
+import { withRouter } from 'react-router-dom';
 
+// AWS Amplify Related
+import { Auth } from 'aws-amplify';
+
+// Components
+import HeaderLogin from '../components/HeaderLogin';
+
+// Required Assets
 const loginBanner = './assets/images/login-banner.jpg';
 
-const Login = () => {
-  const[formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
-
-  const handleChange = (feildName, value) => {
-    setFormData((preVal) => {
-     return {
-       ...preVal,
-       [feildName]: value,
-     }
-    })
-  } 
+const Login = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    setIsLoading(true);
+    Auth.currentAuthenticatedUser()
+      .then(user => {
+        console.log('currentAuthenticatedUser', user);
+        setIsLoading(false);
+        props.history.push('/dashboard');
+      })
+      .catch(() => console.log('Not signed in yet!'))
+      .finally(() => setIsLoading(false));
+  }, []);
 
   return (
     <Fragment>
@@ -31,33 +35,19 @@ const Login = () => {
                 <div className="greeting-title">
                   <h3><span>Good evening!</span> <br /> Welcome back.</h3>
                 </div>
-                <form>
-                  <div className="form-groups-wrapper">
-                    <TextField 
-                      label="Email address" 
-                      className="form-control" 
-                      identifier="emailAddress" 
-                      placeholder="you@example.com" 
-                      fieldName="email" 
-                      value={formData.email}
-                      callback={handleChange} />
-                      
-                    <PasswordField 
-                      label="Password" 
-                      type="password" 
-                      className="form-control" 
-                      identifier="password" 
-                      placeholder="Please enter your password" 
-                      fieldName="password" 
-                      value={formData.password}
-                      callback={handleChange}/>
-                  </div>
-                  <button type="submit" className="btn btn-primary btn-lg btn-block">Sign In</button>
-                </form>
+                <button type="button"
+                  className="btn btn-primary btn-lg btn-block"
+                  onClick={() => Auth.federatedSignIn()}>
+                  {
+                    isLoading
+                      ? <div class="spinner-grow spinner-grow-sm" role="status"> <span class="sr-only">Loading...</span></div> 
+                      : 'Sign Now!'
+                  }
+                </button>
               </div>
             </div>
             <div className="col-md-7 col-sm-6 has-banner-image">
-              <div className="banner-image" style={{backgroundImage: `url(${loginBanner})`}}></div>
+              <div className="banner-image" style={{ backgroundImage: `url(${loginBanner})` }} />
             </div>
           </div>
         </div>
@@ -66,4 +56,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withRouter(Login);

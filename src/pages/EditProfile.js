@@ -1,83 +1,103 @@
 import React, { Fragment } from 'react';
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 
 /** Components */
-import HeaderMain from '../components/HeaderMain';
-import Footer from '../components/Footer';
+import ErrorMessage from '../components/common/ErrorMessage.component';
 import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
-import TextField from '../components/form-fields/TextField';
 
 const EditProfile = () => {
-    const { register, errors, handleSubmit } = useForm();
+  const { register, handleSubmit, errors, isSubmitting } = useForm();
+  const onSubmit = data => console.log(data);
 
-    const onSubmit = data => console.log(data);
-
-    return (
-        <Fragment>
-            <HeaderMain />
-            <div className="main-container">
-                <PageTitleWithOutFilter/>
-                <section className="profile-content">
-                    <div className="container">
-                        <div className="row">
-                            <div className="offset-md-2 col-md-8">
-                                <div className="content-block">
-                                    <div className="content-block-title">
-                                        <a href="#"><i className="icon-caret-left"></i> Back </a>
-                                        <div className="title-with-link">Edit info</div>
-                                    </div>
-                                    <div className="content-block-body">
-                                        <div className="form-wrapper editprofile-form">
-                                            <form onSubmit={handleSubmit(onSubmit)}>
-                                                <TextField 
-                                                    label="Account name" 
-                                                    type="text" 
-                                                    placeholder="Midfirst Bank" 
-                                                    fieldName="accountName" 
-                                                    register={register({ required: true })} 
-                                                    errorMsg={errors.accountName && "Account name is required"} 
-                                                    required />
-
-                                                <TextField 
-                                                    label="Email address" 
-                                                    type="email" 
-                                                    placeholder="info@midfirstbank.com" 
-                                                    fieldName="email" 
-                                                    register={register({ required: true })}
-                                                    errorMsg={errors.email && "Email is required"} 
-                                                    required />
-
-                                                <TextField 
-                                                    label="Phone number" 
-                                                    type="tel" 
-                                                    placeholder="+1 (213) 393-3010" 
-                                                    fieldName="phno" 
-                                                    register={register({ required: true })}
-                                                    errorMsg={errors.phno && "Phone Number is required"} 
-                                                    required />
-
-                                                <TextField 
-                                                    label="Address" 
-                                                    type="text" 
-                                                    placeholder="Midfirst Bank" 
-                                                    fieldName="address" 
-                                                    register={register({ required: true })}
-                                                    errorMsg={errors.address && "Address is required"} 
-                                                    required />
-
-                                                <button type="submit" className="mt-5 btn btn-primary btn-lg btn-block">SAVE INFO</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+  return (
+    <Fragment>
+      <PageTitleWithOutFilter/>
+      <section className="profile-content">
+        <div className="container">
+          <div className="row">
+            <div className="offset-md-2 col-md-8">
+              <div className="content-block">
+                <div className="content-block-title">
+                  <a href="#"><i className="icon-caret-left" /> Back </a>
+                  <div className="title-with-link">Edit info</div>
+                </div>
+                <div className="content-block-body">
+                  <div className="form-wrapper editprofile-form">
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <div className="form-group">
+                        <label htmlFor="accountName" className="label">Account Name</label>
+                        <input
+                          id="accountName"
+                          name="accountName"
+                          type="text"
+                          className="form-control"
+                          placeholder="Midfirst Bank"
+                          autoFocus
+                          ref={register({
+                            required: 'Please enter your Account Name.',
+                          })}
+                        />
+                        <ErrorMessage error={errors.accountName} />
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="email" className="label">Email Address</label>
+                        <input
+                          id="email"
+                          name="email"
+                          type="email"
+                          className="form-control"
+                          placeholder="example@example.com"
+                          ref={register({
+                            required: 'Please enter your email address.',
+                            pattern: {
+                              value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i,
+                              message: 'Invalid Email address or check for ending space',
+                            },
+                          })}
+                        />
+                        <ErrorMessage error={errors.email} />
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="phoneNumber" className="label">Phone Number</label>
+                        <input
+                          label="phoneNumber"
+                          type="tel"
+                          className="form-control"
+                          placeholder="+1 (234) 567-8910"
+                          fieldName="phoneNumber"
+                          ref={register({
+                            required: 'Please enter your Phone Number',
+                          })}
+                        />
+                        <ErrorMessage error={errors.phoneNumber} />
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="address" className="label">Address</label>
+                        <input
+                          id="address"
+                          name="address"
+                          type="text"
+                          className="form-control"
+                          placeholder="Midfirst Bank"
+                          ref={register({
+                            required: 'Please enter your Address',
+                          })}
+                        />
+                        <ErrorMessage error={errors.address} />
+                      </div>
+                      <div className="form-group">
+                        <button disabled={isSubmitting} type="submit" className="mt-5 btn btn-primary btn-lg btn-block">SAVE INFO</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
-            <Footer />
-        </Fragment>
-    );
+          </div>
+        </div>
+      </section>
+    </Fragment>
+  );
 };
 
 export default EditProfile;
