@@ -6,17 +6,17 @@ class App extends Component {
    * Component constructor
    * @param {Object} props
    */
-  constructor(props) { 
+  constructor(props) {
     super(props);
-  } 
+  }
 
   // Render App
-  render() { 
-    return ( 
+  render() {
+    return (
       <Fragment>
         <Routes/>
       </Fragment>
-    ); 
+    );
   }
 }
 

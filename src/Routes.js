@@ -1,9 +1,14 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Redirect } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
 
-// Components
-import NotFound from './pages/NotFound';
+// Private Route Component
+import PrivateRoute from './components/common/PrivateRoute.component';
+
+// Required Components
+import Welcome from './pages/Welcome';
 import Login from './pages/Login';
+import AdminPages from './pages/Admin.page';
 import Dashboard from './pages/Dashboard';
 import Campaign from './pages/Campaign';
 import Creatives from './pages/Creatives';
@@ -16,27 +21,42 @@ import EditProfile from './pages/EditProfile';
 import CreateCustomReport from './pages/CreateCustomReport';
 import Reports from './pages/Reports';
 import Billing from './pages/Billing';
+import NotFound from './pages/NotFound';
 
-const Routes = () => { 
+const Routes = () => {
   return (
     <Switch>
-      {/* Public views */}
-      <Route exact path="/" component={Login} />
-      <Route exact path="/dashboard" component={Dashboard} />
-      <Route exact path="/campaign" component={Campaign} />
-      <Route exact path="/creatives" component={Creatives} />
-      <Route exact path="/landingPages" component={LandingPages} />
-      <Route exact path="/targeting" component={Targeting} />
-      <Route exact path="/stats" component={Stats} />
-      <Route exact path="/profile" component={Profile} />
-      <Route exact path="/editprofile" component={EditProfile} />
-      <Route exact path="/notifications" component={Notifications} />
-      <Route exact path="/create-report" component={CreateCustomReport} />
-      <Route exact path="/reports" component={Reports} />
-      <Route exact path="/billing" component={Billing} />
-      <Route component={NotFound} />
+      <Route path={'/'} component={Welcome} exact />
+      <Route path={'/login'} component={Login} />
+      <Route path={'/others'} component={Welcome} />
+      <Route
+        path={'/dashboard'}
+        render={({ match: { path } }) => (
+          <AdminPages>
+            <Switch>
+              <PrivateRoute exact path={path + '/'} component={Dashboard} />
+              <PrivateRoute exact path={path + '/campaign/:id'} component={Campaign} />
+              <PrivateRoute exact path={path + '/creatives'} component={Creatives} />
+              <PrivateRoute exact path={path + '/landingPages'} component={LandingPages} />
+              <PrivateRoute exact path={path + '/targeting'} component={Targeting} />
+              <PrivateRoute exact path={path + '/stats'} component={Stats} />
+              <PrivateRoute exact path={path + '/profile'} component={Profile} />
+              <PrivateRoute exact path={path + '/edit-profile'} component={EditProfile} />
+              <PrivateRoute exact path={path + '/notifications'} component={Notifications} />
+              <PrivateRoute exact path={path + '/create-report'} component={CreateCustomReport} />
+              <PrivateRoute exact path={path + '/reports'} component={Reports} />
+              <PrivateRoute exact path={path + '/billing'} component={Billing} />
+
+              {/* If no matching routes are requested */}
+              <Redirect exact from={path + '/*'} to={path} />
+            </Switch>
+          </AdminPages>
+        )}
+      />
+      <Route path="/not-found" component={NotFound} />
+      <Redirect exact from={'*'} to={'/not-found'} />
     </Switch>
-  ); 
+  );
 };
 
 export default Routes;
