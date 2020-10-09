@@ -100,8 +100,8 @@ const graphData = {
  * For Initial startdate and enddate
  */
 const now = new Date();
-const start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const end = moment(start).add(7, 'days').format('YYYY-MM-DD');
+const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
+const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
 
 const CampaignGraph = (props) => {
   const [isLoading, setIsLoading] = useState(false);

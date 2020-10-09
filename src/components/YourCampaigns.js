@@ -31,8 +31,8 @@ const YourCampaigns = () => {
  * For Initial startdate and enddate
  */
   const now = new Date();
-  const start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-  const end = moment(start).add(7, 'days').format('YYYY-MM-DD');
+  const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
+  const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
 
   /**
    * Call API and generate graphs correspond to data
@@ -62,9 +62,15 @@ const YourCampaigns = () => {
       .finally(() => setIsLoading(false));
   };
 
+  /**
+   * Handle callback of datepicker
+   * @param {Start Date} startDate
+   * @param {End Date} endDate
+   */
   const datepickerCallback = (startDate, endDate) => {
     const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
     setFilterDateTitle(range);
+    campaignsData(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
   };
 
   /**
@@ -79,6 +85,10 @@ const YourCampaigns = () => {
     return ((fNum / sNum) * 100).toFixed(2);
   };
 
+  /**
+   * Returns List of campaign
+   * @param {Array} campaigns
+   */
   const loadCampaignList = (campaigns) => {
     return campaigns.map(campaign => {
       return (<tr key={campaign.id}>
