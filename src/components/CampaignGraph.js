@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
+import { PropTypes } from 'prop-types';
 import { Auth, API } from 'aws-amplify';
 
 import C3Chart from '@kaiouwang/react-c3js';
@@ -75,7 +76,7 @@ const campaignTabs = [
   },
   {
     label: 'Conversion',
-    slug: 'conversion',
+    slug: 'conversions',
   },
   {
     label: 'Conv rate',
@@ -104,7 +105,7 @@ const end = moment(start).add(7, 'days').format('YYYY-MM-DD');
 
 const CampaignGraph = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState(initialData); // For graph data
+  const [gData, setData] = useState(initialData); // For graph data
   const [activeAttr, setActive] = useState('impressions'); // For active graph (tab)
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days'); // For datepicker label
   const [summaryData, setSummaryData] = useState({
@@ -114,7 +115,7 @@ const CampaignGraph = (props) => {
     impressions_percent: 0,
     ctr: 0,
     ctr_percent: 0,
-    conversion: 0,
+    conversions: [],
     conversion_percent: 0,
     convrate: 0,
     convrate_percent: 0,
@@ -140,7 +141,6 @@ const CampaignGraph = (props) => {
     setIsLoading(true);
     Auth.currentSession()
       .then(async function(info) {
-        let response;
         const accessToken = info.getAccessToken().getJwtToken();
 
         // Setting up header info
@@ -152,7 +152,7 @@ const CampaignGraph = (props) => {
         });
 
         const apiEndPoint = (props.campaignId) ? 'canpaignGroupPerformance' : 'advertiserPerformance';
-        response = await API.post(apiEndPoint, '', apiRequest);
+        const response = await API.post(apiEndPoint, '', apiRequest);
 
         // Reformatting data for BarGraph
         reformatDataForGraph(response.data.data);
@@ -164,7 +164,7 @@ const CampaignGraph = (props) => {
 
         setTimeout(() => {
           updateGraph('impressions');
-          setIsLoading(false)
+          setIsLoading(false);
         }, 1000);
       })
       .catch(() => false)
@@ -181,17 +181,29 @@ const CampaignGraph = (props) => {
     graphData.impressions = [];
     graphData.clicks = [];
     graphData.ctr = [];
-    graphData.conversion = [];
+    graphData.conversions = [];
     graphData.convrate = [];
 
     return data.forEach(element => {
       graphData.date.push(element.date);
       graphData.impressions.push(element.impressions);
       graphData.clicks.push(element.clicks);
-      graphData.ctr.push(element.impressions);
-      graphData.conversion.push(element.clicks);
-      graphData.convrate.push(element.impressions);
+      graphData.ctr.push(handleNanValueWithCalculation(element.clicks, element.impressions) );
+      graphData.conversions.push(element.conversions.length);
+      graphData.convrate.push(handleNanValueWithCalculation(element.conversions.length, element.clicks));
     });
+  };
+
+  /**
+   * Handle NAN and Infinity value
+   * @param {Int} fNum
+   * @param {Int} sNum
+   */
+  const handleNanValueWithCalculation = (fNum, sNum) => {
+    if (sNum === 0) {
+      return (fNum * 100).toFixed(2);
+    }
+    return ((fNum / sNum) * 100).toFixed(2);
   };
 
   /**
@@ -257,15 +269,26 @@ const CampaignGraph = (props) => {
     );
   };
 
+  const tabData = (slug) => {
+    if (slug === 'conversions') {
+      return summaryData[slug].length;
+    } else if (slug === 'convrate') {
+      return handleNanValueWithCalculation(summaryData.conversions.length, summaryData.clicks) + '%';
+    } else if (slug === 'ctr') {
+      return handleNanValueWithCalculation(summaryData.clicks, summaryData.impressions) + '%';
+    }
+    return summaryData[slug];
+  };
+
   return (
     <section className="all-campaigns-content">
       <div className="container">
-      {
-        isLoading
-          ? <div className="text-center m-5">
+        {
+          isLoading
+            ? <div className="text-center m-5">
               <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
             </div>
-          : <div className="card campaigns-card">
+            : <div className="card campaigns-card">
               <div className="card-header">
                 <div className="row">
                   <div className="col-md-6">
@@ -288,7 +311,7 @@ const CampaignGraph = (props) => {
                         {campaignTabs.map((tab) => {
                           return (
                             <li key={tab.slug} className={'nav-item ' + ((activeAttr === tab.slug) ? 'active' : '')} onClick={() => updateGraph(tab.slug)}>
-                              <div className="number">{summaryData[tab.slug]}</div>
+                              <div className="number">{ tabData(tab.slug) }</div>
                               <div className="title">{tab.label}</div>
                               <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData[tab.slug + '_percent']}</div>
                             </li>);
@@ -296,7 +319,7 @@ const CampaignGraph = (props) => {
                         }
                       </ul>
                       <div className="chart-block">
-                        <C3Chart size={size} data={data} bar={bar} axis={axis} unloadBeforeLoad={true} legend={legend} />
+                        <C3Chart size={size} data={gData} bar={bar} axis={axis} unloadBeforeLoad={true} legend={legend} />
                       </div>
                     </div>
                   </div>
@@ -310,10 +333,14 @@ const CampaignGraph = (props) => {
                 </div>
               </div>
             </div>
-      }
+        }
       </div>
     </section>
   );
+};
+
+CampaignGraph.propTypes = {
+  campaignId: PropTypes.func,
 };
 
 export default CampaignGraph;

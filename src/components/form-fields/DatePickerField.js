@@ -1,4 +1,5 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
 import moment from 'moment';
 
@@ -58,6 +59,11 @@ const DatePickerField = (props) => {
       <button type="button" className="btn btn-outline-primary btn-date-picker">{props.label}</button>
     </DateTimeRangeContainer>
   );
+};
+
+DatePickerField.propTypes = {
+  applyCallback: PropTypes.func,
+  label: PropTypes.string,
 };
 
 export default DatePickerField;
