@@ -340,7 +340,7 @@ const CampaignGraph = (props) => {
 };
 
 CampaignGraph.propTypes = {
-  campaignId: PropTypes.func,
+  campaignId: PropTypes.any,
 };
 
 export default CampaignGraph;
