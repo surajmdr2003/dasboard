@@ -75,7 +75,9 @@ const NavDropdownCreatives = (props) => {
 
 
   useEffect(() => {
-    loadTopFiveCreativesData(props.campaignNavItems[0].id);
+    (props.campaignNavItems.length)
+      ? loadTopFiveCreativesData(props.campaignNavItems[0].id)
+      : ''
   }, []);
 
   return (

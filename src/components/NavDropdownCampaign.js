@@ -69,8 +69,10 @@ const NavDropdownCampaign = (props) => {
 
   useEffect(() => {
     setCampaignNav(currentCampaignCat);
-    loadCampaignSummaryData(props.campaignNavItems[0].id);
-  }, []);
+    (props.campaignNavItems.length)
+      ? loadCampaignSummaryData(props.campaignNavItems[0].id)
+      : '';
+  }, [props]);
 
   /**
    * Canclates CTR Properly
@@ -133,7 +135,7 @@ const NavDropdownCampaign = (props) => {
                   </div>
                   : <Fragment>
                     <div className="overview-title">
-                      <h5>Overview of {props.campaignNavItems[0].name}</h5>
+                      <h5>Overview of {(props.campaignNavItems.length) ? props.campaignNavItems[0].name : ''}</h5>
                       <p>Last 7 days</p>
                     </div>
                     <ul className="nav nav-pills nav-fill overview-detail">

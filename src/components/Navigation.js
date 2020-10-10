@@ -1,47 +1,38 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
 import NavDropdownCampaign from './NavDropdownCampaign';
 import NavDropdownCreatives from './NavDropdownCreatives';
 
 const Navigation = () => {
-  const [campaignList] = useState([
-    {
-      'id': 75,
-      'name': 'Membership - Georgia',
-      'status': 'INACTIVE',
-    },
-    {
-      'id': 89,
-      'name': 'Membership - Florida',
-      'status': 'INACTIVE',
-    },
-    {
-      'id': 100,
-      'name': 'Convention - Florida',
-      'status': 'INACTIVE',
-    },
-    {
-      'id': 256,
-      'name': 'Base Targeting -Fort Hood',
-      'status': 'ACTIVE',
-    },
-    {
-      'id': 257,
-      'name': 'Base Targeting- Fort Bragg',
-      'status': 'ACTIVE',
-    },
-    {
-      'id': 258,
-      'name': 'Base Targeting- Norfolk Naval Base',
-      'status': 'ACTIVE',
-    },
-    {
-      'id': 259,
-      'name': 'Base Targeting - Camp Lejeune',
-      'status': 'ACTIVE',
-    },
-  ]);
+  const [campaignList, setCampaignList] = useState(window.$campaigns);
+
+  const apiRequest = {
+    headers: { accept: '*/*' },
+    response: true,
+  };
+
+
+  const loadCampaignsData = () => {
+    Auth.currentSession()
+      .then(async function (info) {
+        const accessToken = info.getAccessToken().getJwtToken();
+
+        // Setting up header info
+        apiRequest.headers.authorization = `Bearer ${accessToken}`;
+        const response = await API.get('advertiserCampaignGroups', '', apiRequest);
+
+        //assign on global variable
+        window.$campaigns = response.data;
+        setCampaignList(response.data);
+      })
+      .catch(() => false);
+
+  }
+
+  useEffect(() => {
+    loadCampaignsData();
+  }, [])
 
   return (
     <Fragment>
