@@ -40,7 +40,7 @@ const Login = (props) => {
                   onClick={() => Auth.federatedSignIn()}>
                   {
                     isLoading
-                      ? <div class="spinner-grow spinner-grow-sm" role="status"> <span class="sr-only">Loading...</span></div> 
+                      ? <div className="spinner-grow spinner-grow-sm" role="status"> <span className="sr-only">Loading...</span></div> 
                       : 'Sign Now!'
                   }
                 </button>
