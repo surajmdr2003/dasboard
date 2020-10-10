@@ -121,7 +121,7 @@ const YourCampaigns = () => {
           <div className="col-md-5">
             <div className="block-title">
               Your Campaigns
-              <Link to="./campaign" className="btn-link">See All</Link>
+              <Link to="/dashbaord/campaign" className="btn-link">See All</Link>
             </div>
           </div>
           <div className="col-md-7">

@@ -83,7 +83,7 @@ const TopCreatives = () => {
           <div className="col-md-5">
             <div className="block-title">
               Top Creatives
-              <Link to="./creatives" className="btn-link">See All</Link>
+              <Link to="/dashboard/creatives" className="btn-link">See All</Link>
             </div>
           </div>
           <div className="col-md-7">

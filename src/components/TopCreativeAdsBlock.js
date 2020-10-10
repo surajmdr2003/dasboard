@@ -17,6 +17,7 @@ const TopCreativeAdsBlock = (props) => {
   const calculateAssetDimensional = (asset) => {
     const img = new Image();
     img.src = asset;
+    img.onload;
     return (img.width + '*' + img.height);
   };
 
