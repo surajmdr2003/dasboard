@@ -20,12 +20,14 @@ const NavDropdownCampaign = (props) => {
   /**
    * Filter Campaign Nav items
    * By ACTIVE and INACTIVE status
+   * Load Campaign summary data for nav
    * @param {String} status
    */
   const setCampaignNav = (status) => {
     const filteredNavCampaignItems = props.campaignNavItems.filter(item => item.status === status);
     setCampaignNavItemsOfStatus(filteredNavCampaignItems);
     setcurrentCampaignCat(status);
+    loadCampaignSummaryData(campaignNavItemsOfStatus[0].id);
   };
 
   /**
@@ -48,7 +50,7 @@ const NavDropdownCampaign = (props) => {
   const loadCampaignSummaryData = (campaignId) => {
     setIsLoading(true);
     Auth.currentSession()
-      .then(async function(info) {
+      .then(async function (info) {
         const accessToken = info.getAccessToken().getJwtToken();
         // Setting up header info
         apiRequest.headers.authorization = `Bearer ${accessToken}`;
@@ -69,16 +71,13 @@ const NavDropdownCampaign = (props) => {
 
   useEffect(() => {
     setCampaignNav(currentCampaignCat);
-    (props.campaignNavItems.length)
-      ? loadCampaignSummaryData(props.campaignNavItems[0].id)
-      : '';
-  }, [props]);
+  }, []);
 
   /**
    * Canclates CTR Properly
    * @param {Object} param
    */
-  const calculateCTR = ({clicks, impressions}) => {
+  const calculateCTR = ({ clicks, impressions }) => {
     return ((clicks === 0 && impressions === 0) ? 0 : ((clicks / impressions) * 100)).toFixed(2);
   };
 
@@ -86,7 +85,7 @@ const NavDropdownCampaign = (props) => {
    * Calculates Conversion Rate Properly
    * @param {Object} param
    */
-  const calculateConvRate = ({conversions, clicks}) => {
+  const calculateConvRate = ({ conversions, clicks }) => {
     return ((conversions.length === 0 && clicks === 0) ? 0 : ((conversions.length / clicks) * 100)).toFixed(2);
   };
 

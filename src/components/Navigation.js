@@ -45,10 +45,18 @@ const Navigation = () => {
         <ul className="navbar-nav mr-auto">
           <li><Link to="/dashboard">Dashboard</Link></li>
           <li className="menu-item-has-children"><Link to="/dashboard/campaign/256">Campaigns</Link>
-            <NavDropdownCampaign campaignNavItems = {campaignList}/>
+            {
+              campaignList.length
+                ? <NavDropdownCampaign campaignNavItems={campaignList} />
+                : ''
+            }
           </li>
           <li className="menu-item-has-children"><Link to="/dashboard/creatives">Creatives</Link>
-            <NavDropdownCreatives campaignNavItems = {campaignList}/>
+            {
+              campaignList.length
+                ? <NavDropdownCreatives campaignNavItems={campaignList} />
+                : ''
+            }
           </li>
           <li><Link to="/dashboard/landingpages">Landing pages</Link></li>
           <li><Link to="/dashboard/targeting">Targeting</Link></li>

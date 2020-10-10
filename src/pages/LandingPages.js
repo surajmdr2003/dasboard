@@ -35,7 +35,7 @@ const LandingPages = () => {
       </section>
       <section className="main-content-wrapper top-landingpage-content">
         <div className="container">
-          <TableLandingPages />
+          <TableLandingPages landingPages={[]}/>
         </div>
       </section>
     </Fragment>
