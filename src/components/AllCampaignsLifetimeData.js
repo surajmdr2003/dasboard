@@ -1,8 +1,21 @@
 import React, { Fragment, useState } from 'react';
+import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const AllCampaignsLifetimeData = (props) => {
   const [showRecommendation, setRecommendation] = useState(false); // For recommendation message
+
+  /**
+   * Handle NAN and Infinity value
+   * @param {Int} fNum
+   * @param {Int} sNum
+   */
+  const handleNanValueWithCalculation = (fNum, sNum) => {
+    if (sNum === 0) {
+      return (fNum * 100).toFixed(2);
+    }
+    return ((fNum / sNum) * 100).toFixed(2);
+  };
 
   return (
     <Fragment>
@@ -38,7 +51,7 @@ const AllCampaignsLifetimeData = (props) => {
                 <li className="nav-item">
                   <div className="data">
                     <h5>CTR</h5>
-                    <p>{props.summaryData.ctr_percent}%</p>
+                    <p>{handleNanValueWithCalculation(props.summaryData.clicks, props.summaryData.impressions)}%</p>
                   </div>
                 </li>
               </ul>
@@ -53,13 +66,13 @@ const AllCampaignsLifetimeData = (props) => {
                 <li className="nav-item">
                   <div className="data">
                     <h5>Conversion</h5>
-                    <p>{props.summaryData.conversion}</p>
+                    <p>{props.summaryData.conversions.length}</p>
                   </div>
                 </li>
                 <li className="nav-item">
                   <div className="data">
                     <h5>Con rate</h5>
-                    <p>{props.summaryData.convrate}%</p>
+                    <p>{handleNanValueWithCalculation(props.summaryData.conversions.length, props.summaryData.clicks)} %</p>
                   </div>
                 </li>
               </ul>
@@ -85,6 +98,11 @@ const AllCampaignsLifetimeData = (props) => {
       </div>
     </Fragment>
   );
+};
+
+// Props validation
+AllCampaignsLifetimeData.propTypes = {
+  summaryData: PropTypes.any,
 };
 
 export default AllCampaignsLifetimeData;

@@ -38,10 +38,9 @@ TextField.propTypes = {
   fieldName: PropTypes.string,
   identifier: PropTypes.string,
   type: PropTypes.string,
-  iconUrl: PropTypes.string,
   placeholder: PropTypes.string,
   errorMsg: PropTypes.string,
-  callback: PropTypes.func,
+  register: PropTypes.func,
 };
 
 export default TextField;

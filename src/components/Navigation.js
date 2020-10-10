@@ -5,7 +5,7 @@ import NavDropdownCampaign from './NavDropdownCampaign';
 import NavDropdownCreatives from './NavDropdownCreatives';
 
 const Navigation = () => {
-  const [campaignList, setCampaignNavItems] = useState([
+  const [campaignList] = useState([
     {
       'id': 75,
       'name': 'Membership - Georgia',

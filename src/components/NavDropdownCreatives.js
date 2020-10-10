@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Auth, API } from 'aws-amplify';
@@ -31,7 +32,6 @@ const NavDropdownCreatives = (props) => {
   const loadTopFiveCreativesData = (campaignId) => {
     Auth.currentSession()
       .then(async function(info) {
-        let response;
         const accessToken = info.getAccessToken().getJwtToken();
         // Setting up header info
         apiRequest.headers.authorization = `Bearer ${accessToken}`;
@@ -41,7 +41,7 @@ const NavDropdownCreatives = (props) => {
           endDate: end,
         });
 
-        response = await API.post('canpaignGroup', `/${campaignId}/performance/asset`, apiRequest);
+        const response = await API.post('canpaignGroup', `/${campaignId}/performance/asset`, apiRequest);
         setTopCreatives(response.data.summary.slice(0, 5));
       })
       .catch(() => false);
@@ -64,7 +64,7 @@ const NavDropdownCreatives = (props) => {
                 props.campaignNavItems.slice(0, 5).map((item) => {
                   return (<li className="nav-item" key={item.id}>
                     <Link to="#"
-                      className={'nav-link ' + ((currentCampaign == item.id) ? 'text-primary' : '')}
+                      className={'nav-link ' + ((currentCampaign === item.id) ? 'text-primary' : '')}
                       onClick={() => loadTopFiveCreativesData(item.id)}>{item.name}
                     </Link>
                   </li>);
@@ -102,6 +102,10 @@ const NavDropdownCreatives = (props) => {
       </div>
     </div>
   );
+};
+
+NavDropdownCreatives.propTypes = {
+  campaignNavItems: PropTypes.array,
 };
 
 export default NavDropdownCreatives;

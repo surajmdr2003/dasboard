@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const ProgressBarBlock = (props) => {
   /**
@@ -20,6 +21,11 @@ const ProgressBarBlock = (props) => {
       <div className="progressbar-label">{props.label}</div>
     </li>
   );
+};
+
+ProgressBarBlock.propTypes = {
+  data: PropTypes.string,
+  label: PropTypes.string,
 };
 
 export default ProgressBarBlock;

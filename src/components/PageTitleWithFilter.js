@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import DatePickerField from './form-fields/DatePickerField';
 
 const PageTitleWithFilter = (props) => {
@@ -75,6 +76,10 @@ const PageTitleWithFilter = (props) => {
       </div>
     </section>
   );
+};
+
+PageTitleWithFilter.propTypes = {
+  reportUrl: PropTypes.any,
 };
 
 export default PageTitleWithFilter;
