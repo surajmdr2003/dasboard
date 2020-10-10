@@ -44,24 +44,24 @@ const Navigation = () => {
       <div className="collapse navbar-collapse primary-navigation" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li><Link to="/dashboard">Dashboard</Link></li>
-          <li className="menu-item-has-children"><Link to="/dashboard/campaign/256">Campaigns</Link>
+          <li className="menu-item-has-children"><Link to={`/dashboard/campaign/${campaignList.length ? campaignList[0].id: ''}`}>Campaigns</Link>
             {
               campaignList.length
                 ? <NavDropdownCampaign campaignNavItems={campaignList} />
                 : ''
             }
           </li>
-          <li className="menu-item-has-children"><Link to="/dashboard/creatives">Creatives</Link>
+          <li className="menu-item-has-children"><Link to={`/dashboard/creatives/${campaignList.length ? campaignList[0].id: ''}`}>Creatives</Link>
             {
               campaignList.length
                 ? <NavDropdownCreatives campaignNavItems={campaignList} />
                 : ''
             }
           </li>
-          <li><Link to="/dashboard/landingpages">Landing pages</Link></li>
-          <li><Link to="/dashboard/targeting">Targeting</Link></li>
-          <li><Link to="/dashboard/stats">Stats</Link></li>
-          <li><Link to="/dashboard/reports">Report</Link></li>
+          <li><Link to={`/dashboard/landingpages/${campaignList.length ? campaignList[0].id: ''}`} >Landing pages</Link></li>
+          <li><Link to={`/dashboard/targeting/${campaignList.length ? campaignList[0].id: ''}`}> Targeting</Link></li>
+          <li><Link to={`/dashboard/stats/${campaignList.length ? campaignList[0].id: ''}`}>Stats</Link></li>
+          <li><Link to={`/dashboard/reports/${campaignList.length ? campaignList[0].id: ''}`}>Report</Link></li>
         </ul>
         <ul className="navbar-nav align-items-center secondary-menu">
           <li><i className="icon icon-notification" />
