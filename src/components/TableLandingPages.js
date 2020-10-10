@@ -1,6 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { PropTypes } from 'prop-types';
 
-const TableLandingPages = () => {
+const TableLandingPages = (props) => {
+  const [pageUrl, setPageUrl] = useState((props.landingPages.length) ? props.landingPages[0].landingPageURL : '');
+  /**
+   * Handle NAN and Infinity value
+   * @param {Int} fNum
+   * @param {Int} sNum
+   */
+  const handleNanValueWithCalculation = (fNum, sNum) => {
+    if (sNum === 0) {
+      return (fNum * 100).toFixed(2);
+    }
+    return ((fNum / sNum) * 100).toFixed(2);
+  };
+
+  /**
+   * Load page url for mobile view
+   * @param {URL} landingPageURL
+   */
+  const loadPageOnMobile = (landingPageURL) => {
+    setPageUrl(landingPageURL);
+  };
+
+  const loadLandingPagesList = (landingPages) => {
+    return landingPages.length
+      ? landingPages.map(landingPage => {
+        return (<tr key={landingPage.id}>
+          <th scope="row">
+            <div className="page-name" onClick={() => loadPageOnMobile(landingPage.landingPageURL)}>
+              {(landingPage.name === null || landingPage.name === '') ? 'No Data' : landingPage.name}
+            </div>
+          </th>
+          <td>{landingPage.impressions}</td>
+          <td>{landingPage.clicks}</td>
+          <td>{handleNanValueWithCalculation(landingPage.clicks, landingPage.impressions)}%</td>
+          <td>{landingPage.conversions.length}</td>
+          <td>{handleNanValueWithCalculation(landingPage.conversions.length, landingPage.clicks)}%</td>
+        </tr>);
+      })
+      : <tr><td colSpan="6" className="text-center">No Landing Page found</td></tr>;
+  };
+
+
   return (
     <div className="card card-table">
       <div className="row">
@@ -18,88 +60,27 @@ const TableLandingPages = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">
-                    <div className="page-name">MFB Fall Checking 2020 - RAF AZ</div>
-                  </th>
-                  <td>
-                                        340,919
-                  </td>
-                  <td>
-                                        2,066
-                  </td>
-                  <td>5.4%</td>
-                  <td>431</td>
-                  <td>1.8%</td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <div className="page-name">MFB Fall Checking 2020 - RAF AZ</div>
-                  </th>
-                  <td>
-                                        340,919
-                  </td>
-                  <td>
-                                        2,066
-                  </td>
-                  <td>5.4%</td>
-                  <td>431</td>
-                  <td>1.8%</td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <div className="page-name">Go! Checking OU</div>
-                  </th>
-                  <td>
-                                        340,919
-                  </td>
-                  <td>
-                                        2,066
-                  </td>
-                  <td>5.4%</td>
-                  <td>431</td>
-                  <td>1.8%</td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <div className="page-name">MFB Fall Checking 2020 - RAF AZ</div>
-                  </th>
-                  <td>
-                                        340,919
-                  </td>
-                  <td>
-                                        2,066
-                  </td>
-                  <td>5.4%</td>
-                  <td>431</td>
-                  <td>1.8%</td>
-                </tr>
-                <tr>
-                  <th scope="row">
-                    <div className="page-name">MFB Fall Checking 2020 - RAF AZ</div>
-                  </th>
-                  <td>
-                                        340,919
-                  </td>
-                  <td>
-                                        2,066
-                  </td>
-                  <td>5.4%</td>
-                  <td>431</td>
-                  <td>1.8%</td>
-                </tr>
+                {
+                  loadLandingPagesList(props.landingPages)
+                }
               </tbody>
             </table>
           </div>
         </div>
         <div className="col-md-4">
-          <div className="card-image">
-            <img src="/assets/images/phone.png" alt="phone" />
+          <div className="card-image ">
+            <div className="page-on-phone-preview">
+              <object data={pageUrl} height="480px" width="320px"/>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+TableLandingPages.propTypes = {
+  landingPages: PropTypes.array,
+}
 
 export default TableLandingPages;

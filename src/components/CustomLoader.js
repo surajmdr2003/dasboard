@@ -1,15 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
-
-const rotate360 = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-`;
+import styled from 'styled-components';
 
 const Spinner = styled.div`
   margin: 16px;

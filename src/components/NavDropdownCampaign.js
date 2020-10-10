@@ -1,4 +1,5 @@
 import React, { useEffect, useState, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Auth, API } from 'aws-amplify';
@@ -22,7 +23,7 @@ const NavDropdownCampaign = (props) => {
    * @param {String} status
    */
   const setCampaignNav = (status) => {
-    const campaignNavItemsOfStatus = props.campaignNavItems.filter(item => item.status == status);
+    const campaignNavItemsOfStatus = props.campaignNavItems.filter(item => item.status === status);
     setCampaignNavItemsOfStatus(campaignNavItemsOfStatus);
     setcurrentCampaignCat(status);
   };
@@ -48,7 +49,6 @@ const NavDropdownCampaign = (props) => {
     setIsLoading(true);
     Auth.currentSession()
       .then(async function(info) {
-        let response;
         const accessToken = info.getAccessToken().getJwtToken();
         // Setting up header info
         apiRequest.headers.authorization = `Bearer ${accessToken}`;
@@ -58,7 +58,7 @@ const NavDropdownCampaign = (props) => {
           endDate: end,
         });
 
-        response = await API.post('canpaignGroup', `/${campaignId}/performance`, apiRequest);
+        const response = await API.post('canpaignGroup', `/${campaignId}/performance`, apiRequest);
         response.data.summary.length ? setNavCampaignSummary(response.data.summary[0]) : setNavCampaignSummary(initSummary);
       })
       .catch(() => false)
@@ -78,7 +78,7 @@ const NavDropdownCampaign = (props) => {
    */
   const calculateCTR = ({clicks, impressions}) => {
     return ((clicks === 0 && impressions === 0) ? 0 : ((clicks / impressions) * 100)).toFixed(2);
-  }
+  };
 
   /**
    * Calculates Conversion Rate Properly
@@ -86,7 +86,7 @@ const NavDropdownCampaign = (props) => {
    */
   const calculateConvRate = ({conversions, clicks}) => {
     return ((conversions.length === 0 && clicks === 0) ? 0 : ((conversions.length / clicks) * 100)).toFixed(2);
-  }
+  };
 
   return (
     <div className="dropdown-full-width">
@@ -97,13 +97,13 @@ const NavDropdownCampaign = (props) => {
               <li className="nav-item">
                 <Link to="#"
                   onClick={() => setCampaignNav('ACTIVE')}
-                  className={'nav-link ' + ((currentCampaignCat == 'ACTIVE') ? 'text-primary' : '')}
+                  className={'nav-link ' + ((currentCampaignCat === 'ACTIVE') ? 'text-primary' : '')}
                 >Active</Link>
               </li>
               <li className="nav-item">
                 <Link to="#"
                   onClick={() => setCampaignNav('INACTIVE')}
-                  className={'nav-link ' + ((currentCampaignCat == 'INACTIVE') ? 'text-primary' : '')}
+                  className={'nav-link ' + ((currentCampaignCat === 'INACTIVE') ? 'text-primary' : '')}
                 >Inactive</Link>
               </li>
               <li className="nav-item">
@@ -116,7 +116,7 @@ const NavDropdownCampaign = (props) => {
               campaignNavItemsOfStatus.map((item) => {
                 return (<li className="nav-item" key={item.id}>
                   <Link to="#"
-                    className={'nav-link ' + ((currentCampaign == item.id) ? 'text-primary' : '')}
+                    className={'nav-link ' + ((currentCampaign === item.id) ? 'text-primary' : '')}
                     onClick={() => loadCampaignSummaryData(item.id)}>{item.name}
                   </Link>
                 </li>);
@@ -129,37 +129,37 @@ const NavDropdownCampaign = (props) => {
               {
                 isLoading
                   ? <div className="text-center m-5">
-                      <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
-                    </div>
+                    <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+                  </div>
                   : <Fragment>
-                      <div className="overview-title">
-                        <h5>Overview of {props.campaignNavItems[0].name}</h5>
-                        <p>Last 7 days</p>
-                      </div>
-                      <ul className="nav nav-pills nav-fill overview-detail">
-                        <li className="nav-item">
-                          <div className="number">{navCampaignSummary.impressions}</div>
-                          <div className="title">Impressions</div>
-                        </li>
-                        <li className="nav-item active">
-                          <div className="number">{navCampaignSummary.clicks}</div>
-                          <div className="title">Clicks</div>
-                        </li>
-                        <li className="nav-item">
-                          <div className="number">{calculateCTR(navCampaignSummary)}%</div>
-                          <div className="title">CTR</div>
-                        </li>
-                        <li className="nav-item">
-                          <div className="number">{navCampaignSummary.conversions.length}</div>
-                          <div className="title">Conversion</div>
-                        </li>
-                        <li className="nav-item">
-                          <div className="number">{calculateConvRate(navCampaignSummary)}%</div>
-                          <div className="title">Conv rate</div>
-                        </li>
-                      </ul>
-                      <Link to="#" className="btn-link">View Performance</Link>
-                    </Fragment>
+                    <div className="overview-title">
+                      <h5>Overview of {props.campaignNavItems[0].name}</h5>
+                      <p>Last 7 days</p>
+                    </div>
+                    <ul className="nav nav-pills nav-fill overview-detail">
+                      <li className="nav-item">
+                        <div className="number">{navCampaignSummary.impressions}</div>
+                        <div className="title">Impressions</div>
+                      </li>
+                      <li className="nav-item active">
+                        <div className="number">{navCampaignSummary.clicks}</div>
+                        <div className="title">Clicks</div>
+                      </li>
+                      <li className="nav-item">
+                        <div className="number">{calculateCTR(navCampaignSummary)}%</div>
+                        <div className="title">CTR</div>
+                      </li>
+                      <li className="nav-item">
+                        <div className="number">{navCampaignSummary.conversions.length}</div>
+                        <div className="title">Conversion</div>
+                      </li>
+                      <li className="nav-item">
+                        <div className="number">{calculateConvRate(navCampaignSummary)}%</div>
+                        <div className="title">Conv rate</div>
+                      </li>
+                    </ul>
+                    <Link to="#" className="btn-link">View Performance</Link>
+                  </Fragment>
               }
             </div>
           </div>
@@ -167,6 +167,10 @@ const NavDropdownCampaign = (props) => {
       </div>
     </div>
   );
+};
+
+NavDropdownCampaign.propTypes = {
+  campaignNavItems: PropTypes.array,
 };
 
 export default NavDropdownCampaign;
