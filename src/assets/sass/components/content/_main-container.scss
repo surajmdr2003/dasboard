@@ -7,7 +7,6 @@
     }
 }
 
-
 section.all-campaigns-content {
     background: $color__gray50;
     padding: 2.5rem 0 3rem;
@@ -284,3 +283,15 @@ section.all-campaigns-content {
     }
 }
 
+.leaflet-container {
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+}
+
+.custom-map--light {
+    .leaflet-control a {
+      background-color: white;
+      color: black;
+    }
+}

@@ -64,7 +64,7 @@ const awsApiConfigs = {
     },
     {
       name: 'canpaignGroupTargeting',
-      endpoint: `${Config.apiPath}/campaignGroups/256/targeting`,
+      endpoint: `${Config.apiPath}/campaignGroups/1/targeting`,
     },
   ],
 };
