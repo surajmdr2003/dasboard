@@ -36,11 +36,7 @@ const TopTargets = () => {
           <div className="col-md-5">
             <div className="block-title">
               Top Targets
-              <a href="#" className="btn-link">See All</a>
             </div>
-          </div>
-          <div className="col-md-7 text-right">
-            <button type="button" className="btn btn-outline-primary btn-date-picker">Last 30 days</button>
           </div>
         </div>
         <div className="card card-map">

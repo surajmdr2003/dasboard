@@ -4,12 +4,12 @@ const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+
 const env = process.env.NODE_ENV
 
 module.exports = {
-  // mode: env || 'development',
+  mode: 'development',
   devtool: 'source-map',
   entry: [
     './src/Index.js',
@@ -58,19 +58,12 @@ module.exports = {
       }),
     ],
   },
-  devServer: {
-    contentBase: './public/',
-    watchContentBase: true,
-    historyApiFallback: true,
-  },
   plugins: [
     new Dotenv(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
     new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
       filename: env ? '[name].css' : '[name].[hash].css',
       chunkFilename: env ? '[id].css' : '[id].[hash].css',
     }),
@@ -85,7 +78,11 @@ module.exports = {
       ]
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.HotModuleReplacementPlugin()
   ],
+  devServer: {
+    contentBase: './public/',
+    watchContentBase: true,
+    historyApiFallback: true,
+  },
 };
