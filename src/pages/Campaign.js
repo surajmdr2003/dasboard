@@ -2,12 +2,10 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
 /** Components */
-import HeaderMain from '../components/HeaderMain';
 import CampaignGraph from '../components/CampaignGraph';
 import TopCreatives from '../components/TopCreatives';
 import TopLandingPages from '../components/TopLandingPages';
 import TopTargets from '../components/TopTargets';
-import Footer from '../components/Footer';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 
 const Campaign = (props) => {
