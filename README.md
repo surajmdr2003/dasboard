@@ -18,24 +18,17 @@ This README.md file documents whatever steps that are necessary to get Starter C
 
 ##### Create a environment file `.env` in the root of the project. Ignore the API PATH if you have no api for now.
 ```
-# App Configs
-BASE_PATH=/
-API_PATH=http://localhost:8080/api/
-API_CALLBACK_DELAY=100
-SESSION_TIMEOUT=1
+# Application Configuration
+APP_BASE_PATH=<App Base Path Here>
+API_PATH=<API Url Here>
 
-```
+# AWS Amplify Configuration
+REGION=<region here>
+USER_POOL_ID=<pool if here>
+CLIENT_ID=<client id here>
 
-##### Create a `app.config.js` in root of the project with following contents
-```
-const Config = {};
-
-Config.basepath = process.env.BASE_PATH || '/';
-Config.apiPath = process.env.API_PATH || 'http://HOST:PORT/api/';
-Config.apiDelay = process.env.API_CALLBACK_DELAY || 100;
-Config.sessionTimeout = process.env.SESSION_TIMEOUT || 1;
-
-module.exports = Config;
+# Mapbox Access Token
+MAPBOX_API_KEY=<Mapbox Access Token Here>
 
 ```
 
@@ -62,5 +55,4 @@ module.exports = Config;
 ##### Run the client side project production build:
 * Run the following command to build the production build of the project
 `npm run build`
-
-
+* Once the build is successful, the final deployable codes will be available in `/dist/` directory.
