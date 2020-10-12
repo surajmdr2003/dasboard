@@ -1,17 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
+const TerserJSPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
+  mode: 'development',
   entry: [
-    'babel-polyfill',
     './src/Index.js',
-    './node_modules/react-bootstrap-typeahead/css/Typeahead.css',
-    './node_modules/bootstrap/dist/css/bootstrap.min.css',
-    './src/styles/style.scss',
+    './src/assets/sass/style.scss',
   ],
   output: {
     publicPath: '/',
@@ -19,22 +18,17 @@ module.exports = {
     filename: 'bundle.min.js',
   },
   cache: true,
+  optimization: {
+    minimizer: [new TerserJSPlugin({})],
+  },
   module: {
     rules: [{
-      test: /\.css$/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: [{
-          loader: 'css-loader',
-          options: {
-            minimize: true,
-          },
-        }],
-      }),
-    },
-    {
-      test: /\.scss/,
-      loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader']),
+      test: /.s?css$/,
+      use: [
+        MiniCssExtractPlugin.loader,
+        { loader: 'css-loader', options: { sourceMap: true } },
+        { loader: 'sass-loader', options: { sourceMap: true } },
+      ],
     },
     {
       test: /\.js$/,
@@ -56,35 +50,27 @@ module.exports = {
       },
     }],
   },
-  devServer: {
-    contentBase: './dist/',
-    watchContentBase: true,
-    historyApiFallback: true,
-  },
   plugins: [
     new Dotenv(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
+    new MiniCssExtractPlugin({ filename: 'style.min.css' }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/assets/', to: './assets/', force: true },
+      ]
+    }),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/index.tpl.html',
       inject: 'body',
       filename: 'index.html',
     }),
-    new ExtractTextPlugin({
-      filename: 'style.min.css',
-      disable: false,
-      allChunks: true,
-    }),
-    new CopyWebpackPlugin([
-      { from: 'src/assets/', to: './assets/', force: true },
-    ]),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        drop_debugger: true,
-        warnings: false,
-      },
-    }),
   ],
+  devServer: {
+    contentBase: './dist/',
+    watchContentBase: true,
+    historyApiFallback: true,
+  },
 };
