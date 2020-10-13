@@ -6,7 +6,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
-const env = process.env.NODE_ENV
+const env = process.env.NODE_ENV;
 
 module.exports = {
   mode: 'development',

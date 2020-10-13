@@ -1,6 +1,8 @@
+import Config from '../../app.config';
+
 // Aws Auth Configuration
 const authConfig = {
-  domain: 'supernova.auth.us-east-2.amazoncognito.com',
+  domain: Config.authDomain,
   scope: [
     'phone',
     'email',
@@ -10,13 +12,13 @@ const authConfig = {
   ],
   mandatorySignIn: false,
   cookieStorage: {
-    domain: 'localhost',
+    domain: Config.client,
     path: '/',
     expires: 365,
     secure: true,
   },
-  redirectSignIn: 'http://localhost:8000',
-  redirectSignOut: 'http://localhost:8000',
+  redirectSignIn: Config.redirectSignInPath,
+  redirectSignOut: Config.redirectSignOutPath,
   responseType: 'code',
 };
 
