@@ -1,129 +1,172 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import axios from 'axios';
-import DataTable from 'react-data-table-component';
-import PageTitleWithFilter from '../components/PageTitleWithFilter';
-import CustomLoader from '../components/CustomLoader';
+import moment from 'moment';
+import { Auth, API } from 'aws-amplify';
 
-const AdsBlock = ({row}) => (
-  <div className="campaign-media media">
-    <img src={row.avatar} className="table-campaign-image mr-3" alt="ads"/>
-    <div className="media-body">
-      <p className="mt-0">
-        MFB Fall Checking 2020 - RAF AZ {row.first_name}
-      </p>
-    </div>
-  </div>
-);
+/** Components */
+import DatePickerField from '../components/form-fields/DatePickerField';
+import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
+import DropdownFilter from '../components/form-fields/DropdownFilter';
 
-AdsBlock.propTypes = {
-  row: PropTypes.object,
-};
 
-const columns = [
-  {
-    name: 'Ad name',
-    selector: 'avatar',
-    sortable: true,
-    className: 'fuck',
-    cell: row => <AdsBlock row={row} />,
-  },
-  {
-    name: 'size',
-    selector: 'id',
-    sortable: true,
-  },
-  {
-    name: 'Impressions',
-    selector: 'id',
-    sortable: true,
-  },
-  {
-    name: 'Clicks',
-    selector: 'id',
-    sortable: true,
-  },
-  {
-    name: 'CTR',
-    selector: 'id',
-    sortable: true,
-  },
-  {
-    name: 'Conversion',
-    selector: 'id',
-    sortable: true,
-  },
-  {
-    name: 'Conv rate',
-    selector: 'id',
-    sortable: true,
-    cell: row => <div row={row}>{row.id}%</div>,
-  },
-];
+/**
+ * For Initial startdate and enddate
+ */
+const now = new Date();
+const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
+const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
 
-const Creatives = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [totalRows, setTotalRows] = useState(0);
-  const [perPage, setPerPage] = useState(10);
+const Creatives = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
+  const [creativeList, setCreativeList] = useState([]);
+  const [dateFilter, setDateFilter] = useState({
+    endDate: end,
+    startDate: start,
+  })
 
-  const fetchUsers = async page => {
-    setLoading(true);
+  const campaignId = props.match.params.id;
 
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`,
-    );
-
-    setData(response.data.data);
-    setTotalRows(response.data.total);
-    setLoading(false);
+  const apiRequest = {
+    headers: { accept: '*/*' },
+    response: true,
+    queryStringParameters: {},
   };
 
-  const handlePageChange = page => {
-    fetchUsers(page);
+
+  /**
+   * Call API and generate graphs correspond to data
+   * @param {object} dateFilter 
+   */
+  const loadCreativesData = (dateFilter) => {
+    setIsLoading(true);
+    Auth.currentSession()
+      .then(async function (info) {
+        const accessToken = info.getAccessToken().getJwtToken();
+
+        // Setting up header info
+        apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+        Object.assign(apiRequest.queryStringParameters, dateFilter);
+
+        const response = await API.post('canpaignGroup', `/${campaignId}/performance/asset`, apiRequest);
+        setCreativeList(response.data.summary);
+        setIsLoading(false);
+      })
+      .catch(() => false)
+      .finally(() => setIsLoading(false));
   };
 
-  const handlePerRowsChange = async(newPerPage, page) => {
-    setLoading(true);
-
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${newPerPage}&delay=1`,
-    );
-
-    setData(response.data.data);
-    setPerPage(newPerPage);
-    setLoading(false);
+  /**
+   * Handle callback of datepicker
+   * @param {Start Date} startDate
+   * @param {End Date} endDate
+   */
+  const datepickerCallback = (startDate, endDate) => {
+    setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
+    setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
+    loadCreativesData({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
+
+  /**
+* Handle NAN and Infinity value
+* @param {Int} fNum
+* @param {Int} sNum
+*/
+  const handleNanValueWithCalculation = (fNum, sNum) => {
+    if (sNum === 0) {
+      return (fNum * 100).toFixed(2);
+    }
+    return ((fNum / sNum) * 100).toFixed(2);
+  };
+
+  const calculateAssetDimensional = (asset) => {
+    const img = new Image();
+    img.src = asset;
+    img.onload;
+    return (img.width + '*' + img.height);
+  };
+
+  const loadViewOfCreative = (creativeList) => {
+    return creativeList.length
+      ? creativeList.map(creative => {
+        return <tr key={creative.campaignAssetId}>
+          <td scope="row">
+            <div className="campaign-media media">
+              <object data={creative.assetUrl} />
+              <div className="media-body">
+                <p className="mt-0">{(creative.name === null || creative.name === '') ? 'No Data' : creative.name}</p>
+              </div>
+            </div>
+          </td>
+          <td>{calculateAssetDimensional(creative.assetUrl)}</td>
+          <td>{creative.impressions}</td>
+          <td>{creative.clicks}</td>
+          <td>{handleNanValueWithCalculation(creative.clicks, creative.impressions)}%</td>
+          <td>{creative.conversions.length}</td>
+          <td>{handleNanValueWithCalculation(creative.conversions.length, creative.clicks)}%</td>
+        </tr>
+      })
+      : <tr><td colSpan="7" className="text-center">No creative in this campaign</td></tr>
+  }
+
 
   useEffect(() => {
-    fetchUsers(1);
-  }, []);
+    loadCreativesData(dateFilter);
+  }, [campaignId]);
 
   return (
     <Fragment>
-      <PageTitleWithFilter hasFilter={true}/>
+      <section className="filter-bar ">
+        <div className="inner-filter-bar w-100">
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-md-6">
+                {
+                  window.$campaigns.length
+                    ? <PageTitleCampaignDropdown pageSlug='/dashboard/creatives' campaignId={campaignId} campaignList={window.$campaigns} />
+                    : ''
+                }
+              </div>
+              <div className="col-md-6 text-right">
+                <div className="block-filter">
+                  <DropdownFilter />
+                  <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="main-content-wrapper table-creatives">
         <div className="container">
-          <DataTable
-            columns={columns}
-            data={data}
-            progressPending={loading}
-            progressComponent={<CustomLoader />}
-            persistTableHead
-            pagination
-            paginationServer
-            paginationTotalRows={totalRows}
-            onChangeRowsPerPage={handlePerRowsChange}
-            onChangePage={handlePageChange}
-          />
+          <div className="table-responsive table-creatives">
+            <table className="table">
+              <thead className="thead-light">
+                <tr>
+                  <th scope="col">Ad name</th>
+                  <th scope="col">Size</th>
+                  <th scope="col">Impressions</th>
+                  <th scope="col">Clicks</th>
+                  <th scope="col">CTR</th>
+                  <th scope="col">Conversion</th>
+                  <th scope="col">Conv rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  isLoading
+                    ? <tr><td colSpan="7"><div className="text-center m-5">
+                      <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+                    </div></td></tr>
+                    : loadViewOfCreative(creativeList)
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
     </Fragment>
   );
-};
-
-Creatives.propTypes = {
-  row: PropTypes.object,
 };
 
 export default Creatives;

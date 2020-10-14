@@ -64,7 +64,7 @@ const LandingPages = (props) => {
   const datepickerCallback = (startDate, endDate) => {
     setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
     setDateFilter({startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')})
-    loadLandingPagesData(dateFilter);
+    loadLandingPagesData({startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')});
   };
 
   useEffect(() => {
