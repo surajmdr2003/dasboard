@@ -40,13 +40,13 @@ const Reports = () => {
       name: 'CTR',
       selector: 'id',
       sortable: true,
-      cell: row => (<div row={row}>{(row.clicks/row.impressions).toFixed(2)}</div>),
+      cell: row => (<div row={row}>{(row.clicks / row.impressions).toFixed(2)}</div>),
     },
     {
       name: 'Conv rate',
       selector: 'id',
       sortable: true,
-      cell: row => (<div row={row}>{(row.conversions/row.clicks).toFixed(2)}%</div>),
+      cell: row => (<div row={row}>{(row.conversions / row.clicks).toFixed(2)}%</div>),
     },
     {
       name: '',
