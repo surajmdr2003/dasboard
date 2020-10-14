@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 /** Components */
@@ -35,6 +36,10 @@ const Campaign = (props) => {
       <TopTargets />
     </Fragment>
   );
+};
+
+Campaign.propTypes = {
+  match: PropTypes.object,
 };
 
 export default Campaign;

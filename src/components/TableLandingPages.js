@@ -81,6 +81,6 @@ const TableLandingPages = (props) => {
 
 TableLandingPages.propTypes = {
   landingPages: PropTypes.array,
-}
+};
 
 export default TableLandingPages;

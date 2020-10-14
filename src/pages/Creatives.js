@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import PageTitleWithFilter from '../components/PageTitleWithFilter';
@@ -14,6 +15,10 @@ const AdsBlock = ({row}) => (
     </div>
   </div>
 );
+
+AdsBlock.propTypes = {
+  row: PropTypes.object,
+};
 
 const columns = [
   {
@@ -56,7 +61,7 @@ const columns = [
   },
 ];
 
-const Campaign = () => {
+const Creatives = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
@@ -117,4 +122,8 @@ const Campaign = () => {
   );
 };
 
-export default Campaign;
+Creatives.propTypes = {
+  row: PropTypes.object,
+};
+
+export default Creatives;

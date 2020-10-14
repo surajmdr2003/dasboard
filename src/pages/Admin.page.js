@@ -1,4 +1,6 @@
 import React, {Fragment} from 'react';
+import PropTypes from 'prop-types';
+// Components
 import HeaderMain from '../components/HeaderMain';
 import Footer from '../components/Footer';
 
@@ -12,6 +14,10 @@ const AdminPages = ({ children }) => {
       <Footer />
     </Fragment>
   );
+};
+
+AdminPages.propTypes = {
+  children: PropTypes.object,
 };
 
 export default AdminPages;
