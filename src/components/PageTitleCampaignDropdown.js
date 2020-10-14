@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from 'prop-types';
+import { Link } from "react-router-dom";
 
 const PageTitleCampaignDropdown = (props) => {
   const [currentCampaignCat, setcurrentCampaignCat] = useState('ACTIVE');
@@ -12,33 +14,45 @@ const PageTitleCampaignDropdown = (props) => {
  */
   const setCampaignNav = (status) => {
     const campaignNavItemsOfStatus = props.campaignList.filter(item => item.status === status);
-
     setCampaignNavItemsOfStatus(campaignNavItemsOfStatus);
     setcurrentCampaignCat(status);
   };
 
 
+  /**
+   * Returns view of Campiagns list for breadcrumb
+   * @param {Array} campaignsOfStatus 
+   */
   const loadCampaignListForPageFilter = (campaignsOfStatus) => {
     return campaignsOfStatus.length
       ? campaignsOfStatus.map((item) => {
-        return (<li className="nav-item" key={item.id} onClick={() => loadCampaignSummaryData(item.id)}>
-          {item.name}
+        return (<li className="nav-item" key={item.id}>
+          <Link to={`${props.pageSlug}/${item.id}`} className={parseInt(props.campaignId) === item.id ? 'text-primary' : ''}>{item.name}</Link>
         </li>);
       })
-      : <li className="nav-item">No Campaign</li>
+      : <li className="nav-item no-campaign">No Campaign</li>
   }
 
+  /**
+   * Returns currnet campaign name
+   * @param {Int} campaignId 
+   */
+  const showCurrentCampaign = (campaignId) => {
+    const currentCampaign =  props.campaignList.find(item => item.id === parseInt(campaignId))
+    return currentCampaign.name;
+  }
+  
   useEffect(() => {
     setCampaignNav(currentCampaignCat);
   }, [])
 
   return (
     <div className="campaigns-link">
-      Creatives - <a href="#" className="btn-breadcrumb">Go! checking OU</a>
+      Landing Pages - <a href="#" className="btn-breadcrumb">{showCurrentCampaign(props.campaignId)}</a>
       <div className="campaign-dropdown-menu dropdown-menu">
         <div className="card-header">
-          <div className="active" onClick={() => setCampaignNav('ACTIVE')}>Active campaigns</div>
-          <div onClick={() => setCampaignNav('INACTIVE')}>Inactive campaigns</div>
+          <div className={(currentCampaignCat === 'ACTIVE' ? "active" : '')} onClick={() => setCampaignNav('ACTIVE')}>Active campaigns</div>
+          <div className={(currentCampaignCat === 'INACTIVE' ? "active" : '')} onClick={() => setCampaignNav('INACTIVE')}>Inactive campaigns</div>
         </div>
         <div className="card-body p-0">
           <ul className="campaign-list">
@@ -46,8 +60,14 @@ const PageTitleCampaignDropdown = (props) => {
           </ul>
         </div>
       </div>
-    </div>
+    </div> 
   );
+};
+
+PageTitleCampaignDropdown.propTypes = {
+  pageSlug: PropTypes.string,
+  campaignId: PropTypes.string,
+  campaignList: PropTypes.array,
 };
 
 export default PageTitleCampaignDropdown;

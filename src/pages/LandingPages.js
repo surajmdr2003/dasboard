@@ -8,12 +8,23 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import TableLandingPages from '../components/TableLandingPages';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 
+/**
+ * For Initial startdate and enddate
+ */
+const now = new Date();
+const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
+const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
+
 const LandingPages = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
   const [topLandingPageList, setLandingPagesList] = useState([]);
+  const [dateFilter, setDateFilter] = useState({
+    endDate: end,
+    startDate: start,
+  })
 
-  const campaignId = props.match.params.id
+  const campaignId = props.match.params.id;
 
   const apiRequest = {
     headers: { accept: '*/*' },
@@ -21,19 +32,12 @@ const LandingPages = (props) => {
     queryStringParameters: {},
   };
 
-  /**
- * For Initial startdate and enddate
- */
-  const now = new Date();
-  const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-  const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
 
   /**
    * Call API and generate graphs correspond to data
-   * @param {start date} sDate
-   * @param {end date} eDate
+   * @param {object} dateFilter 
    */
-  const loadLandingPagesData = (sDate, eDate) => {
+  const loadLandingPagesData = (dateFilter) => {
     setIsLoading(true);
     Auth.currentSession()
       .then(async function (info) {
@@ -42,10 +46,7 @@ const LandingPages = (props) => {
         // Setting up header info
         apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
-        Object.assign(apiRequest.queryStringParameters, {
-          startDate: sDate,
-          endDate: eDate,
-        });
+        Object.assign(apiRequest.queryStringParameters, dateFilter);
 
         const response = await API.post('canpaignGroup', `/${campaignId}/performance/landingpage`, apiRequest);
         setLandingPagesList(response.data.summary);
@@ -61,14 +62,14 @@ const LandingPages = (props) => {
    * @param {End Date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
-    const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
-    setFilterDateTitle(range);
-    loadLandingPagesData(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
+    setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
+    setDateFilter({startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')})
+    loadLandingPagesData(dateFilter);
   };
 
   useEffect(() => {
-    loadLandingPagesData(start, end);
-  }, []);
+    loadLandingPagesData(dateFilter);
+  }, [campaignId]);
 
   return (
     <Fragment>
@@ -79,7 +80,7 @@ const LandingPages = (props) => {
               <div className="col-md-6">
                 {
                   window.$campaigns.length
-                    ? <PageTitleCampaignDropdown pageSlug='/dashboard/landing-pages' campaignCallback={() => campaignFilterCallback()} campaignList={window.$campaigns} />
+                    ? <PageTitleCampaignDropdown pageSlug='/dashboard/landing-pages' campaignId={campaignId} campaignList={window.$campaigns} />
                     : ''
                 }
               </div>
