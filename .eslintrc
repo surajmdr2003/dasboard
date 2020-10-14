@@ -11,7 +11,7 @@
         "node": true
     },
     "parserOptions": {
-        "ecmaVersion": 6,
+        "ecmaVersion": 8,
         "ecmaFeatures": {
             "jsx": true
         },
@@ -147,7 +147,7 @@
         "react/jsx-uses-vars": 2,
         "react/no-did-mount-set-state": 2,
         "react/no-did-update-set-state": 2,
-        "react/no-multi-comp": 2,
+        "react/no-multi-comp": 0,
         "react/no-unknown-property": 2,
         "react/prop-types": 2,
         "react/react-in-jsx-scope": 2,
