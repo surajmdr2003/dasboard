@@ -10,8 +10,9 @@ import TopTargets from '../components/TopTargets';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 
 const Campaign = (props) => {
-  const id = props.match.params.id;
-
+  const campaignId = props.match.params.id;
+  window.$campaigns
+  debugger
   return (
     <Fragment>
       <div className="main-container">
@@ -20,7 +21,11 @@ const Campaign = (props) => {
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-md-6">
-                  {/* <PageTitleCampaignDropdown /> */}
+                  {
+                    window.$campaigns.length
+                      ? <PageTitleCampaignDropdown pageSlug='/dashboard/campaign' campaignId={campaignId} campaignList={window.$campaigns} />
+                      : ''
+                  }
                 </div>
                 <div className="col-md-6 text-right">
                   <Link to="./https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" className="btn btn-link btn-download-report">
@@ -31,10 +36,10 @@ const Campaign = (props) => {
             </div>
           </div>
         </section>
-        <CampaignGraph campaignId = {id}/>
-        <TopCreatives campaignId = {id}/>
-        <TopLandingPages campaignId = {id}/>
-        <TopTargets campaignId = {id}/>
+        <CampaignGraph campaignId = {campaignId}/>
+        <TopCreatives campaignId = {campaignId}/>
+        <TopLandingPages campaignId = {campaignId}/>
+        <TopTargets campaignId = {campaignId}/>
       </div>
     </Fragment>
   );
