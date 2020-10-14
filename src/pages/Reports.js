@@ -40,13 +40,13 @@ const Reports = () => {
       name: 'CTR',
       selector: 'id',
       sortable: true,
-      cell: row => (<div row={row}>-</div>),
+      cell: row => (<div row={row}>{(row.clicks/row.impressions).toFixed(2)}</div>),
     },
     {
       name: 'Conv rate',
       selector: 'id',
       sortable: true,
-      cell: row => (<div row={row}>{row.conversions}%</div>),
+      cell: row => (<div row={row}>{(row.conversions/row.clicks).toFixed(2)}%</div>),
     },
     {
       name: '',
@@ -97,7 +97,7 @@ const Reports = () => {
         // Setting up header info
         apiRequest.headers.authorization = `Bearer ${accessToken}`;
         apiRequest.queryStringParameters = {};
-        apiRequest.queryStringParameters.email = 'example@gmail.com';
+        apiRequest.queryStringParameters.email = info.getIdToken().payload.email;
 
         await API.post('emailReport', `/${reportId}/reports/email`, apiRequest);
         alert('Email Sent!');
