@@ -36,7 +36,7 @@ const LandingPages = (props) => {
   const loadLandingPagesData = (sDate, eDate) => {
     setIsLoading(true);
     Auth.currentSession()
-      .then(async function(info) {
+      .then(async function (info) {
         const accessToken = info.getAccessToken().getJwtToken();
 
         // Setting up header info
@@ -45,7 +45,7 @@ const LandingPages = (props) => {
         Object.assign(apiRequest.queryStringParameters, {
           startDate: sDate,
           endDate: eDate,
-        }); 
+        });
 
         const response = await API.post('canpaignGroup', `/${campaignId}/performance/landingpage`, apiRequest);
         setLandingPagesList(response.data.summary);
@@ -77,7 +77,11 @@ const LandingPages = (props) => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown />
+                {
+                  window.$campaigns.length
+                    ? <PageTitleCampaignDropdown pageSlug='/dashboard/landing-pages' campaignCallback={() => campaignFilterCallback()} campaignList={window.$campaigns} />
+                    : ''
+                }
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
@@ -91,13 +95,13 @@ const LandingPages = (props) => {
       </section>
       <section className="main-content-wrapper top-landingpage-content">
         <div className="container">
-        {
-          isLoading
-            ? <div className="text-center m-5">
-              <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
-            </div>
-            : <TableLandingPages landingPages={topLandingPageList} />
-        }
+          {
+            isLoading
+              ? <div className="text-center m-5">
+                <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+              </div>
+              : <TableLandingPages landingPages={topLandingPageList} />
+          }
         </div>
       </section>
     </Fragment>

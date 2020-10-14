@@ -142,6 +142,7 @@ const CampaignGraph = (props) => {
         Object.assign(apiRequest.queryStringParameters, {
           startDate: sDate,
           endDate: eDate,
+          interval: checkInterval(sDate, eDate),
         });
 
         const apiEndPoint = (props.campaignId) ? 'canpaignGroupPerformance' : 'advertiserPerformance';
@@ -171,6 +172,23 @@ const CampaignGraph = (props) => {
       .finally(() => setIsLoading(false));
   };
 
+  /**
+   * Returns interval correspond to provided date
+   * @param {start date} sdate 
+   * @param {end date} edate 
+   */
+  const checkInterval = (sDate, eDate) => {
+    const days = moment.duration(moment(eDate).diff(moment(sDate))).asDays();
+    let interval = 'DAILY';
+
+    if (days > 60 && days < 365) {
+      interval = 'WEEKLY';
+    } else if (days > 365) {
+      interval = 'MONTHLY';
+    }
+
+    return interval;
+  }
 
   /**
    * Returns Formatted data for Bar graph
@@ -233,7 +251,6 @@ const CampaignGraph = (props) => {
    * @param {date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
-    debugger
     const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
     setFilterDateTitle(range);
     advertiserPerformanceData(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
@@ -285,27 +302,28 @@ const CampaignGraph = (props) => {
   return (
     <section className="all-campaigns-content">
       <div className="container">
-        {
-          isLoading
-            ? <div className="text-center m-5">
-              <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
-            </div>
-            : <div className="card campaigns-card">
-              <div className="card-header">
-                <div className="row">
-                  <div className="col-md-6">
-                    {
-                      (props.campaignId)
-                        ? <SingleCampaignInfo />
-                        : <AllCampaignInfo />
-                    }
-                  </div>
-                  <div className="col-md-6 text-right">
-                    <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
-                  </div>
-                </div>
+        <div className="card campaigns-card">
+          <div className="card-header">
+            <div className="row">
+              <div className="col-md-6">
+                {
+                  (props.campaignId)
+                    ? <SingleCampaignInfo />
+                    : <AllCampaignInfo />
+                }
               </div>
-              <div className="card-body">
+              <div className="col-md-6 text-right">
+                <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
+              </div>
+            </div>
+          </div>
+          <div className="card-body">
+            {
+              isLoading
+                ? <div className="text-center m-5">
+                  <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+                </div>
+                :
                 <div className="row">
                   <div className="col-md-8 pr-0 br">
                     <div className="campaigns-chart">
@@ -333,9 +351,10 @@ const CampaignGraph = (props) => {
                     }
                   </div>
                 </div>
-              </div>
-            </div>
-        }
+            }
+          </div>
+        </div>
+
       </div>
     </section>
   );
