@@ -110,15 +110,8 @@ const CampaignGraph = (props) => {
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days'); // For datepicker label
   const [summaryData, setSummaryData] = useState({
     clicks: 0,
-    clicks_percent: 0,
     impressions: 0,
-    impressions_percent: 0,
-    ctr: 0,
-    ctr_percent: 0,
     conversions: [],
-    conversion_percent: 0,
-    convrate: 0,
-    convrate_percent: 0,
   });
 
 
@@ -140,7 +133,7 @@ const CampaignGraph = (props) => {
   const advertiserPerformanceData = (sDate, eDate) => {
     setIsLoading(true);
     Auth.currentSession()
-      .then(async function(info) {
+      .then(async function (info) {
         const accessToken = info.getAccessToken().getJwtToken();
 
         // Setting up header info
@@ -158,14 +151,21 @@ const CampaignGraph = (props) => {
         reformatDataForGraph(response.data.data);
 
         // Merge old summary data and new summarydata from api
-        setSummaryData(oldData => {
-          return { ...oldData, ...response.data.summary[0] };
-        });
+        setSummaryData(
+          (response.data.summary.length)
+            ? response.data.summary[0]
+            : {
+              clicks: 0,
+              impressions: 0,
+              conversions: [],
+            }
+        );
 
         setTimeout(() => {
           updateGraph('impressions');
           setIsLoading(false);
         }, 1000);
+
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
@@ -188,7 +188,7 @@ const CampaignGraph = (props) => {
       graphData.date.push(element.date);
       graphData.impressions.push(element.impressions);
       graphData.clicks.push(element.clicks);
-      graphData.ctr.push(handleNanValueWithCalculation(element.clicks, element.impressions) );
+      graphData.ctr.push(handleNanValueWithCalculation(element.clicks, element.impressions));
       graphData.conversions.push(element.conversions.length);
       graphData.convrate.push(handleNanValueWithCalculation(element.conversions.length, element.clicks));
     });
@@ -211,6 +211,7 @@ const CampaignGraph = (props) => {
    * @param {String} label
    */
   const updateGraph = (label) => {
+    graphData
     setData((prevData) => {
       return ({
         ...prevData,
@@ -232,6 +233,7 @@ const CampaignGraph = (props) => {
    * @param {date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
+    debugger
     const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
     setFilterDateTitle(range);
     advertiserPerformanceData(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
@@ -311,7 +313,7 @@ const CampaignGraph = (props) => {
                         {campaignTabs.map((tab) => {
                           return (
                             <li key={tab.slug} className={'nav-item ' + ((activeAttr === tab.slug) ? 'active' : '')} onClick={() => updateGraph(tab.slug)}>
-                              <div className="number">{ tabData(tab.slug) }</div>
+                              <div className="number">{tabData(tab.slug)}</div>
                               <div className="title">{tab.label}</div>
                               <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData[tab.slug + '_percent']}</div>
                             </li>);

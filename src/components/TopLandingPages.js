@@ -9,7 +9,7 @@ import DropdownFilter from '../components/form-fields/DropdownFilter';
 import TableLandingPages from '../components/TableLandingPages';
 
 
-const TopLandingPages = () => {
+const TopLandingPages = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
   const [topLandingPageList, setLandingPagesList] = useState([]);
@@ -46,7 +46,10 @@ const TopLandingPages = () => {
           endDate: eDate,
         });
 
-        const response = await API.post('advertiserPerformanceLandingPage', '', apiRequest);
+        const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformanceLandingPage';
+        const apiPath = (props.campaignId) ? `/${props.campaignId}/performance/landingpage` : '';
+
+        const response = await API.post(apiEndPoint, apiPath, apiRequest);
         setLandingPagesList(response.data.summary.slice(0, 7));
         setIsLoading(false);
       })
@@ -76,7 +79,7 @@ const TopLandingPages = () => {
           <div className="col-md-5">
             <div className="block-title">
               Top Landing Pages
-              <Link to="/dashbaord/landingpages" className="btn-link">See All</Link>
+              <Link to={`/dashboard/landing-pages${props.campaignId ? '/'+props.campaignId: ''}`} className="btn-link">See All</Link>
             </div>
           </div>
           <div className="col-md-7">

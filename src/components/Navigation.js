@@ -58,7 +58,7 @@ const Navigation = () => {
                 : ''
             }
           </li>
-          <li><Link to={`/dashboard/landingpages/${campaignList.length ? campaignList[0].id: ''}`} >Landing pages</Link></li>
+          <li><Link to={`/dashboard/landing-pages/${campaignList.length ? campaignList[0].id: ''}`} >Landing pages</Link></li>
           <li><Link to={`/dashboard/targeting/${campaignList.length ? campaignList[0].id: ''}`}> Targeting</Link></li>
           <li><Link to={`/dashboard/stats/${campaignList.length ? campaignList[0].id: ''}`}>Stats</Link></li>
           <li><Link to={`/dashboard/reports/${campaignList.length ? campaignList[0].id: ''}`}>Report</Link></li>

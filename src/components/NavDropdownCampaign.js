@@ -24,10 +24,14 @@ const NavDropdownCampaign = (props) => {
    * @param {String} status
    */
   const setCampaignNav = (status) => {
-    const filteredNavCampaignItems = props.campaignNavItems.filter(item => item.status === status);
-    setCampaignNavItemsOfStatus(filteredNavCampaignItems);
+    const campaignNavItemsOfStatus = props.campaignNavItems.filter(item => item.status === status);
+
+    setCampaignNavItemsOfStatus(campaignNavItemsOfStatus.slice(0, 5));
     setcurrentCampaignCat(status);
-    loadCampaignSummaryData(campaignNavItemsOfStatus[0].id);
+
+    campaignNavItemsOfStatus.length
+     ? loadCampaignSummaryData(campaignNavItemsOfStatus[0].id)
+     : '';
   };
 
   /**
@@ -88,6 +92,19 @@ const NavDropdownCampaign = (props) => {
   const calculateConvRate = ({ conversions, clicks }) => {
     return ((conversions.length === 0 && clicks === 0) ? 0 : ((conversions.length / clicks) * 100)).toFixed(2);
   };
+  
+  const loadCampaignListForNav = (campaignsOfStatus) => {
+    return campaignsOfStatus.length
+    ? campaignsOfStatus.map((item) => {
+      return (<li className="nav-item" key={item.id}>
+        <Link to="#"
+          className={'nav-link ' + ((currentCampaign === item.id) ? 'text-primary' : '')}
+          onClick={() => loadCampaignSummaryData(item.id)}>{item.name}
+        </Link>
+      </li>);
+      })
+    : <li className="nav-item"><Link to="#" className="nav-link">No Campaign</Link></li>
+  }
 
   return (
     <div className="dropdown-full-width">
@@ -113,16 +130,8 @@ const NavDropdownCampaign = (props) => {
             </ul>
           </div>
           <div className="col-sm-2 br">
-            <ul className="nav flex-column">{
-              campaignNavItemsOfStatus.map((item) => {
-                return (<li className="nav-item" key={item.id}>
-                  <Link to="#"
-                    className={'nav-link ' + ((currentCampaign === item.id) ? 'text-primary' : '')}
-                    onClick={() => loadCampaignSummaryData(item.id)}>{item.name}
-                  </Link>
-                </li>);
-              })
-            }
+            <ul className="nav flex-column">
+              { loadCampaignListForNav(campaignNavItemsOfStatus) }
             </ul>
           </div>
           <div className="col-sm-8 pt-4">

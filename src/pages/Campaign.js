@@ -32,9 +32,9 @@ const Campaign = (props) => {
           </div>
         </section>
         <CampaignGraph campaignId = {id}/>
-        <TopCreatives />
-        <TopLandingPages />
-        <TopTargets />
+        <TopCreatives campaignId = {id}/>
+        <TopLandingPages campaignId = {id}/>
+        <TopTargets campaignId = {id}/>
       </div>
     </Fragment>
   );
