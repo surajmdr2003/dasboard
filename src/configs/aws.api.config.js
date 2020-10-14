@@ -66,6 +66,12 @@ const awsApiConfigs = {
       name: 'canpaignGroupTargeting',
       endpoint: `${Config.apiPath}/campaignGroups/1/targeting`,
     },
+
+    // Email Report Feature
+    {
+      name: 'emailReport',
+      endpoint: `${Config.apiPath}/months`,
+    },
   ],
 };
 
