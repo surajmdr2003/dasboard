@@ -1,4 +1,5 @@
 import React, { useEffect, Fragment, useState } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 // AWS Amplify Related
@@ -40,7 +41,7 @@ const Login = (props) => {
                   onClick={() => Auth.federatedSignIn()}>
                   {
                     isLoading
-                      ? <div className="spinner-grow spinner-grow-sm" role="status"> <span className="sr-only">Loading...</span></div> 
+                      ? <div className="spinner-grow spinner-grow-sm" role="status"> <span className="sr-only">Loading...</span></div>
                       : 'Sign Now!'
                   }
                 </button>
@@ -54,6 +55,10 @@ const Login = (props) => {
       </section>
     </Fragment>
   );
+};
+
+Login.propTypes = {
+  history: PropTypes.object,
 };
 
 export default withRouter(Login);

@@ -23,8 +23,8 @@ const NavDropdownCampaign = (props) => {
    * @param {String} status
    */
   const setCampaignNav = (status) => {
-    const campaignNavItemsOfStatus = props.campaignNavItems.filter(item => item.status === status);
-    setCampaignNavItemsOfStatus(campaignNavItemsOfStatus);
+    const filteredNavCampaignItems = props.campaignNavItems.filter(item => item.status === status);
+    setCampaignNavItemsOfStatus(filteredNavCampaignItems);
     setcurrentCampaignCat(status);
   };
 

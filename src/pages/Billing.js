@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 
@@ -9,7 +10,7 @@ import Footer from '../components/Footer';
 import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
 
 
-const ActionBlock = ({row}) => (
+const ActionBlock = () => (
   <ul>
     <li><Link to="">Print</Link></li>
     <li><Link to="">Download</Link></li>
@@ -41,7 +42,7 @@ const columns = [
     name: 'Status',
     selector: 'id',
     sortable: true,
-    cell: row => <div className="status paid">Paid</div>,
+    cell: () => <div className="status paid">Paid</div>,
   },
   {
     name: '',
@@ -111,6 +112,10 @@ const Billing = () => {
       <Footer />
     </Fragment>
   );
+};
+
+Billing.propTypes = {
+  row: PropTypes.object,
 };
 
 export default Billing;

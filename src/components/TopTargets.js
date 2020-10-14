@@ -27,7 +27,7 @@ const TopTargets = () => {
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
-  }, [])
+  }, []);
 
   return (
     <section className="target-location-content">
@@ -44,23 +44,23 @@ const TopTargets = () => {
             {
               isLoading
                 ? <div className="col text-center m-5">
-                    <center><div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div></center>
-                  </div>
+                  <center><div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div></center>
+                </div>
                 : <Fragment>
-                    <div className="locations col-sm-3 pr-0">
-                      <div className="card border-0">
-                        <div className="card-header">
+                  <div className="locations col-sm-3 pr-0">
+                    <div className="card border-0">
+                      <div className="card-header">
                           Target Locations
-                        </div>
-                        <ul className="list-group list-group-flush">
-                          { targets.map(target => <li key={target.id}  style={{cursor: 'pointer'}} className="list-group-item" onClick={(e) => {e.preventDefault(); setSelectedTarget(target)}}>{target.name}</li>)}
-                        </ul>
                       </div>
+                      <ul className="list-group list-group-flush">
+                        { targets.map(target => <li key={target.id}  style={{cursor: 'pointer'}} className="list-group-item" onClick={(e) => {e.preventDefault(); setSelectedTarget(target);}}>{target.name}</li>)}
+                      </ul>
                     </div>
-                    <div className="col-sm-9 pl-0">
-                      <MapComponent target={selectedTarget ? selectedTarget : {data: null}}/>
-                    </div>
-                  </Fragment>
+                  </div>
+                  <div className="col-sm-9 pl-0">
+                    <MapComponent target={selectedTarget ? selectedTarget : {data: null}}/>
+                  </div>
+                </Fragment>
             }
           </div>
         </div>

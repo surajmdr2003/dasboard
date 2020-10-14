@@ -30,6 +30,12 @@ CLIENT_ID=<client id here>
 # Mapbox Access Token
 MAPBOX_API_KEY=<Mapbox Access Token Here>
 
+# Client Specific Configs
+CLIENT=<Client Domain>
+AUTH_DOMAIN=<Auth Domain>
+REDIRECT_SIGNIN_URL=<Redirect SignIn Path>
+REDIRECT_SIGNOUT_URL=<Redirect SignOut Path>
+
 ```
 
 * Then run command to install project dependencies

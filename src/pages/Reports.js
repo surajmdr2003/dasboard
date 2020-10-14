@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import axios from 'axios';
+import { Auth, API } from 'aws-amplify';
 import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 
@@ -7,96 +7,134 @@ import DataTable from 'react-data-table-component';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 
 const Reports = () => {
-  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
   const [columns] = useState([
     {
       name: 'Months',
       selector: 'avatar',
       sortable: true,
-      cell: row => getMonthBlock({row}),
+      cell: row => getMonthBlock(row),
     },
     {
       name: 'Status',
       selector: 'id',
       sortable: true,
-      cell: () => (<div className="status active-campaign">Active</div>),
+      cell: (row) => getReportStatus(row),
     },
     {
       name: 'Impressions',
       selector: 'id',
       sortable: true,
+      cell: row => (<div row={row}>{row.impressions}</div>),
     },
     {
       name: 'Clicks',
       selector: 'id',
       sortable: true,
+      cell: row => (<div row={row}>{row.clicks}</div>),
     },
     {
       name: 'CTR',
       selector: 'id',
       sortable: true,
+      cell: row => (<div row={row}>-</div>),
     },
     {
       name: 'Conv rate',
       selector: 'id',
       sortable: true,
-      cell: row => (<div row={row}>{row.id}%</div>),
+      cell: row => (<div row={row}>{row.conversions}%</div>),
     },
     {
       name: '',
       selector: 'id',
-      cell: row => getActionBlock({row}),
+      cell: row => getActionBlock(row),
     },
   ]);
 
-  const getMonthBlock = () => (
+  const apiRequest = {
+    headers: { accept: '*/*' },
+    response: true,
+    queryStringParameters: {},
+  };
+
+  useEffect(() => {
+    fetchUsers(currentPage);
+  }, []);
+
+  const getReportStatus = (row) => {
+    return (
+      <div className={'status ' + (row.status === 'ACTIVE' ? 'active' : 'inactive') + '-campaign'}>
+        {row.status}
+      </div>
+    );
+  };
+
+  const getMonthBlock = (row) => (
     <div className="campaign">
-      <div className="c-name">MFB Fall Checking 2020 - RAF AZ</div>
-      <div className="c-date">12th Jan - 12th Sept</div>
+      <div className="c-name">{row.monthName}</div>
+      <div className="c-date">{row.startDate} - {row.endDate}</div>
     </div>
   );
 
-  const getActionBlock = () => (
+  const getActionBlock = (row) => (
     <ul>
-      <li><Link to="">Email</Link></li>
-      <li><Link to="">Download</Link></li>
+      <li><a href="#" onClick={(e) => sendEmail(e, row.id)}>Email</a></li>
+      <li><a target="_blank" href={row.reportUrl}>Download</a></li>
     </ul>
   );
 
-  const fetchUsers = async page => {
+  const  sendEmail = async(event, reportId) => {
+    event.preventDefault();
+
+    Auth.currentSession()
+      .then(async function(info) {
+        const accessToken = info.getAccessToken().getJwtToken();
+
+        // Setting up header info
+        apiRequest.headers.authorization = `Bearer ${accessToken}`;
+        apiRequest.queryStringParameters = {};
+        apiRequest.queryStringParameters.email = 'example@gmail.com';
+
+        await API.post('emailReport', `/${reportId}/reports/email`, apiRequest);
+        alert('Email Sent!');
+      })
+      .catch((error) => alert(error.message))
+      .finally(() => setLoading(false));
+  };
+
+  const fetchUsers = async(page) => {
     setLoading(true);
+    Auth.currentSession()
+      .then(async function(info) {
+        const accessToken = info.getAccessToken().getJwtToken();
 
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${perPage}&delay=1`,
-    );
+        // Setting up header info
+        apiRequest.headers.authorization = `Bearer ${accessToken}`;
+        apiRequest.queryStringParameters.perPage = perPage;
+        apiRequest.queryStringParameters.pageNumber = page;
 
-    setData(response.data.data);
-    setTotalRows(response.data.total);
-    setLoading(false);
+        const response = await API.get('canpaignGroup', '/256/reports/months', apiRequest);
+
+        // Updating the response to the state
+        setData(response.data);
+      })
+      .catch(() => false)
+      .finally(() => setLoading(false));
   };
 
   const handlePageChange = page => {
+    setCurrentPage(page);
     fetchUsers(page);
   };
 
   const handlePerRowsChange = async(newPerPage, page) => {
-    setLoading(true);
-
-    const response = await axios.get(
-      `https://reqres.in/api/users?page=${page}&per_page=${newPerPage}&delay=1`,
-    );
-
-    setData(response.data.data);
     setPerPage(newPerPage);
-    setLoading(false);
+    fetchUsers(page);
   };
-
-  useEffect(() => {
-    fetchUsers(1);
-  }, []);
 
   return (
     <Fragment>
@@ -118,11 +156,11 @@ const Reports = () => {
         <div className="container">
           <DataTable
             columns={columns}
-            data={data}
+            data={data.content}
             progressPending={loading}
             pagination
             paginationServer
-            paginationTotalRows={totalRows}
+            paginationTotalRows={data.totalElements}
             onChangeRowsPerPage={handlePerRowsChange}
             onChangePage={handlePageChange}
           />
