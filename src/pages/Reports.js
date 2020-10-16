@@ -1,10 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Auth, API } from 'aws-amplify';
 import { Link } from 'react-router-dom';
-import DataTable from 'react-data-table-component';
 
 /** Components */
-import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
+import DataTable from 'react-data-table-component';
 
 const Reports = () => {
   const [loading, setLoading] = useState(false);
@@ -146,7 +145,7 @@ const Reports = () => {
                 {/* <PageTitleCampaignDropdown /> */}
               </div>
               <div className="col-md-6 text-right">
-                <Link to="./create-report" className="btn btn-primary btn-default">Create Custom Report</Link>
+                <Link to="/dashboard/create-report" className="btn btn-primary btn-default">Create Custom Report</Link>
               </div>
             </div>
           </div>

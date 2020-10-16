@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import { PropTypes } from 'prop-types';
 import moment from 'moment';
 import { Auth, API } from 'aws-amplify';
 
@@ -22,7 +23,7 @@ const LandingPages = (props) => {
   const [dateFilter, setDateFilter] = useState({
     endDate: end,
     startDate: start,
-  })
+  });
 
   const campaignId = props.match.params.id;
 
@@ -35,18 +36,18 @@ const LandingPages = (props) => {
 
   /**
    * Call API and generate graphs correspond to data
-   * @param {object} dateFilter 
+   * @param {object} dateRangeFilter
    */
-  const loadLandingPagesData = (dateFilter) => {
+  const loadLandingPagesData = (dateRangeFilter) => {
     setIsLoading(true);
     Auth.currentSession()
-      .then(async function (info) {
+      .then(async function(info) {
         const accessToken = info.getAccessToken().getJwtToken();
 
         // Setting up header info
         apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
-        Object.assign(apiRequest.queryStringParameters, dateFilter);
+        Object.assign(apiRequest.queryStringParameters, dateRangeFilter);
 
         const response = await API.post('canpaignGroup', `/${campaignId}/performance/landingpage`, apiRequest);
         setLandingPagesList(response.data.summary);
@@ -63,7 +64,7 @@ const LandingPages = (props) => {
    */
   const datepickerCallback = (startDate, endDate) => {
     setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
-    setDateFilter({startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')})
+    setDateFilter({startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')});
     loadLandingPagesData({startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')});
   };
 
@@ -80,7 +81,7 @@ const LandingPages = (props) => {
               <div className="col-md-6">
                 {
                   window.$campaigns.length
-                    ? <PageTitleCampaignDropdown pageSlug='/dashboard/landing-pages' campaignId={campaignId} campaignList={window.$campaigns} />
+                    ? <PageTitleCampaignDropdown pageSlug="/dashboard/landing-pages" campaignId={campaignId} campaignList={window.$campaigns} />
                     : ''
                 }
               </div>
@@ -107,6 +108,10 @@ const LandingPages = (props) => {
       </section>
     </Fragment>
   );
+};
+
+LandingPages.propTypes = {
+  match: PropTypes.any,
 };
 
 export default LandingPages;

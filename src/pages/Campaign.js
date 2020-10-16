@@ -1,6 +1,7 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Auth, API } from 'aws-amplify';
 
 /** Components */
 import CampaignGraph from '../components/CampaignGraph';
@@ -10,9 +11,39 @@ import TopTargets from '../components/TopTargets';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 
 const Campaign = (props) => {
+  const [reportUrl, setReportUrl] = ('#');
+
   const campaignId = props.match.params.id;
-  window.$campaigns
-  debugger
+
+  const apiRequest = {
+    headers: { accept: '*/*' },
+    response: true,
+  };
+
+  /**
+   * Call API and generate graphs correspond to data
+   * Campaign ID
+   * @param {Int} id
+   */
+  const loadReportUrl = (id) => {
+    Auth.currentSession()
+      .then(async function(info) {
+        const accessToken = info.getAccessToken().getJwtToken();
+
+        // Setting up header info
+        apiRequest.headers.authorization = `Bearer ${accessToken}`;
+        const response = await API.get('canpaignGroup', `/${id}/report`, apiRequest);
+
+        setReportUrl(response);
+      })
+      .catch(() => false)
+      .finally();
+  };
+
+  useEffect(() => {
+    loadReportUrl(campaignId);
+  }, [campaignId]);
+
   return (
     <Fragment>
       <div className="main-container">
@@ -23,14 +54,12 @@ const Campaign = (props) => {
                 <div className="col-md-6">
                   {
                     window.$campaigns.length
-                      ? <PageTitleCampaignDropdown pageSlug='/dashboard/campaign' campaignId={campaignId} campaignList={window.$campaigns} />
+                      ? <PageTitleCampaignDropdown pageSlug="/dashboard/campaign" campaignId={campaignId} campaignList={window.$campaigns} />
                       : ''
                   }
                 </div>
                 <div className="col-md-6 text-right">
-                  <Link to="./https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" className="btn btn-link btn-download-report">
-                                        Download Report
-                  </Link>
+                  <Link to={reportUrl} className="btn btn-link btn-download-report">Download Report</Link>
                 </div>
               </div>
             </div>

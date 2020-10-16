@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Auth, API } from 'aws-amplify';
@@ -70,7 +71,7 @@ const TopLandingPages = (props) => {
 
   useEffect(() => {
     loadLandingPagesData(start, end);
-  }, []);
+  }, [props.campaignId]);
 
   return (
     <section className="top-landingpage-content">
@@ -79,7 +80,7 @@ const TopLandingPages = (props) => {
           <div className="col-md-5">
             <div className="block-title">
               Top Landing Pages
-              <Link to={`/dashboard/landing-pages${props.campaignId ? '/'+props.campaignId: ''}`} className="btn-link">See All</Link>
+              <Link to={`/dashboard/landing-pages${props.campaignId ? '/' + props.campaignId : ''}`} className="btn-link">See All</Link>
             </div>
           </div>
           <div className="col-md-7">
@@ -99,6 +100,10 @@ const TopLandingPages = (props) => {
       </div>
     </section>
   );
+};
+
+TopLandingPages.propTypes = {
+  campaignId: PropTypes.number,
 };
 
 export default TopLandingPages;

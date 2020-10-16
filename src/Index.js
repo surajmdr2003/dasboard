@@ -17,7 +17,7 @@ import awsApiConfig from './configs/aws.api.config';
 // Main Componets
 import App from './App';
 
-//global variable
+// global variable
 window.$campaigns = [];
 
 // Configure AWS Amplify

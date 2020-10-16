@@ -1,11 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { PropTypes } from 'prop-types';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Auth, API } from 'aws-amplify';
 
 /** Components */
 import DatePickerField from '../components/form-fields/DatePickerField';
-import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 
 
@@ -16,16 +15,14 @@ const now = new Date();
 const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
 const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
 
-const Creatives = (props) => {
+const CampaignList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
-  const [creativeList, setCreativeList] = useState([]);
+  const [campaigns, setcampaigns] = useState([]);
   const [dateFilter, setDateFilter] = useState({
     endDate: end,
     startDate: start,
   });
-
-  const campaignId = props.match.params.id;
 
   const apiRequest = {
     headers: { accept: '*/*' },
@@ -34,11 +31,11 @@ const Creatives = (props) => {
   };
 
 
-  /**
-   * Call API and generate graphs correspond to data
-   * @param {object} dateRangeFilter
-   */
-  const loadCreativesData = (dateRangeFilter) => {
+    /**
+     * Call API and generate graphs correspond to data
+     * @param {object} dateRangeFilter
+     */
+  const loadCampaignListData = (dateRangeFilter) => {
     setIsLoading(true);
     Auth.currentSession()
       .then(async function(info) {
@@ -49,30 +46,30 @@ const Creatives = (props) => {
 
         Object.assign(apiRequest.queryStringParameters, dateRangeFilter);
 
-        const response = await API.post('canpaignGroup', `/${campaignId}/performance/asset`, apiRequest);
-        setCreativeList(response.data.summary);
+        const response = await API.post('advertiserPerformanceCampaigns', '', apiRequest);
+        setcampaigns(response.data.summary);
         setIsLoading(false);
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
   };
 
-  /**
-   * Handle callback of datepicker
-   * @param {Start Date} startDate
-   * @param {End Date} endDate
-   */
+    /**
+     * Handle callback of datepicker
+     * @param {Start Date} startDate
+     * @param {End Date} endDate
+     */
   const datepickerCallback = (startDate, endDate) => {
     setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
-    loadCreativesData({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
+    loadCampaignListData({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
 
-  /**
-* Handle NAN and Infinity value
-* @param {Int} fNum
-* @param {Int} sNum
-*/
+    /**
+  * Handle NAN and Infinity value
+  * @param {Int} fNum
+  * @param {Int} sNum
+  */
   const handleNanValueWithCalculation = (fNum, sNum) => {
     if (sNum === 0) {
       return (fNum * 100).toFixed(2);
@@ -80,40 +77,33 @@ const Creatives = (props) => {
     return ((fNum / sNum) * 100).toFixed(2);
   };
 
-  const calculateAssetDimensional = (asset) => {
-    const img = new Image();
-    img.src = asset;
-    img.onload;
-    return (img.width + '*' + img.height);
-  };
-
-  const loadViewOfCreative = (creativesList) => {
-    return creativesList.length
-      ? creativesList.map(creative => {
-        return (<tr key={creative.campaignAssetId}>
-          <td scope="row">
-            <div className="campaign-media media">
-              <object data={creative.assetUrl} />
-              <div className="media-body">
-                <p className="mt-0">{(creative.name === null || creative.name === '') ? 'No Data' : creative.name}</p>
-              </div>
+  const loadViewOfCampaigns = (campaignList) => {
+    return campaignList.length
+      ? campaignList.map(campaign => {
+        return (<tr key={campaign.id}>
+          <th scope="row">
+            <div className="campaign">
+              <div className="c-name">{(campaign.name === null || campaign.name === '') ? 'No Data' : campaign.name}</div>
+              <div className="c-date">
+                {campaign.startDate + ' - ' + campaign.endDate}</div>
             </div>
-          </td>
-          <td>{calculateAssetDimensional(creative.assetUrl)}</td>
-          <td>{creative.impressions}</td>
-          <td>{creative.clicks}</td>
-          <td>{handleNanValueWithCalculation(creative.clicks, creative.impressions)}%</td>
-          <td>{creative.conversions.length}</td>
-          <td>{handleNanValueWithCalculation(creative.conversions.length, creative.clicks)}%</td>
+          </th>
+          <td><div className={`status ${campaign.status.toLowerCase()}-campaign`}>{campaign.status}</div></td>
+          <td>{campaign.impressions}</td>
+          <td>{campaign.clicks}</td>
+          <td>{handleNanValueWithCalculation(campaign.clicks, campaign.impressions)}%</td>
+          <td>{campaign.conversions.length}</td>
+          <td>{handleNanValueWithCalculation(campaign.conversions.length, campaign.clicks)}%</td>
+          <td><Link to={`/dashboard/campaign/${campaign.id}`}>See details</Link></td>
         </tr>);
       })
-      : <tr><td colSpan="7" className="text-center">No creative in this campaign</td></tr>;
+      : <tr><td colSpan="7" className="text-center">No campaign</td></tr>;
   };
 
 
   useEffect(() => {
-    loadCreativesData(dateFilter);
-  }, [campaignId]);
+    loadCampaignListData(dateFilter);
+  }, []);
 
   return (
     <Fragment>
@@ -122,11 +112,7 @@ const Creatives = (props) => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                {
-                  window.$campaigns.length
-                    ? <PageTitleCampaignDropdown pageSlug="/dashboard/creatives" campaignId={campaignId} campaignList={window.$campaigns} />
-                    : ''
-                }
+                <h4>All Campaigns</h4>
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
@@ -138,19 +124,20 @@ const Creatives = (props) => {
           </div>
         </div>
       </section>
-      <section className="main-content-wrapper table-creatives">
+      <section className="main-content-wrapper table-CampaignList">
         <div className="container">
-          <div className="table-responsive table-creatives">
+          <div className="table-responsive table-CampaignList">
             <table className="table">
               <thead className="thead-light">
                 <tr>
-                  <th scope="col">Ad name</th>
-                  <th scope="col">Size</th>
+                  <th scope="col">Campaign name</th>
+                  <th scope="col">Status</th>
                   <th scope="col">Impressions</th>
                   <th scope="col">Clicks</th>
                   <th scope="col">CTR</th>
                   <th scope="col">Conversion</th>
                   <th scope="col">Conv rate</th>
+                  <th scope="col" />
                 </tr>
               </thead>
               <tbody>
@@ -159,7 +146,7 @@ const Creatives = (props) => {
                     ? <tr><td colSpan="7"><div className="text-center m-5">
                       <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
                     </div></td></tr>
-                    : loadViewOfCreative(creativeList)
+                    : loadViewOfCampaigns(campaigns)
                 }
               </tbody>
             </table>
@@ -170,8 +157,4 @@ const Creatives = (props) => {
   );
 };
 
-Creatives.propTypes = {
-  match: PropTypes.any,
-};
-
-export default Creatives;
+export default CampaignList;

@@ -29,7 +29,7 @@ const NavDropdownCreatives = (props) => {
   const loadTopFiveCreativesData = (campaignId) => {
     setIsLoading(true);
     Auth.currentSession()
-      .then(async function (info) {
+      .then(async function(info) {
         const accessToken = info.getAccessToken().getJwtToken();
         // Setting up header info
         apiRequest.headers.authorization = `Bearer ${accessToken}`;
@@ -77,7 +77,7 @@ const NavDropdownCreatives = (props) => {
   useEffect(() => {
     (props.campaignNavItems.length)
       ? loadTopFiveCreativesData(props.campaignNavItems[0].id)
-      : ''
+      : '';
   }, []);
 
   return (

@@ -23,7 +23,7 @@ const initialData = {
   ],
   type: 'bar',
   colors: {
-    Impression: primaryColor,
+    impression: primaryColor,
   },
 };
 
@@ -104,7 +104,6 @@ const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).f
 const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
 
 const CampaignGraph = (props) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [gData, setData] = useState(initialData); // For graph data
   const [activeAttr, setActive] = useState('impressions'); // For active graph (tab)
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days'); // For datepicker label
@@ -123,7 +122,7 @@ const CampaignGraph = (props) => {
 
   useEffect(() => {
     advertiserPerformanceData(start, end);
-  }, []);
+  }, [props.campaignId]);
 
   /**
    * Call API and generate graphs correspond to data
@@ -131,9 +130,8 @@ const CampaignGraph = (props) => {
    * @param {end date} eDate
    */
   const advertiserPerformanceData = (sDate, eDate) => {
-    setIsLoading(true);
     Auth.currentSession()
-      .then(async function (info) {
+      .then(async function(info) {
         const accessToken = info.getAccessToken().getJwtToken();
 
         // Setting up header info
@@ -145,8 +143,10 @@ const CampaignGraph = (props) => {
           interval: checkInterval(sDate, eDate),
         });
 
-        const apiEndPoint = (props.campaignId) ? 'canpaignGroupPerformance' : 'advertiserPerformance';
-        const response = await API.post(apiEndPoint, '', apiRequest);
+        const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformanceLandingPage';
+        const apiPath = (props.campaignId) ? `/${props.campaignId}/performance` : '';
+
+        const response = await API.post(apiEndPoint, apiPath, apiRequest);
 
         // Reformatting data for BarGraph
         reformatDataForGraph(response.data.data);
@@ -164,18 +164,16 @@ const CampaignGraph = (props) => {
 
         setTimeout(() => {
           updateGraph('impressions');
-          setIsLoading(false);
         }, 1000);
-
       })
       .catch(() => false)
-      .finally(() => setIsLoading(false));
+      .finally();
   };
 
   /**
    * Returns interval correspond to provided date
-   * @param {start date} sdate 
-   * @param {end date} edate 
+   * @param {start date} sdate
+   * @param {end date} edate
    */
   const checkInterval = (sDate, eDate) => {
     const days = moment.duration(moment(eDate).diff(moment(sDate))).asDays();
@@ -188,7 +186,7 @@ const CampaignGraph = (props) => {
     }
 
     return interval;
-  }
+  };
 
   /**
    * Returns Formatted data for Bar graph
@@ -202,7 +200,7 @@ const CampaignGraph = (props) => {
     graphData.conversions = [];
     graphData.convrate = [];
 
-    return data.forEach(element => {
+    data.forEach(element => {
       graphData.date.push(element.date);
       graphData.impressions.push(element.impressions);
       graphData.clicks.push(element.clicks);
@@ -210,6 +208,8 @@ const CampaignGraph = (props) => {
       graphData.conversions.push(element.conversions.length);
       graphData.convrate.push(handleNanValueWithCalculation(element.conversions.length, element.clicks));
     });
+
+    updateGraph('impressions');
   };
 
   /**
@@ -229,7 +229,6 @@ const CampaignGraph = (props) => {
    * @param {String} label
    */
   const updateGraph = (label) => {
-    graphData
     setData((prevData) => {
       return ({
         ...prevData,
@@ -318,43 +317,43 @@ const CampaignGraph = (props) => {
             </div>
           </div>
           <div className="card-body">
-            {
+            {/* {
               isLoading
                 ? <div className="text-center m-5">
                   <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
                 </div>
                 :
-                <div className="row">
-                  <div className="col-md-8 pr-0 br">
-                    <div className="campaigns-chart">
-                      <ul className="nav nav-pills nav-fill bb">
-                        {campaignTabs.map((tab) => {
-                          return (
-                            <li key={tab.slug} className={'nav-item ' + ((activeAttr === tab.slug) ? 'active' : '')} onClick={() => updateGraph(tab.slug)}>
-                              <div className="number">{tabData(tab.slug)}</div>
-                              <div className="title">{tab.label}</div>
-                              <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData[tab.slug + '_percent']}</div>
-                            </li>);
-                        })
-                        }
-                      </ul>
-                      <div className="chart-block">
-                        <C3Chart size={size} data={gData} bar={bar} axis={axis} unloadBeforeLoad={true} legend={legend} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    {
-                      (props.campaignId)
-                        ? <CampaignDetail />
-                        : <AllCampaignsLifetimeData summaryData={summaryData} />
+
+            } */}
+            <div className="row">
+              <div className="col-md-8 pr-0 br">
+                <div className="campaigns-chart">
+                  <ul className="nav nav-pills nav-fill bb">
+                    {campaignTabs.map((tab) => {
+                      return (
+                        <li key={tab.slug} className={'nav-item ' + ((activeAttr === tab.slug) ? 'active' : '')} onClick={() => updateGraph(tab.slug)}>
+                          <div className="number">{tabData(tab.slug)}</div>
+                          <div className="title">{tab.label}</div>
+                          <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData[tab.slug + '_percent']}</div>
+                        </li>);
+                    })
                     }
+                  </ul>
+                  <div className="chart-block">
+                    <C3Chart size={size} data={gData} bar={bar} axis={axis} unloadBeforeLoad={true} legend={legend} />
                   </div>
                 </div>
-            }
+              </div>
+              <div className="col-md-4">
+                {
+                  (props.campaignId)
+                    ? <CampaignDetail />
+                    : <AllCampaignsLifetimeData summaryData={summaryData} />
+                }
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
     </section>
   );

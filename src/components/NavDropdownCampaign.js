@@ -24,14 +24,14 @@ const NavDropdownCampaign = (props) => {
    * @param {String} status
    */
   const setCampaignNav = (status) => {
-    const campaignNavItemsOfStatus = props.campaignNavItems.filter(item => item.status === status);
+    const campaignNavItemsWithStatus = props.campaignNavItems.filter(item => item.status === status);
 
-    setCampaignNavItemsOfStatus(campaignNavItemsOfStatus.slice(0, 5));
+    setCampaignNavItemsOfStatus(campaignNavItemsWithStatus.slice(0, 5));
     setcurrentCampaignCat(status);
 
     campaignNavItemsOfStatus.length
-     ? loadCampaignSummaryData(campaignNavItemsOfStatus[0].id)
-     : '';
+      ? loadCampaignSummaryData(campaignNavItemsOfStatus[0].id)
+      : '';
   };
 
   /**
@@ -54,7 +54,7 @@ const NavDropdownCampaign = (props) => {
   const loadCampaignSummaryData = (campaignId) => {
     setIsLoading(true);
     Auth.currentSession()
-      .then(async function (info) {
+      .then(async function(info) {
         const accessToken = info.getAccessToken().getJwtToken();
         // Setting up header info
         apiRequest.headers.authorization = `Bearer ${accessToken}`;
@@ -92,19 +92,19 @@ const NavDropdownCampaign = (props) => {
   const calculateConvRate = ({ conversions, clicks }) => {
     return ((conversions.length === 0 && clicks === 0) ? 0 : ((conversions.length / clicks) * 100)).toFixed(2);
   };
-  
+
   const loadCampaignListForNav = (campaignsOfStatus) => {
     return campaignsOfStatus.length
-    ? campaignsOfStatus.map((item) => {
-      return (<li className="nav-item" key={item.id}>
-        <Link to="#"
-          className={'nav-link ' + ((currentCampaign === item.id) ? 'text-primary' : '')}
-          onClick={() => loadCampaignSummaryData(item.id)}>{item.name}
-        </Link>
-      </li>);
+      ? campaignsOfStatus.map((item) => {
+        return (<li className="nav-item" key={item.id}>
+          <Link to="#"
+            className={'nav-link ' + ((currentCampaign === item.id) ? 'text-primary' : '')}
+            onClick={() => loadCampaignSummaryData(item.id)}>{item.name}
+          </Link>
+        </li>);
       })
-    : <li className="nav-item"><Link to="#" className="nav-link">No Campaign</Link></li>
-  }
+      : <li className="nav-item"><Link to="#" className="nav-link">No Campaign</Link></li>;
+  };
 
   return (
     <div className="dropdown-full-width">

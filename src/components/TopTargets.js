@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import { PropTypes } from 'prop-types';
 import { Auth, API } from 'aws-amplify';
 import MapComponent from './MapComponent';
 
@@ -15,7 +16,7 @@ const TopTargets = (props) => {
   useEffect(() => {
     setIsLoading(true);
     Auth.currentSession()
-      .then(async function (info) {
+      .then(async function(info) {
         const accessToken = info.getAccessToken().getJwtToken();
 
         // Setting up header info
@@ -27,7 +28,7 @@ const TopTargets = (props) => {
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [props.campaignId]);
 
   return (
     <section className="target-location-content">
@@ -51,11 +52,11 @@ const TopTargets = (props) => {
                     <div className="card border-0">
                       <div className="card-header">
                         Target Locations
-                          </div>
+                      </div>
                       <ul className="list-group list-group-flush">
                         {
                           targets.length
-                            ? targets.map(target => <li key={target.id} style={{ cursor: 'pointer' }} className="list-group-item" onClick={(e) => { e.preventDefault(); setSelectedTarget(target) }}>{target.name}</li>)
+                            ? targets.map(target => <li key={target.id} style={{ cursor: 'pointer' }} className="list-group-item" onClick={(e) => { e.preventDefault(); setSelectedTarget(target); }}>{target.name}</li>)
                             : <li className="list-group-item">No Location</li>
                         }
                       </ul>
@@ -71,6 +72,10 @@ const TopTargets = (props) => {
       </div>
     </section>
   );
+};
+
+TopTargets.propTypes = {
+  campaignId: PropTypes.number,
 };
 
 export default TopTargets;

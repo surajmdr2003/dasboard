@@ -22,6 +22,7 @@ import CreateCustomReport from './pages/CreateCustomReport';
 import Reports from './pages/Reports';
 import Billing from './pages/Billing';
 import NotFound from './pages/NotFound';
+import CampaignList from './pages/CampaignList';
 
 const Routes = () => {
   return (
@@ -35,6 +36,7 @@ const Routes = () => {
           <AdminPages>
             <Switch>
               <PrivateRoute exact path={path + '/'} component={Dashboard} />
+              <PrivateRoute exact path={path + '/campaigns'} component={CampaignList} />
               <PrivateRoute exact path={path + '/campaign/:id'} component={Campaign} />
               <PrivateRoute exact path={path + '/creatives/:id'} component={Creatives} />
               <PrivateRoute exact path={path + '/landing-pages/:id'} component={LandingPages} />

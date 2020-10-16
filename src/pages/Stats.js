@@ -1,36 +1,14 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import C3Chart from '@kaiouwang/react-c3js';
 import 'c3/c3.css';
 
 /** Components */
-import PageTitleWithFilter from '../components/PageTitleWithFilter';
+import { Auth, API } from 'aws-amplify';
+import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
 import ProgressBarBlock from '../components/ProgressBarBlock';
-import GraphData from '../components/GraphData';
 
 const primaryColor = '#22a6de';
 const secondaryColor = '#faddb1';
-
-const dataDonut = {
-  columns: [
-    ['Male', 70],
-    ['Female', 30],
-  ],
-  type: 'donut',
-  colors: {
-    Male: primaryColor,
-    Female: secondaryColor,
-  },
-};
-
-const data = {
-  columns: [
-    ['Impression', ...GraphData.AgeDatas.data],
-  ],
-  type: 'bar',
-  colors: {
-    Impression: primaryColor,
-  },
-};
 
 const size = {
   height: 320,
@@ -46,23 +24,123 @@ const bar = {
   },
 };
 
-const axis = {
-  x: {
-    type: 'category',
-    categories: [...GraphData.AgeDatas.label],
-    label: {
-      position: 'inner-center',
-    },
-  },
-  y: {
-    show: false,
-  },
-};
 
 const Stats = () => {
+  const [affinityData, setAffinityData] = useState([]);
+  const [inMarketData, setInMarketData] = useState([]);
+  const [genderData, setGenderData] = useState({
+    columns: [
+      ['Male', 70],
+      ['Female', 30],
+    ],
+    type: 'donut',
+    colors: {
+      Male: primaryColor,
+      Female: secondaryColor,
+    },
+  });
+  const [genderAxisData] = useState({
+    x: {
+      type: 'category',
+      categories: ['15-25', '25-35', '35-45', '45-55', '55+'],
+      label: {
+        position: 'inner-center',
+      },
+    },
+    y: {
+      show: false,
+    },
+  });
+  const [ageData, setAgeData] = useState({
+    columns: [
+      ['Peoples' ],
+    ],
+    type: 'bar',
+    colors: {
+      Impression: primaryColor,
+    },
+  });
+
+  const apiRequest = {
+    headers: { accept: '*/*' },
+    response: true,
+  };
+
+  /**
+   * API call to load stats data
+   */
+  const loadStatsData = () => {
+    Auth.currentSession()
+      .then(async function(info) {
+        const accessToken = info.getAccessToken().getJwtToken();
+
+        // Setting up header info
+        apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+        // const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformanceLandingPage';
+        const apiPath = '/4955/stats';
+        const response = await API.get('canpaignGroup', apiPath, apiRequest);
+
+        // Reformatting data for BarGraph
+        reformatDataForGraph(response.data);
+      })
+      .catch(() => false)
+      .finally();
+  };
+
+  const reformatDataForGraph = (graphData) => {
+    graphData.find(item => {
+      if (item.type === 'Gender Data') {
+        formateGenderData(item.stats);
+      } else if (item.type === 'Age Data') {
+        formateAgeData(item.stats);
+      } else if (item.type === 'Affinity Data') {
+        formateAffinityData(item.stats);
+      } else if (item.type === 'In Market Data') {
+        formateInMarketData(item.stats);
+      }
+    });
+  };
+
+  const formateGenderData = (statsData) => {
+    setGenderData(prevData => {
+      return ({
+        ...prevData,
+        columns: [
+          ['Male', statsData.find(item => item.field === 'Male').value],
+          ['Female', statsData.find(item => item.field === 'Female').value],
+        ],
+      });
+    });
+  };
+
+  const formateAgeData = (statsData) => {
+    setAgeData(prevData => {
+      return ({
+        ...prevData,
+        columns: [
+          ['People', ...statsData.map(item => item.value)],
+        ],
+      });
+    });
+  };
+
+  const formateAffinityData = (statsData) => {
+    setAffinityData(statsData);
+  };
+
+  const formateInMarketData = (statsData) => {
+    setInMarketData(statsData);
+  };
+
+  useEffect(() => {
+    loadStatsData();
+  }, []);
+
   return (
     <Fragment>
-      <PageTitleWithFilter/>
+      {/* <PageTitleWithFilter/> */}
+      <PageTitleWithOutFilter title="Stats" />
       <section className="campaigns-charts">
         <div className="container">
           <div className="row bar-donut-charts mb-5">
@@ -71,7 +149,7 @@ const Stats = () => {
                 <div className="card-body">
                   <h4>Age data</h4>
                   <div className="chart-block">
-                    <C3Chart size={size} data={data} bar={bar} axis={axis} legend={legend} />
+                    <C3Chart size={size} data={ageData} bar={bar} axis={genderAxisData} legend={legend} />
                   </div>
                 </div>
               </div>
@@ -81,7 +159,7 @@ const Stats = () => {
                 <div className="card-body">
                   <h4>Gender data</h4>
                   <div className="chart-block">
-                    <C3Chart data={dataDonut} />
+                    <C3Chart data={genderData} />
                   </div>
                 </div>
               </div>
@@ -93,16 +171,12 @@ const Stats = () => {
                 <div className="card-body">
                   <h4>Affinity data</h4>
                   <ul className="progress-chart-block">
-                    <ProgressBarBlock data={10.24} label={'Sports & Fitness/Sports Fans'}/>
-                    <ProgressBarBlock data={8.05} label={'Media & Entertainment/Movie Lovers'}/>
-                    <ProgressBarBlock data={4.24} label={'Technology/Technophiles'}/>
-                    <ProgressBarBlock data={9.40} label={'Sports/Fitness/Health & Fitness Buffs'}/>
-                    <ProgressBarBlock data={10.14} label={'Shoppers/Luxury Shoppers'}/>
-                    <ProgressBarBlock data={6.00} label={'Media & Entertainment/Movie'}/>
-                    <ProgressBarBlock data={4.50} label={'Lifestyles & Hobbies/Green Living'}/>
-                    <ProgressBarBlock data={1.00} label={'Shoppers/Luxury Shoppers'}/>
-                    <ProgressBarBlock data={8.85} label={'Hobbies/Fashionistas'}/>
-                    <ProgressBarBlock data={7.00} label={'Sports/Fitness/Health & Fitness Buffs'}/>
+                    { affinityData.length
+                      ? affinityData.map((progressbar, i) => {
+                        return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field}/>;
+                      })
+                      : 'No Data'
+                    }
                   </ul>
                 </div>
               </div>
@@ -112,16 +186,12 @@ const Stats = () => {
                 <div className="card-body">
                   <h4>In market data</h4>
                   <ul className="progress-chart-block">
-                    <ProgressBarBlock data={1.24} label={'Sports & Fitness/Sports Fans'}/>
-                    <ProgressBarBlock data={5.05} label={'Media & Entertainment/Movie Lovers'}/>
-                    <ProgressBarBlock data={4.24} label={'Technology/Technophiles'}/>
-                    <ProgressBarBlock data={7.40} label={'Sports/Fitness/Health & Fitness Buffs'}/>
-                    <ProgressBarBlock data={3.14} label={'Shoppers/Luxury Shoppers'}/>
-                    <ProgressBarBlock data={2.00} label={'Media & Entertainment/Movie'}/>
-                    <ProgressBarBlock data={6.50} label={'Lifestyles & Hobbies/Green Living'}/>
-                    <ProgressBarBlock data={5.00} label={'Shoppers/Luxury Shoppers'}/>
-                    <ProgressBarBlock data={1.85} label={'Hobbies/Fashionistas'}/>
-                    <ProgressBarBlock data={10.00} label={'Sports/Fitness/Health & Fitness Buffs'}/>
+                    { inMarketData.length
+                      ? inMarketData.map((progressbar, i) => {
+                        return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field}/>;
+                      })
+                      : 'No Data'
+                    }
                   </ul>
                 </div>
               </div>
