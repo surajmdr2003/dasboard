@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 
 /** Components */
 import DatePickerField from '../components/form-fields/DatePickerField';
-import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 
 const CreateCustomReport = () => {
   const DateCallback = (startDate, endDate) => {
@@ -18,7 +17,7 @@ const CreateCustomReport = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown />
+                {/* <PageTitleCampaignDropdown /> */}
               </div>
               <div className="col-md-6 text-right">
                 <Link to="./create-report" className="btn btn-primary btn-default">Create Custom Report</Link>

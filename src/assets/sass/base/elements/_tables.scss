@@ -53,6 +53,7 @@ table {
 
 	.campaign, .page-name {
 		font-weight: normal;
+		cursor: pointer;
 	
 		.c-date {
 			font-size: size(11);
@@ -76,10 +77,12 @@ table {
 	.campaign-media {
 		align-items: center;
 	
-		.table-campaign-image {
+		.table-campaign-image, object {
 			width: size(40);
 			height: size(50);
 			object-fit: contain;
+			border: 1px solid #ddd;
+			margin-right: 10px;
 		}
 	
 		p {

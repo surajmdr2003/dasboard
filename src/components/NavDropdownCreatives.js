@@ -5,12 +5,9 @@ import moment from 'moment';
 import { Auth, API } from 'aws-amplify';
 
 const NavDropdownCreatives = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [currentCampaign, setcurrentCampaign] = useState(75);
-  const [topCreatives, setTopCreatives] = useState([{
-    id: 1,
-    clicks: 0,
-    impressions: 0,
-  }]);
+  const [topCreatives, setTopCreatives] = useState([]);
 
   /**
    * For Initial startdate and enddate for 7 Days
@@ -25,11 +22,12 @@ const NavDropdownCreatives = (props) => {
     queryStringParameters: {},
   };
 
-    /**
-     * Load Campaign Summary data for menu
-     * @param {Int} campaignId
-     */
+  /**
+   * Load Campaign Summary data for menu
+   * @param {Int} campaignId
+   */
   const loadTopFiveCreativesData = (campaignId) => {
+    setIsLoading(true);
     Auth.currentSession()
       .then(async function(info) {
         const accessToken = info.getAccessToken().getJwtToken();
@@ -43,21 +41,49 @@ const NavDropdownCreatives = (props) => {
 
         const response = await API.post('canpaignGroup', `/${campaignId}/performance/asset`, apiRequest);
         setTopCreatives(response.data.summary.slice(0, 5));
+        setIsLoading(false);
       })
       .catch(() => false);
 
     setcurrentCampaign(campaignId);
   };
 
+  const loadNavTopCreatives = (creatives) => {
+    return creatives.length
+      ? creatives.map(creative => {
+        return (<li className="col" key={creative.campaignAssetId}>
+          <div className="card card-menu-creative">
+            <div className="card-creative-thumb">
+              <span className="badge badge-secondary">{calculateAssetDimensional(creative.assetUrl)}</span>
+              <object data={creative.assetUrl} />
+            </div>
+            <div className="card-body">
+              <h5>{(creative.name === null || creative.name === '') ? 'No Data' : creative.name}</h5>
+            </div>
+          </div>
+        </li>);
+      })
+      : <div className="col">No Creative found</div>;
+  };
+
+  const calculateAssetDimensional = (asset) => {
+    const img = new Image();
+    img.src = asset;
+    img.onload;
+    return (img.width + '*' + img.height);
+  };
+
 
   useEffect(() => {
-    loadTopFiveCreativesData(props.campaignNavItems[0].id);
+    (props.campaignNavItems.length)
+      ? loadTopFiveCreativesData(props.campaignNavItems[0].id)
+      : '';
   }, []);
 
   return (
     <div className="dropdown-full-width">
       <div className="container">
-        <div className="row">
+        <div className="row w-100">
           <div className="col-md-2 br">
             <ul className="nav flex-column">
               {
@@ -81,19 +107,11 @@ const NavDropdownCreatives = (props) => {
               </div>
               <ul className="row overview-detail">
                 {
-                  topCreatives.map((creative, i)=> {
-                    return (<li className="col" key={i}>
-                      <div className="card card-menu-creative">
-                        <div className="card-creative-thumb">
-                          <span className="badge badge-secondary">1200*462</span>
-                          <img src="/assets/images/ads-1.png" alt="creative thumb" />
-                        </div>
-                        <div className="card-body">
-                          <h5>MFB Fall Checking 2020 - RAZ AZ</h5>
-                        </div>
-                      </div>
-                    </li>);
-                  })
+                  isLoading
+                    ? <div className="text-center m-5">
+                      <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+                    </div>
+                    : loadNavTopCreatives(topCreatives)
                 }
               </ul>
             </div>

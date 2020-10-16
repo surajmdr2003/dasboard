@@ -20,12 +20,18 @@ const NavDropdownCampaign = (props) => {
   /**
    * Filter Campaign Nav items
    * By ACTIVE and INACTIVE status
+   * Load Campaign summary data for nav
    * @param {String} status
    */
   const setCampaignNav = (status) => {
-    const filteredNavCampaignItems = props.campaignNavItems.filter(item => item.status === status);
-    setCampaignNavItemsOfStatus(filteredNavCampaignItems);
+    const campaignNavItemsWithStatus = props.campaignNavItems.filter(item => item.status === status);
+
+    setCampaignNavItemsOfStatus(campaignNavItemsWithStatus.slice(0, 5));
     setcurrentCampaignCat(status);
+
+    campaignNavItemsOfStatus.length
+      ? loadCampaignSummaryData(campaignNavItemsOfStatus[0].id)
+      : '';
   };
 
   /**
@@ -69,14 +75,13 @@ const NavDropdownCampaign = (props) => {
 
   useEffect(() => {
     setCampaignNav(currentCampaignCat);
-    loadCampaignSummaryData(props.campaignNavItems[0].id);
   }, []);
 
   /**
    * Canclates CTR Properly
    * @param {Object} param
    */
-  const calculateCTR = ({clicks, impressions}) => {
+  const calculateCTR = ({ clicks, impressions }) => {
     return ((clicks === 0 && impressions === 0) ? 0 : ((clicks / impressions) * 100)).toFixed(2);
   };
 
@@ -84,8 +89,21 @@ const NavDropdownCampaign = (props) => {
    * Calculates Conversion Rate Properly
    * @param {Object} param
    */
-  const calculateConvRate = ({conversions, clicks}) => {
+  const calculateConvRate = ({ conversions, clicks }) => {
     return ((conversions.length === 0 && clicks === 0) ? 0 : ((conversions.length / clicks) * 100)).toFixed(2);
+  };
+
+  const loadCampaignListForNav = (campaignsOfStatus) => {
+    return campaignsOfStatus.length
+      ? campaignsOfStatus.map((item) => {
+        return (<li className="nav-item" key={item.id}>
+          <Link to="#"
+            className={'nav-link ' + ((currentCampaign === item.id) ? 'text-primary' : '')}
+            onClick={() => loadCampaignSummaryData(item.id)}>{item.name}
+          </Link>
+        </li>);
+      })
+      : <li className="nav-item"><Link to="#" className="nav-link">No Campaign</Link></li>;
   };
 
   return (
@@ -112,16 +130,8 @@ const NavDropdownCampaign = (props) => {
             </ul>
           </div>
           <div className="col-sm-2 br">
-            <ul className="nav flex-column">{
-              campaignNavItemsOfStatus.map((item) => {
-                return (<li className="nav-item" key={item.id}>
-                  <Link to="#"
-                    className={'nav-link ' + ((currentCampaign === item.id) ? 'text-primary' : '')}
-                    onClick={() => loadCampaignSummaryData(item.id)}>{item.name}
-                  </Link>
-                </li>);
-              })
-            }
+            <ul className="nav flex-column">
+              { loadCampaignListForNav(campaignNavItemsOfStatus) }
             </ul>
           </div>
           <div className="col-sm-8 pt-4">
@@ -133,7 +143,7 @@ const NavDropdownCampaign = (props) => {
                   </div>
                   : <Fragment>
                     <div className="overview-title">
-                      <h5>Overview of {props.campaignNavItems[0].name}</h5>
+                      <h5>Overview of {(props.campaignNavItems.length) ? props.campaignNavItems[0].name : ''}</h5>
                       <p>Last 7 days</p>
                     </div>
                     <ul className="nav nav-pills nav-fill overview-detail">

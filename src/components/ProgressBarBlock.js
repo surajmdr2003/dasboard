@@ -7,12 +7,12 @@ const ProgressBarBlock = (props) => {
      * @param {Number} num
      */
   const calcPercentage = (num) => {
-    return (((100 / 10.24) * num) + '%');
+    return (((100 / 460) * num).toFixed() + '%');
   };
 
   return (
     <li className="progressbar-item">
-      <div className="progressbar-data">{props.data}%</div>
+      <div className="progressbar-data">{calcPercentage(props.data)}</div>
       <div className="progressbar-graph">
         <div className="progress">
           <div className="progress-bar" role="progressbar" style={{width: calcPercentage(props.data)}} />
@@ -24,7 +24,7 @@ const ProgressBarBlock = (props) => {
 };
 
 ProgressBarBlock.propTypes = {
-  data: PropTypes.string,
+  data: PropTypes.number,
   label: PropTypes.string,
 };
 

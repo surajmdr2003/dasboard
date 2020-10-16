@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import { PropTypes } from 'prop-types';
 import { Auth, API } from 'aws-amplify';
 import MapComponent from './MapComponent';
 
-const TopTargets = () => {
+const TopTargets = (props) => {
   const apiRequest = {
     headers: { accept: '*/*' },
     response: true,
@@ -20,14 +21,14 @@ const TopTargets = () => {
 
         // Setting up header info
         apiRequest.headers.authorization = `Bearer ${accessToken}`;
-        const response = await API.post('canpaignGroupTargeting', '', apiRequest);
+        const response = await API.post('canpaignGroup', `/${props.campaignId}/targeting`, apiRequest);
 
         // Updating the response to the state
         setTargets(response.data);
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [props.campaignId]);
 
   return (
     <section className="target-location-content">
@@ -50,15 +51,19 @@ const TopTargets = () => {
                   <div className="locations col-sm-3 pr-0">
                     <div className="card border-0">
                       <div className="card-header">
-                          Target Locations
+                        Target Locations
                       </div>
                       <ul className="list-group list-group-flush">
-                        { targets.map(target => <li key={target.id}  style={{cursor: 'pointer'}} className="list-group-item" onClick={(e) => {e.preventDefault(); setSelectedTarget(target);}}>{target.name}</li>)}
+                        {
+                          targets.length
+                            ? targets.map(target => <li key={target.id} style={{ cursor: 'pointer' }} className="list-group-item" onClick={(e) => { e.preventDefault(); setSelectedTarget(target); }}>{target.name}</li>)
+                            : <li className="list-group-item">No Location</li>
+                        }
                       </ul>
                     </div>
                   </div>
                   <div className="col-sm-9 pl-0">
-                    <MapComponent target={selectedTarget ? selectedTarget : {data: null}}/>
+                    <MapComponent target={selectedTarget ? selectedTarget : { data: null }} />
                   </div>
                 </Fragment>
             }
@@ -67,6 +72,10 @@ const TopTargets = () => {
       </div>
     </section>
   );
+};
+
+TopTargets.propTypes = {
+  campaignId: PropTypes.number,
 };
 
 export default TopTargets;

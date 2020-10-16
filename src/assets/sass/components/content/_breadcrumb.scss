@@ -14,7 +14,7 @@ section.filter-bar {
             font-size: size(14);
             text-transform: capitalize;
 
-            a {
+            > a {
                 font-weight: 600;
                 text-decoration: none;
 
@@ -102,8 +102,14 @@ ul.campaign-list {
 
     li {
         cursor: pointer;
-        padding: 20px 15px;
         border-bottom: 1px solid $color__gray100;
+
+        &.no-campaign, a {
+            display: block;
+            color: $color__black;
+            padding: 20px 15px;
+            text-decoration: none;
+        }
 
         &:last-child {
             border: 0;
