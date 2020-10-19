@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 // Components
-import HeaderMain from '../components/HeaderMain';
+import HeaderMain from '../components/navigation/HeaderMain';
 import Footer from '../components/Footer';
 
 const AdminPages = ({ children }) => {

@@ -5,7 +5,7 @@ import axios from 'axios';
 import DataTable from 'react-data-table-component';
 
 /** Components */
-import HeaderMain from '../components/HeaderMain';
+import HeaderMain from '../components/navigation/HeaderMain';
 import Footer from '../components/Footer';
 import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
 
