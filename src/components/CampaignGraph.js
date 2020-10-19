@@ -394,7 +394,7 @@ const CampaignGraph = (props) => {
                         <li key={tab.slug} className={'nav-item ' + ((activeAttr === tab.slug) ? 'active' : '')} onClick={() => updateGraph(tab.slug)}>
                           <div className="number">{tabData(tab.slug)}</div>
                           <div className="title">{tab.label}</div>
-                          { summaryData.change.length ? showChangeValue(summaryData.change, tab.slug) : ''}
+                          { summaryData.change !== null && summaryData.change.length ? showChangeValue(summaryData.change, tab.slug) : ''}
                           {/* <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData.change}</div> */}
                         </li>);
                     })
