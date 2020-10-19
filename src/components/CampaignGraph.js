@@ -111,6 +111,7 @@ const CampaignGraph = (props) => {
     clicks: 0,
     impressions: 0,
     conversions: [],
+    change: [],
   });
   const [lifeTimeData, setLifeTimeData] = useState({
     clicks: 0,
@@ -147,6 +148,7 @@ const CampaignGraph = (props) => {
           startDate: sDate,
           endDate: eDate,
           interval: checkInterval(sDate, eDate),
+          includeChange: true,
         });
 
         const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformance';
@@ -165,6 +167,7 @@ const CampaignGraph = (props) => {
               clicks: 0,
               impressions: 0,
               conversions: [],
+              change: [],
             }
         );
 
@@ -333,6 +336,28 @@ const CampaignGraph = (props) => {
     return summaryData[slug];
   };
 
+  const showChangeValue = (changeVal, activeTab) => {
+    const clickChange = changeVal.find(value => value.metricType === 'CLICK').change.toFixed(10);
+    const conversionChange = changeVal.find(value => value.metricType === 'CONVERSION').change.toFixed(10);
+    const impressionChange = changeVal.find(value => value.metricType === 'IMPRESSION').change.toFixed(10);
+
+    if (activeTab === 'impressions') {
+      return showViewOf(impressionChange);
+    } else if (activeTab === 'clicks') {
+      return showViewOf(clickChange);
+    } else if (activeTab === 'conversions') {
+      return showViewOf(conversionChange);
+    } else if (activeTab === 'convrate') {
+      return showViewOf(handleNanValueWithCalculation(summaryData.conversions.length, summaryData.clicks));
+    } else if (activeTab === 'ctr') {
+      return showViewOf(handleNanValueWithCalculation(summaryData.clicks, summaryData.impressions));
+    }
+  };
+
+  const showViewOf = (val) => {
+    return <div className={'percent ' + ((val >= 0) ? 'up-percent' : 'down-percent')}>{Math.abs(val).toFixed(2)}</div>;
+  };
+
   return (
     <section className="all-campaigns-content">
       <div className="container">
@@ -369,19 +394,20 @@ const CampaignGraph = (props) => {
                         <li key={tab.slug} className={'nav-item ' + ((activeAttr === tab.slug) ? 'active' : '')} onClick={() => updateGraph(tab.slug)}>
                           <div className="number">{tabData(tab.slug)}</div>
                           <div className="title">{tab.label}</div>
-                          <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData[tab.slug + '_percent']}</div>
+                          { summaryData.change.length ? showChangeValue(summaryData.change, tab.slug) : ''}
+                          {/* <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData.change}</div> */}
                         </li>);
                     })
                     }
                   </ul>
                   <div className="chart-block">
-                  <div className="date-range">{chartDate}</div>
+                    <div className="date-range">{chartDate}</div>
                     <C3Chart size={size} data={gData} bar={bar} axis={axis} unloadBeforeLoad={true} legend={legend} />
                   </div>
                 </div>
               </div>
               <div className="col-md-4">
-                { 
+                {
                   (props.campaignId)
                     ? <CampaignDetail />
                     : <AllCampaignsLifetimeData summaryData={lifeTimeData} />
