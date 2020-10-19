@@ -106,6 +106,7 @@ const CampaignGraph = (props) => {
   const [gData, setData] = useState(initialData); // For graph data
   const [activeAttr, setActive] = useState('impressions'); // For active graph (tab)
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days'); // For datepicker label
+  const [chartDate, setChartDate] = useState((moment(start).format('MMM DD YYYY') + ' - ' + moment(end).format('MMM DD YYYY')).toString()); // For datepicker label
   const [summaryData, setSummaryData] = useState({
     clicks: 0,
     impressions: 0,
@@ -285,6 +286,7 @@ const CampaignGraph = (props) => {
   const datepickerCallback = (startDate, endDate) => {
     const range = (moment(startDate).format('DD MMM YY') + ' - ' + moment(endDate).format('DD MMM YY')).toString();
     setFilterDateTitle(range);
+    setChartDate((moment(startDate).format('MMM DD YYYY') + ' - ' + moment(endDate).format('MMM DD YYYY')).toString());
     advertiserPerformanceData(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
   };
 
@@ -373,13 +375,13 @@ const CampaignGraph = (props) => {
                     }
                   </ul>
                   <div className="chart-block">
-                    <div className="date-range"> Jan 1 2020 - Jan 7 2020 {filterDateTitle}</div>
+                  <div className="date-range">{chartDate}</div>
                     <C3Chart size={size} data={gData} bar={bar} axis={axis} unloadBeforeLoad={true} legend={legend} />
                   </div>
                 </div>
               </div>
               <div className="col-md-4">
-                {
+                { 
                   (props.campaignId)
                     ? <CampaignDetail />
                     : <AllCampaignsLifetimeData summaryData={lifeTimeData} />
