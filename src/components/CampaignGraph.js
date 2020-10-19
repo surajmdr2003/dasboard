@@ -112,6 +112,11 @@ const CampaignGraph = (props) => {
     impressions: 0,
     conversions: [],
   });
+  const [lifeTimeData, setLifeTimeData] = useState({
+    clicks: 0,
+    impressions: 0,
+    conversions: [],
+  });
 
 
   const apiRequest = {
@@ -121,6 +126,7 @@ const CampaignGraph = (props) => {
   };
 
   useEffect(() => {
+    advertiserLifeTimeData();
     advertiserPerformanceData(start, end);
   }, [props.campaignId]);
 
@@ -143,7 +149,7 @@ const CampaignGraph = (props) => {
           interval: checkInterval(sDate, eDate),
         });
 
-        const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformanceLandingPage';
+        const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformance';
         const apiPath = (props.campaignId) ? `/${props.campaignId}/performance` : '';
 
         const response = await API.post(apiEndPoint, apiPath, apiRequest);
@@ -165,6 +171,27 @@ const CampaignGraph = (props) => {
         setTimeout(() => {
           updateGraph('impressions');
         }, 1000);
+      })
+      .catch(() => false)
+      .finally();
+  };
+
+  /**
+   * Call API for life time data
+   */
+  const advertiserLifeTimeData = () => {
+    Auth.currentSession()
+      .then(async function(info) {
+        const accessToken = info.getAccessToken().getJwtToken();
+
+        // Setting up header info
+        apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+
+        const response = await API.post('advertiserPerformanceLifeTime', '', apiRequest);
+
+        // Set advertiser lifetime data
+        setLifeTimeData(response.data.summary[0]);
       })
       .catch(() => false)
       .finally();
@@ -348,7 +375,7 @@ const CampaignGraph = (props) => {
                 {
                   (props.campaignId)
                     ? <CampaignDetail />
-                    : <AllCampaignsLifetimeData summaryData={summaryData} />
+                    : <AllCampaignsLifetimeData summaryData={lifeTimeData} />
                 }
               </div>
             </div>
