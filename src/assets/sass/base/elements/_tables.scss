@@ -64,6 +64,7 @@ table {
 	.status  {
 		font-size: size(11);
 		color: $color__table-sectext;
+		text-transform: capitalize;
 	} 
 
 	a {
