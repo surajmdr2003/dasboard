@@ -36,16 +36,15 @@ const legend = {
 };
 
 const bar = {
-  width: {
-    ratio: 0.5, // this makes bar width 50% of length between ticks
-  },
+  width: 10,
 };
+
 
 const axis = {
   x: {
     type: 'timeseries',
     tick: {
-      format: '%d-%m-%Y',
+      format: '%m-%d',
     },
     label: {
       position: 'inner-center',
@@ -101,7 +100,7 @@ const graphData = {
  */
 const now = new Date();
 const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
+const start = moment(start).subtract(6, 'days').format('YYYY-MM-DD');
 
 const CampaignGraph = (props) => {
   const [gData, setData] = useState(initialData); // For graph data
@@ -227,14 +226,21 @@ const CampaignGraph = (props) => {
     graphData.conversions = [];
     graphData.convrate = [];
 
-    data.forEach(element => {
-      graphData.date.push(element.date);
-      graphData.impressions.push(element.impressions);
-      graphData.clicks.push(element.clicks);
-      graphData.ctr.push(handleNanValueWithCalculation(element.clicks, element.impressions));
-      graphData.conversions.push(element.conversions.length);
-      graphData.convrate.push(handleNanValueWithCalculation(element.conversions.length, element.clicks));
-    });
+    data.length
+      ? data.forEach(element => {
+        graphData.date.push(element.date);
+        graphData.impressions.push(element.impressions);
+        graphData.clicks.push(element.clicks);
+        graphData.ctr.push(handleNanValueWithCalculation(element.clicks, element.impressions));
+        graphData.conversions.push(element.conversions.length);
+        graphData.convrate.push(handleNanValueWithCalculation(element.conversions.length, element.clicks));
+      })
+      : graphData.date.push(end);
+    graphData.impressions.push(0);
+    graphData.clicks.push(0);
+    graphData.ctr.push(0);
+    graphData.conversions.push(0);
+    graphData.convrate.push(0);
 
     updateGraph('impressions');
   };
@@ -277,7 +283,7 @@ const CampaignGraph = (props) => {
    * @param {date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
-    const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+    const range = (moment(startDate).format('DD MMM YY') + ' - ' + moment(endDate).format('DD MMM YY')).toString();
     setFilterDateTitle(range);
     advertiserPerformanceData(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
   };
@@ -367,6 +373,7 @@ const CampaignGraph = (props) => {
                     }
                   </ul>
                   <div className="chart-block">
+                    <div className="date-range"> Jan 1 2020 - Jan 7 2020 {filterDateTitle}</div>
                     <C3Chart size={size} data={gData} bar={bar} axis={axis} unloadBeforeLoad={true} legend={legend} />
                   </div>
                 </div>

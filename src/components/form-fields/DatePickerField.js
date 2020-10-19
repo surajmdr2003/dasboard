@@ -22,8 +22,8 @@ const DatePickerField = (props) => {
     ],
     '3 Days': [moment(start).subtract(3, 'days'), moment(end)],
     '5 Days': [moment(start).subtract(5, 'days'), moment(end)],
-    '1 Week': [moment(start).subtract(7, 'days'), moment(end)],
-    '2 Weeks': [moment(start).subtract(14, 'days'), moment(end)],
+    '1 Week': [moment(start).subtract(6, 'days'), moment(end)],
+    '2 Weeks': [moment(start).subtract(13, 'days'), moment(end)],
     '1 Month': [moment(start).subtract(1, 'months'), moment(end)],
     '1 Year': [moment(start).subtract(1, 'years'), moment(end)],
   };
