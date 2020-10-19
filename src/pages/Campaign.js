@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Auth, API } from 'aws-amplify';
 
 /** Components */
 import CampaignGraph from '../components/CampaignGraph';
@@ -10,30 +9,21 @@ import TopLandingPages from '../components/TopLandingPages';
 import TopTargets from '../components/TopTargets';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 
+// Services
+import CampaignService from '../services/campaign.service';
+
 const Campaign = (props) => {
-  const [reportUrl, setReportUrl] = ('#');
-
   const campaignId = props.match.params.id;
-
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-  };
+  const [reportUrl, setReportUrl] = ('#');
 
   /**
    * Call API and generate graphs correspond to data
    * Campaign ID
-   * @param {Int} id
+   * @param {Int} campId
    */
-  const loadReportUrl = (id) => {
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-        const response = await API.get('canpaignGroup', `/${id}/report`, apiRequest);
-
+  const loadCampaignReport = (campId) => {
+    CampaignService.getCampaignReports(campId)
+      .then((response) => {
         setReportUrl(response);
       })
       .catch(() => false)
@@ -41,7 +31,7 @@ const Campaign = (props) => {
   };
 
   useEffect(() => {
-    loadReportUrl(campaignId);
+    loadCampaignReport(campaignId);
   }, [campaignId]);
 
   return (

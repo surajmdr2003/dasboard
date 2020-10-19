@@ -9,7 +9,6 @@ import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 import TableLandingPages from '../components/TableLandingPages';
 
-
 const TopLandingPages = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
@@ -103,7 +102,7 @@ const TopLandingPages = (props) => {
 };
 
 TopLandingPages.propTypes = {
-  campaignId: PropTypes.number,
+  campaignId: PropTypes.string,
 };
 
 export default TopLandingPages;

@@ -30,7 +30,7 @@ const Navigation = () => {
   };
 
   useEffect(() => {
-    loadCampaignsData();
+    window.$campaigns.length === 0 && loadCampaignsData();
   }, []);
 
   return (

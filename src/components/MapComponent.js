@@ -20,7 +20,7 @@ class MapComponent extends Component {
     const drawings = [];
     let centerLatLang = {...this.state.latlng};
 
-    this.props.target.data && this.props.target.data.forEach((data, index) => {
+    this.props.target && this.props.target.data.forEach((data, index) => {
       if (data.type === 'circle') {
         centerLatLang = data.center ? data.center : {...this.state.latlng};
         drawings.push((

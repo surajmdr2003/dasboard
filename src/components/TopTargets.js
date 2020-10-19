@@ -1,29 +1,21 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { Auth, API } from 'aws-amplify';
+
+// Services
+import TargetService from '../services/target.service';
+
+// Components
 import MapComponent from './MapComponent';
 
 const TopTargets = (props) => {
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-    queryStringParameters: {},
-  };
   const [isLoading, setIsLoading] = useState(false);
   const [targets, setTargets] = useState([]);
   const [selectedTarget, setSelectedTarget] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-        const response = await API.post('canpaignGroup', `/${props.campaignId}/targeting`, apiRequest);
-
-        // Updating the response to the state
+    TargetService.getCampaignTargets(props.campaignId)
+      .then((response) => {
         setTargets(response.data);
       })
       .catch(() => false)
@@ -63,7 +55,7 @@ const TopTargets = (props) => {
                     </div>
                   </div>
                   <div className="col-sm-9 pl-0">
-                    <MapComponent target={selectedTarget ? selectedTarget : { data: null }} />
+                    <MapComponent target={selectedTarget ? selectedTarget : null} />
                   </div>
                 </Fragment>
             }
@@ -75,7 +67,7 @@ const TopTargets = (props) => {
 };
 
 TopTargets.propTypes = {
-  campaignId: PropTypes.number,
+  campaignId: PropTypes.any,
 };
 
 export default TopTargets;

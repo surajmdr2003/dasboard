@@ -1,6 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Auth, API } from 'aws-amplify';
 import { Link } from 'react-router-dom';
+
+/** Services */
+import ReportService from '../services/report.service';
 
 /** Components */
 import DataTable from 'react-data-table-component';
@@ -54,14 +56,8 @@ const Reports = () => {
     },
   ]);
 
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-    queryStringParameters: {},
-  };
-
   useEffect(() => {
-    fetchUsers(currentPage);
+    fetchCampaignReports(currentPage);
   }, []);
 
   const getReportStatus = (row) => {
@@ -88,37 +84,20 @@ const Reports = () => {
 
   const  sendEmail = async(event, reportId) => {
     event.preventDefault();
-
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-        apiRequest.queryStringParameters = {};
-        apiRequest.queryStringParameters.email = info.getIdToken().payload.email;
-
-        await API.post('emailReport', `/${reportId}/reports/email`, apiRequest);
+    setLoading(true);
+    ReportService.emailReport(reportId)
+      .then((response) => {
+        console.log(response);
         alert('Email Sent!');
       })
       .catch((error) => alert(error.message))
       .finally(() => setLoading(false));
   };
 
-  const fetchUsers = async(page) => {
+  const fetchCampaignReports = async(page) => {
     setLoading(true);
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-        apiRequest.queryStringParameters.perPage = perPage;
-        apiRequest.queryStringParameters.pageNumber = page;
-
-        const response = await API.get('canpaignGroup', '/256/reports/months', apiRequest);
-
-        // Updating the response to the state
+    ReportService.getReports(page, perPage)
+      .then((response) => {
         setData(response.data);
       })
       .catch(() => false)
@@ -127,12 +106,12 @@ const Reports = () => {
 
   const handlePageChange = page => {
     setCurrentPage(page);
-    fetchUsers(page);
+    fetchCampaignReports(page);
   };
 
   const handlePerRowsChange = async(newPerPage, page) => {
     setPerPage(newPerPage);
-    fetchUsers(page);
+    fetchCampaignReports(page);
   };
 
   return (

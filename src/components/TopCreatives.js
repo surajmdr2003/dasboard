@@ -114,7 +114,7 @@ const TopCreatives = (props) => {
 };
 
 TopCreatives.propTypes = {
-  campaignId: PropTypes.number,
+  campaignId: PropTypes.string,
 };
 
 export default TopCreatives;

@@ -7,17 +7,16 @@ const PageTitleCampaignDropdown = (props) => {
   const [campaignNavItemsOfStatus, setCampaignNavItemsOfStatus] = useState([]);
 
   /**
- * Filter Campaign Nav items
- * By ACTIVE and INACTIVE status
- * Load Campaign summary data for nav
- * @param {String} status
- */
+   * Filter Campaign Nav items
+   * By ACTIVE and INACTIVE status
+   * Load Campaign summary data for nav
+   * @param {String} status
+   */
   const setCampaignNav = (status) => {
     const campaignNavItemsWithStatus = props.campaignList.filter(item => item.status === status);
     setCampaignNavItemsOfStatus(campaignNavItemsWithStatus);
     setcurrentCampaignCat(status);
   };
-
 
   /**
    * Returns view of Campiagns list for breadcrumb
@@ -66,7 +65,7 @@ const PageTitleCampaignDropdown = (props) => {
 
 PageTitleCampaignDropdown.propTypes = {
   pageSlug: PropTypes.string,
-  campaignId: PropTypes.string,
+  campaignId: PropTypes.any,
   campaignList: PropTypes.array,
 };
 
