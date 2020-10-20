@@ -98,12 +98,12 @@ const graphData = {
  */
 const now = new Date();
 const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const start = moment(start).subtract(6, 'days').format('YYYY-MM-DD');
+const start = moment(start).subtract(29, 'days').format('YYYY-MM-DD');
 
 const CampaignGraph = (props) => {
   const [gData, setData] = useState(initialData); // For graph data
   const [activeAttr, setActive] = useState('impressions'); // For active graph (tab)
-  const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days'); // For datepicker label
+  const [filterDateTitle, setFilterDateTitle] = useState('Last 30 Days'); // For datepicker label
   const [chartDate, setChartDate] = useState((moment(start).format('MMM DD YYYY') + ' - ' + moment(end).format('MMM DD YYYY')).toString()); // For datepicker label
   const [summaryData, setSummaryData] = useState({
     clicks: 0,
@@ -117,6 +117,7 @@ const CampaignGraph = (props) => {
     conversions: [],
   });
 
+  const currentCampaign = window.$campaigns.find(item => item.id === parseInt(props.campaignId, 10));
 
   const apiRequest = {
     headers: { accept: '*/*' },
@@ -310,15 +311,17 @@ const CampaignGraph = (props) => {
   /**
    * Returns view of Single Campaigns Data
    */
-  const SingleCampaignInfo = () => {
+  const SingleCampaignInfo = (campaign) => {
     return (
-      <Fragment>
-        <h4>Go Checking OU</h4>
-        <ul className="campaigns-datas nav">
-          <li>From 12th Jan 2020 - 18th Jan 2020</li>
-          <li className="active-campaign">Active</li>
-        </ul>
-      </Fragment>
+      campaign.campaignDetail
+        ? <Fragment>
+          <h4>{campaign.campaignDetail.name}</h4>
+          <ul className="campaigns-datas nav">
+            <li>From {chartDate }</li>
+            <li className={`${campaign.campaignDetail.status.toLowerCase()}-campaign`}>{campaign.campaignDetail.status}</li>
+          </ul>
+        </Fragment>
+        : ''
     );
   };
 
@@ -366,7 +369,7 @@ const CampaignGraph = (props) => {
               <div className="col-md-6">
                 {
                   (props.campaignId)
-                    ? <SingleCampaignInfo />
+                    ? <SingleCampaignInfo campaignDetail={currentCampaign} />
                     : <AllCampaignInfo />
                 }
               </div>
@@ -376,14 +379,6 @@ const CampaignGraph = (props) => {
             </div>
           </div>
           <div className="card-body">
-            {/* {
-              isLoading
-                ? <div className="text-center m-5">
-                  <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
-                </div>
-                :
-
-            } */}
             <div className="row">
               <div className="col-md-8 pr-0 br">
                 <div className="campaigns-chart">
@@ -394,7 +389,6 @@ const CampaignGraph = (props) => {
                           <div className="number">{tabData(tab.slug)}</div>
                           <div className="title">{tab.label}</div>
                           { summaryData.change !== null && summaryData.change.length ? showChangeValue(summaryData.change, tab.slug) : ''}
-                          {/* <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData.change}</div> */}
                         </li>);
                     })
                     }
@@ -422,6 +416,7 @@ const CampaignGraph = (props) => {
 
 CampaignGraph.propTypes = {
   campaignId: PropTypes.any,
+  campaignDetail: PropTypes.any,
 };
 
 export default CampaignGraph;

@@ -1,6 +1,5 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
 /** Components */
 import CampaignGraph from '../components/CampaignGraph';
@@ -14,7 +13,7 @@ import CampaignService from '../services/campaign.service';
 
 const Campaign = (props) => {
   const campaignId = props.match.params.id;
-  const [reportUrl, setReportUrl] = ('#');
+  const [reportUrl, setReportUrl] = useState('');
 
   /**
    * Call API and generate graphs correspond to data
@@ -24,7 +23,7 @@ const Campaign = (props) => {
   const loadCampaignReport = (campId) => {
     CampaignService.getCampaignReports(campId)
       .then((response) => {
-        setReportUrl(response);
+        setReportUrl(response.data.value);
       })
       .catch(() => false)
       .finally();
@@ -45,7 +44,7 @@ const Campaign = (props) => {
                   <PageTitleCampaignDropdown pageSlug="/dashboard/campaign" campaignId={campaignId} campaignList={window.$campaigns} />
                 </div>
                 <div className="col-md-6 text-right">
-                  <Link to={reportUrl} className="btn btn-link btn-download-report">Download Report</Link>
+                  <a href={reportUrl} target="_blank" className="btn btn-link btn-download-report">Download Report</a>
                 </div>
               </div>
             </div>
