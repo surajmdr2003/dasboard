@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Auth, API } from 'aws-amplify';
 import NavDropdownCampaign from './NavDropdownCampaign';
 import NavDropdownCreatives from './NavDropdownCreatives';
@@ -42,25 +43,25 @@ const Navigation = () => {
 
       <div className="collapse navbar-collapse primary-navigation" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
-          <li><Link to="/dashboard">Dashboard</Link></li>
-          <li className="menu-item-has-children"><Link to={'/dashboard/campaigns'}>Campaigns</Link>
+          <li><NavLink activeClassName={"active"} exact={true} to="/dashboard">Dashboard</NavLink></li>
+          <li className="menu-item-has-children"><NavLink activeClassName={"active"} to={'/dashboard/campaigns'}>Campaigns</NavLink>
             {
               campaignList.length
                 ? <NavDropdownCampaign campaignNavItems={campaignList} />
                 : ''
             }
           </li>
-          <li className="menu-item-has-children"><Link to={`/dashboard/creatives/${campaignList.length ? campaignList[0].id : ''}`}>Creatives</Link>
+          <li className="menu-item-has-children"><NavLink activeClassName={"active"} to={`/dashboard/creatives/${campaignList.length ? campaignList[0].id : ''}`}>Creatives</NavLink>
             {
               campaignList.length
                 ? <NavDropdownCreatives campaignNavItems={campaignList} />
                 : ''
             }
           </li>
-          <li><Link to={`/dashboard/landing-pages/${campaignList.length ? campaignList[0].id : ''}`} >Landing pages</Link></li>
-          <li><Link to={`/dashboard/targeting/${campaignList.length ? campaignList[0].id : ''}`}> Targeting</Link></li>
-          <li><Link to={`/dashboard/stats/${campaignList.length ? campaignList[0].id : ''}`}>Stats</Link></li>
-          <li><Link to={`/dashboard/reports/${campaignList.length ? campaignList[0].id : ''}`}>Report</Link></li>
+          <li><NavLink activeClassName={"active"} to={`/dashboard/landing-pages/${campaignList.length ? campaignList[0].id : ''}`} >Landing pages</NavLink></li>
+          <li><NavLink activeClassName={"active"} to={`/dashboard/targeting/${campaignList.length ? campaignList[0].id : ''}`}> Targeting</NavLink></li>
+          <li><NavLink activeClassName={"active"} to={`/dashboard/stats/${campaignList.length ? campaignList[0].id : ''}`}>Stats</NavLink></li>
+          <li><NavLink activeClassName={"active"} to={`/dashboard/reports/${campaignList.length ? campaignList[0].id : ''}`}>Report</NavLink></li>
         </ul>
         <ul className="navbar-nav align-items-center secondary-menu">
           <li><i className="icon icon-notification" />

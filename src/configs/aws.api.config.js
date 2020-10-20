@@ -37,6 +37,10 @@ const awsApiConfigs = {
       endpoint: `${Config.apiPath}/advertisers/4955/performance/landingpage`,
     },
     {
+      name: 'advertiserPerformanceLifeTime',
+      endpoint: `${Config.apiPath}/advertisers/4955/performance/lifetime`,
+    },
+    {
       name: 'searchAdvertisers',
       endpoint: `${Config.apiPath}/advertisers/search`,
     },

@@ -11,15 +11,7 @@ import DropdownFilter from '../components/form-fields/DropdownFilter';
 const YourCampaigns = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
-  const [campaginList, setCampaginList] = useState([{
-    clicks: 0,
-    conversions: [],
-    endDate: '',
-    id: 0,
-    impressions: 0,
-    name: '',
-    startDate: '',
-  }]);
+  const [campaginList, setCampaginList] = useState([]);
 
   const apiRequest = {
     headers: { accept: '*/*' },
@@ -90,24 +82,26 @@ const YourCampaigns = () => {
    * @param {Array} campaigns
    */
   const loadCampaignList = (campaigns) => {
-    return campaigns.map(campaign => {
-      return (<tr key={campaign.id}>
-        <th scope="row">
-          <div className="campaign">
-            <div className="c-name">{(campaign.name === null || campaign.name === '') ? 'No Data' : campaign.name}</div>
-            <div className="c-date">
-              {campaign.startDate + ' - ' + campaign.endDate}</div>
-          </div>
-        </th>
-        <td><div className="status active-campaign">Active</div></td>
-        <td>{campaign.impressions}</td>
-        <td>{campaign.clicks}</td>
-        <td>{handleNanValueWithCalculation(campaign.clicks, campaign.impressions)}%</td>
-        <td>{campaign.conversions.length}</td>
-        <td>{handleNanValueWithCalculation(campaign.conversions.length, campaign.clicks)}%</td>
-        <td><Link to={`/dashboard/campaign/${campaign.id}`}>See details</Link></td>
-      </tr>);
-    });
+    return campaigns.length
+      ? campaigns.map(campaign => {
+        return (<tr key={campaign.id}>
+          <th scope="row">
+            <div className="campaign">
+              <div className="c-name">{(campaign.name === null || campaign.name === '') ? 'No Data' : campaign.name}</div>
+              <div className="c-date">
+                {campaign.startDate + ' - ' + campaign.endDate}</div>
+            </div>
+          </th>
+          <td><div className={`status ${campaign.status.toLowerCase()}-campaign`}>{campaign.status.toLowerCase()}</div></td>
+          <td>{campaign.impressions}</td>
+          <td>{campaign.clicks}</td>
+          <td>{handleNanValueWithCalculation(campaign.clicks, campaign.impressions)}%</td>
+          <td>{campaign.conversions.length}</td>
+          <td>{handleNanValueWithCalculation(campaign.conversions.length, campaign.clicks)}%</td>
+          <td><Link to={`/dashboard/campaign/${campaign.id}`}>See details</Link></td>
+        </tr>);
+      })
+      : <tr><td colSpan="7" className="text-center">No campaign</td></tr>;
   };
 
   useEffect(() => {

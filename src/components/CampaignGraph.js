@@ -36,16 +36,15 @@ const legend = {
 };
 
 const bar = {
-  width: {
-    ratio: 0.5, // this makes bar width 50% of length between ticks
-  },
+  width: 10,
 };
+
 
 const axis = {
   x: {
     type: 'timeseries',
     tick: {
-      format: '%d-%m-%Y',
+      format: '%m-%d',
     },
     label: {
       position: 'inner-center',
@@ -101,13 +100,20 @@ const graphData = {
  */
 const now = new Date();
 const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
+const start = moment(start).subtract(6, 'days').format('YYYY-MM-DD');
 
 const CampaignGraph = (props) => {
   const [gData, setData] = useState(initialData); // For graph data
   const [activeAttr, setActive] = useState('impressions'); // For active graph (tab)
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days'); // For datepicker label
+  const [chartDate, setChartDate] = useState((moment(start).format('MMM DD YYYY') + ' - ' + moment(end).format('MMM DD YYYY')).toString()); // For datepicker label
   const [summaryData, setSummaryData] = useState({
+    clicks: 0,
+    impressions: 0,
+    conversions: [],
+    change: [],
+  });
+  const [lifeTimeData, setLifeTimeData] = useState({
     clicks: 0,
     impressions: 0,
     conversions: [],
@@ -121,6 +127,7 @@ const CampaignGraph = (props) => {
   };
 
   useEffect(() => {
+    advertiserLifeTimeData();
     advertiserPerformanceData(start, end);
   }, [props.campaignId]);
 
@@ -141,9 +148,10 @@ const CampaignGraph = (props) => {
           startDate: sDate,
           endDate: eDate,
           interval: checkInterval(sDate, eDate),
+          includeChange: true,
         });
 
-        const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformanceLandingPage';
+        const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformance';
         const apiPath = (props.campaignId) ? `/${props.campaignId}/performance` : '';
 
         const response = await API.post(apiEndPoint, apiPath, apiRequest);
@@ -159,12 +167,34 @@ const CampaignGraph = (props) => {
               clicks: 0,
               impressions: 0,
               conversions: [],
+              change: [],
             }
         );
 
         setTimeout(() => {
           updateGraph('impressions');
         }, 1000);
+      })
+      .catch(() => false)
+      .finally();
+  };
+
+  /**
+   * Call API for life time data
+   */
+  const advertiserLifeTimeData = () => {
+    Auth.currentSession()
+      .then(async function(info) {
+        const accessToken = info.getAccessToken().getJwtToken();
+
+        // Setting up header info
+        apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+
+        const response = await API.post('advertiserPerformanceLifeTime', '', apiRequest);
+
+        // Set advertiser lifetime data
+        setLifeTimeData(response.data.summary[0]);
       })
       .catch(() => false)
       .finally();
@@ -200,14 +230,21 @@ const CampaignGraph = (props) => {
     graphData.conversions = [];
     graphData.convrate = [];
 
-    data.forEach(element => {
-      graphData.date.push(element.date);
-      graphData.impressions.push(element.impressions);
-      graphData.clicks.push(element.clicks);
-      graphData.ctr.push(handleNanValueWithCalculation(element.clicks, element.impressions));
-      graphData.conversions.push(element.conversions.length);
-      graphData.convrate.push(handleNanValueWithCalculation(element.conversions.length, element.clicks));
-    });
+    data.length
+      ? data.forEach(element => {
+        graphData.date.push(element.date);
+        graphData.impressions.push(element.impressions);
+        graphData.clicks.push(element.clicks);
+        graphData.ctr.push(handleNanValueWithCalculation(element.clicks, element.impressions));
+        graphData.conversions.push(element.conversions.length);
+        graphData.convrate.push(handleNanValueWithCalculation(element.conversions.length, element.clicks));
+      })
+      : graphData.date.push(end);
+    graphData.impressions.push(0);
+    graphData.clicks.push(0);
+    graphData.ctr.push(0);
+    graphData.conversions.push(0);
+    graphData.convrate.push(0);
 
     updateGraph('impressions');
   };
@@ -250,8 +287,9 @@ const CampaignGraph = (props) => {
    * @param {date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
-    const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+    const range = (moment(startDate).format('DD MMM YY') + ' - ' + moment(endDate).format('DD MMM YY')).toString();
     setFilterDateTitle(range);
+    setChartDate((moment(startDate).format('MMM DD YYYY') + ' - ' + moment(endDate).format('MMM DD YYYY')).toString());
     advertiserPerformanceData(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
   };
 
@@ -298,6 +336,28 @@ const CampaignGraph = (props) => {
     return summaryData[slug];
   };
 
+  const showChangeValue = (changeVal, activeTab) => {
+    const clickChange = changeVal.find(value => value.metricType === 'CLICK').change.toFixed(10);
+    const conversionChange = changeVal.find(value => value.metricType === 'CONVERSION').change.toFixed(10);
+    const impressionChange = changeVal.find(value => value.metricType === 'IMPRESSION').change.toFixed(10);
+
+    if (activeTab === 'impressions') {
+      return showViewOf(impressionChange);
+    } else if (activeTab === 'clicks') {
+      return showViewOf(clickChange);
+    } else if (activeTab === 'conversions') {
+      return showViewOf(conversionChange);
+    } else if (activeTab === 'convrate') {
+      return showViewOf(handleNanValueWithCalculation(summaryData.conversions.length, summaryData.clicks));
+    } else if (activeTab === 'ctr') {
+      return showViewOf(handleNanValueWithCalculation(summaryData.clicks, summaryData.impressions));
+    }
+  };
+
+  const showViewOf = (val) => {
+    return <div className={'percent ' + ((val >= 0) ? 'up-percent' : 'down-percent')}>{Math.abs(val).toFixed(2)}</div>;
+  };
+
   return (
     <section className="all-campaigns-content">
       <div className="container">
@@ -334,12 +394,14 @@ const CampaignGraph = (props) => {
                         <li key={tab.slug} className={'nav-item ' + ((activeAttr === tab.slug) ? 'active' : '')} onClick={() => updateGraph(tab.slug)}>
                           <div className="number">{tabData(tab.slug)}</div>
                           <div className="title">{tab.label}</div>
-                          <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData[tab.slug + '_percent']}</div>
+                          { summaryData.change !== null && summaryData.change.length ? showChangeValue(summaryData.change, tab.slug) : ''}
+                          {/* <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData.change}</div> */}
                         </li>);
                     })
                     }
                   </ul>
                   <div className="chart-block">
+                    <div className="date-range">{chartDate}</div>
                     <C3Chart size={size} data={gData} bar={bar} axis={axis} unloadBeforeLoad={true} legend={legend} />
                   </div>
                 </div>
@@ -348,7 +410,7 @@ const CampaignGraph = (props) => {
                 {
                   (props.campaignId)
                     ? <CampaignDetail />
-                    : <AllCampaignsLifetimeData summaryData={summaryData} />
+                    : <AllCampaignsLifetimeData summaryData={lifeTimeData} />
                 }
               </div>
             </div>
