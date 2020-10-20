@@ -9,14 +9,19 @@ import MapComponent from './MapComponent';
 
 const TopTargets = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [targets, setTargets] = useState([]);
-  const [selectedTarget, setSelectedTarget] = useState(null);
+  const [targetInfo, setTargetInfo] = useState({
+    selectedTarget: null,
+    allTargets: [],
+  });
 
   useEffect(() => {
     setIsLoading(true);
     TargetService.getCampaignTargets(props.campaignId)
       .then((response) => {
-        setTargets(response.data);
+        setTargetInfo({
+          selectedTarget: (response.data && response.data.length ? response.data[0] : null),
+          allTargets: response.data,
+        });
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
@@ -47,15 +52,23 @@ const TopTargets = (props) => {
                       </div>
                       <ul className="list-group list-group-flush">
                         {
-                          targets.length
-                            ? targets.map(target => <li key={target.id} style={{ cursor: 'pointer' }} className="list-group-item" onClick={(e) => { e.preventDefault(); setSelectedTarget(target); }}>{target.name}</li>)
+                          targetInfo.allTargets.length
+                            ? targetInfo.allTargets.map(target => {
+                              return (
+                                <li key={target.id} style={{ cursor: 'pointer' }}
+                                  className={'list-group-item ' + (targetInfo.selectedTarget && targetInfo.selectedTarget.id === target.id ? 'active' : '' )}
+                                  onClick={(e) => { e.preventDefault(); setTargetInfo({...targetInfo, selectedTarget: target}); }}>
+                                  {target.name}
+                                </li>
+                              );
+                            })
                             : <li className="list-group-item">No Location</li>
                         }
                       </ul>
                     </div>
                   </div>
                   <div className="col-sm-9 pl-0">
-                    <MapComponent target={selectedTarget ? selectedTarget : null} />
+                    <MapComponent target={targetInfo.selectedTarget} />
                   </div>
                 </Fragment>
             }

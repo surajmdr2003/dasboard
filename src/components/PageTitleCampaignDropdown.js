@@ -1,10 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import PubSub from 'pubsub-js';
 
 const PageTitleCampaignDropdown = (props) => {
+  const [campaignList, setCampaignList] = useState(props.campaignList);
   const [currentCampaignCat, setcurrentCampaignCat] = useState('ACTIVE');
   const [campaignNavItemsOfStatus, setCampaignNavItemsOfStatus] = useState([]);
+
+  useEffect(() => {
+    initialize();
+
+    return () => {
+      PubSub.clearAllSubscriptions();
+    };
+  }, []);
+
+  const initialize = () => {
+    // Initialize Subscribers
+    PubSub.subscribe('CAMPAIGNS:LOADED', (event, updatedCampaigns) => {
+      event === 'CAMPAIGNS:LOADED' && updateCampaignsList(updatedCampaigns);
+    });
+  };
+
+  /**
+   * Update loaded Campaigns
+   * @param {[Object]} campaigns
+   */
+  const updateCampaignsList = campaigns => {
+    setCampaignList(campaigns);
+  };
 
   /**
    * Filter Campaign Nav items
@@ -13,7 +38,7 @@ const PageTitleCampaignDropdown = (props) => {
    * @param {String} status
    */
   const setCampaignNav = (status) => {
-    const campaignNavItemsWithStatus = props.campaignList.filter(item => item.status === status);
+    const campaignNavItemsWithStatus = campaignList.filter(item => item.status === status);
     setCampaignNavItemsOfStatus(campaignNavItemsWithStatus);
     setcurrentCampaignCat(status);
   };
@@ -37,8 +62,8 @@ const PageTitleCampaignDropdown = (props) => {
    * @param {Int} campaignId
    */
   const showCurrentCampaign = (campaignId) => {
-    const currentCampaign =  props.campaignList.find(item => item.id === parseInt(campaignId, 10));
-    return currentCampaign.name;
+    const currentCampaign =  campaignList.find(item => item.id === parseInt(campaignId, 10));
+    return currentCampaign ? currentCampaign.name : '';
   };
 
   useEffect(() => {
