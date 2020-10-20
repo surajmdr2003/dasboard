@@ -152,8 +152,9 @@ section.all-campaigns-content {
         }
     }
 
-    .page-on-phone-preview{
+    .page-on-phone-preview {
         position: relative;
+        z-index: 0;
 
         object {
             height: 570px;

@@ -24,5 +24,11 @@ dd {
     position: relative;
     display: block;
     padding: 1.45rem 1.25rem;
-    border: 1px solid $color__table-border;
+	border: 1px solid $color__table-border;
+	
+	&.active {
+		z-index: 0;
+		border: 0;
+		border-radius: 0;
+	}
 }
