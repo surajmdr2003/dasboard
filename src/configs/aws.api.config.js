@@ -6,7 +6,7 @@ const awsApiConfigs = {
     // Advertiser APIs
     {
       name: 'advertiser',
-      endpoint: `${Config.apiPath}/advertisers/4955`,
+      endpoint: `${Config.apiPath}/advertisers`,
     },
     {
       name: 'advertiserAsset',
@@ -35,6 +35,10 @@ const awsApiConfigs = {
     {
       name: 'advertiserPerformanceLandingPage',
       endpoint: `${Config.apiPath}/advertisers/4955/performance/landingpage`,
+    },
+    {
+      name: 'advertiserPerformanceLifeTime',
+      endpoint: `${Config.apiPath}/advertisers/4955/performance/lifetime`,
     },
     {
       name: 'searchAdvertisers',

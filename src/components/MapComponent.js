@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Map, TileLayer, CircleMarker, Popup, Polygon} from 'react-leaflet';
 import Config from '../../app.config';
 
 const leafURL = `https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${Config.mapboxAccessToken}`;
 
-class MapComponent extends Component {
+class MapComponent extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       latlng: {
-        lat: 51.505,
-        lng: -0.09,
+        lat: 40.730,
+        lng: -73.935,
       },
     };
   }
@@ -42,7 +42,7 @@ class MapComponent extends Component {
 
     return (
       <div className="map leaflet-container">
-        <Map style={{height: '60vh'}} center={centerLatLang} zoom={11} className="custom-map--light" >
+        <Map center={centerLatLang} zoom={10} className="custom-map--light" >
           <TileLayer id="mapbox.streets" url={leafURL} attribution="<attribution>" />
           {drawings}
         </Map>

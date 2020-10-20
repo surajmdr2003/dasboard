@@ -1,29 +1,24 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Auth, API } from 'aws-amplify';
+import { Link, NavLink } from 'react-router-dom';
+import { Auth } from 'aws-amplify';
+import PubSub from 'pubsub-js';
+
+// Components
 import NavDropdownCampaign from './NavDropdownCampaign';
 import NavDropdownCreatives from './NavDropdownCreatives';
+
+// Services
+import AdvertiserService from '../../services/advertiser.service';
 
 const Navigation = () => {
   const [campaignList, setCampaignList] = useState(window.$campaigns);
 
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-  };
-
-
   const loadCampaignsData = () => {
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-        const response = await API.get('advertiserCampaignGroups', '', apiRequest);
-
+    AdvertiserService.getAdvertiserCampaignGroups(4955)
+      .then((response) => {
         // assign on global variable
         window.$campaigns = response.data;
+        PubSub.publish('CAMPAIGNS:LOADED', response.data);
         setCampaignList(response.data);
       })
       .catch(() => false);
@@ -42,25 +37,25 @@ const Navigation = () => {
 
       <div className="collapse navbar-collapse primary-navigation" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
-          <li><Link to="/dashboard">Dashboard</Link></li>
-          <li className="menu-item-has-children"><Link to={'/dashboard/campaigns'}>Campaigns</Link>
+          <li><NavLink activeClassName={'active'} exact={true} to="/dashboard">Dashboard</NavLink></li>
+          <li className="menu-item-has-children"><NavLink activeClassName={'active'} to={'/dashboard/campaigns'}>Campaigns</NavLink>
             {
               campaignList.length
                 ? <NavDropdownCampaign campaignNavItems={campaignList} />
                 : ''
             }
           </li>
-          <li className="menu-item-has-children"><Link to={`/dashboard/creatives/${campaignList.length ? campaignList[0].id : ''}`}>Creatives</Link>
+          <li className="menu-item-has-children"><NavLink activeClassName={'active'} to={`/dashboard/creatives/${campaignList.length ? campaignList[0].id : ''}`}>Creatives</NavLink>
             {
               campaignList.length
                 ? <NavDropdownCreatives campaignNavItems={campaignList} />
                 : ''
             }
           </li>
-          <li><Link to={`/dashboard/landing-pages/${campaignList.length ? campaignList[0].id : ''}`} >Landing pages</Link></li>
-          <li><Link to={`/dashboard/targeting/${campaignList.length ? campaignList[0].id : ''}`}> Targeting</Link></li>
-          <li><Link to={`/dashboard/stats/${campaignList.length ? campaignList[0].id : ''}`}>Stats</Link></li>
-          <li><Link to={`/dashboard/reports/${campaignList.length ? campaignList[0].id : ''}`}>Report</Link></li>
+          <li><NavLink activeClassName={'active'} to={`/dashboard/landing-pages/${campaignList.length ? campaignList[0].id : ''}`} >Landing pages</NavLink></li>
+          <li><NavLink activeClassName={'active'} to={`/dashboard/targeting/${campaignList.length ? campaignList[0].id : ''}`}> Targeting</NavLink></li>
+          <li><NavLink activeClassName={'active'} to={`/dashboard/stats/${campaignList.length ? campaignList[0].id : ''}`}>Stats</NavLink></li>
+          <li><NavLink activeClassName={'active'} to={`/dashboard/reports/${campaignList.length ? campaignList[0].id : ''}`}>Report</NavLink></li>
         </ul>
         <ul className="navbar-nav align-items-center secondary-menu">
           <li><i className="icon icon-notification" />

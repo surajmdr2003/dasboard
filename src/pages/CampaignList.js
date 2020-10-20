@@ -1,12 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { Auth, API } from 'aws-amplify';
+
+// Services
+import CampaignService from '../services/campaign.service';
 
 /** Components */
 import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
-
 
 /**
  * For Initial startdate and enddate
@@ -18,58 +19,42 @@ const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
 const CampaignList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
-  const [campaigns, setcampaigns] = useState([]);
+  const [campaigns, setCampaigns] = useState([]);
   const [dateFilter, setDateFilter] = useState({
     endDate: end,
     startDate: start,
   });
 
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-    queryStringParameters: {},
-  };
-
-
-    /**
-     * Call API and generate graphs correspond to data
-     * @param {object} dateRangeFilter
-     */
+  /**
+   * Call API and generate graphs correspond to data
+   * @param {object} dateRangeFilter
+   */
   const loadCampaignListData = (dateRangeFilter) => {
     setIsLoading(true);
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-
-        Object.assign(apiRequest.queryStringParameters, dateRangeFilter);
-
-        const response = await API.post('advertiserPerformanceCampaigns', '', apiRequest);
-        setcampaigns(response.data.summary);
-        setIsLoading(false);
+    CampaignService.getCampaignList(dateRangeFilter)
+      .then((response) => {
+        setCampaigns(response.data.summary);
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
   };
 
-    /**
-     * Handle callback of datepicker
-     * @param {Start Date} startDate
-     * @param {End Date} endDate
-     */
+  /**
+   * Handle callback of datepicker
+   * @param {Start Date} startDate
+   * @param {End Date} endDate
+   */
   const datepickerCallback = (startDate, endDate) => {
     setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
     loadCampaignListData({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
 
-    /**
-  * Handle NAN and Infinity value
-  * @param {Int} fNum
-  * @param {Int} sNum
-  */
+  /**
+   * Handle NAN and Infinity value
+   * @param {Int} fNum
+   * @param {Int} sNum
+   */
   const handleNanValueWithCalculation = (fNum, sNum) => {
     if (sNum === 0) {
       return (fNum * 100).toFixed(2);

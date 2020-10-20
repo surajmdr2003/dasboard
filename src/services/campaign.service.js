@@ -1,24 +1,33 @@
-import { Auth, API } from 'aws-amplify';
+import { API } from 'aws-amplify';
+import AuthService from './auth.service';
 
 class CampaignService {
-    apiRequest = {
-      headers: { accept: '*/*' },
-      response: true,
-      queryStringParameters: {},
-    };
+  apiRequest = {
+    headers: { accept: '*/*' },
+    response: true,
+    queryStringParameters: {},
+  };
 
-    async getCampaignReports(campaignId) {
-      const self = this;
-      return Auth.currentSession()
-        .then(async function(info) {
-          const accessToken = info.getAccessToken().getJwtToken();
+  async getCampaignReports(campaignId) {
+    const userInfo = await AuthService.getSessionInfo();
+    const accessToken = userInfo.getAccessToken().getJwtToken();
 
-          // Setting up header info
-          self.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    // Setting up header info
+    this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
-          return await API.get('canpaignGroup', `/${campaignId}/report`, this.apiRequest);
-        });
-    }
+    return await API.get('canpaignGroup', `/${campaignId}/report`, this.apiRequest);
+  }
+
+  async getCampaignList(dateRangeFilter) {
+    const userInfo = await AuthService.getSessionInfo();
+    const accessToken = userInfo.getAccessToken().getJwtToken();
+
+    // Setting up header info
+    this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
+
+    return await API.post('advertiserPerformanceCampaigns', '', this.apiRequest);
+  }
 }
 
 module.exports = new CampaignService();

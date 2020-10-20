@@ -152,31 +152,30 @@ section.all-campaigns-content {
         }
     }
 
-    .page-on-phone-preview{
-        height: 540px;
-        width: 330px;
+    .page-on-phone-preview {
         position: relative;
-        border: 18px solid #252525;
-        background: #252525;
-        border-radius: 25px;
+        z-index: 0;
 
         object {
-            border-radius: 15px;
-            height: 100%;
+            height: 570px;
+            width: 280px;
+            position: relative;
+            padding: 14px;
             background-color: #fff;
         }
 
         &:before {
             content: '';
-            display: block;
-            width: 60%;
-            background: #252525;
-            height: 30px;
-            border-radius: 12px;
+            position: absolute;;
+            left: 0;
             top: 0;
-            left: 50%;
-            position: absolute;
-            transform: translate(-50%, -10px);
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+            background: url(https://lh3.googleusercontent.com/-2cUWQy4FX-E/X4PWpfXwuCI/AAAAAAAADz0/I3qOh5CIw9ggQYGs1WX73RJviDcLIcZLwCK8BGAsYHg/s0/Phone.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
         }
     }
 }

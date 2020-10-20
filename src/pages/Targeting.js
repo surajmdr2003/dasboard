@@ -15,11 +15,7 @@ const Targeting = (props) => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                {
-                  window.$campaigns.length
-                    ? <PageTitleCampaignDropdown pageSlug="/dashboard/targeting" campaignId={+campaignId} campaignList={window.$campaigns} />
-                    : ''
-                }
+                <PageTitleCampaignDropdown pageSlug="/dashboard/targeting" campaignId={+campaignId} campaignList={window.$campaigns} />
               </div>
             </div>
           </div>

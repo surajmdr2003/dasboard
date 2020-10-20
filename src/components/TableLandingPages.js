@@ -70,7 +70,7 @@ const TableLandingPages = (props) => {
         <div className="col-md-4">
           <div className="card-image ">
             <div className="page-on-phone-preview">
-              <object data={pageUrl} height="480px" width="320px"/>
+              <object data={pageUrl} />
             </div>
           </div>
         </div>

@@ -42,6 +42,10 @@
                 -moz-transform: translateY(10px);
                 transform: translateY(10px);
             }
+
+            &:focus, &:active {
+                outline: none;
+            }
         }
 
         > li:hover {
@@ -58,7 +62,18 @@
             .dropdown-full-width {
                 display: block;
             } 
-        }  
+        }
+        
+        li a.active {
+            color: $primary;
+    
+            &::before {
+                opacity: 1;
+                -webkit-transform: translateY(0);
+                -moz-transform: translateY(0);
+                transform: translateY(0);
+            }
+        }
     }
 }
 
