@@ -117,6 +117,7 @@ const CampaignGraph = (props) => {
     conversions: [],
   });
 
+  const currentCampaign = window.$campaigns.find(item => item.id === parseInt(props.campaignId, 10));
 
   const apiRequest = {
     headers: { accept: '*/*' },
@@ -310,15 +311,17 @@ const CampaignGraph = (props) => {
   /**
    * Returns view of Single Campaigns Data
    */
-  const SingleCampaignInfo = () => {
+  const SingleCampaignInfo = (campaign) => {
     return (
-      <Fragment>
-        <h4>Go Checking OU</h4>
-        <ul className="campaigns-datas nav">
-          <li>From 12th Jan 2020 - 18th Jan 2020</li>
-          <li className="active-campaign">Active</li>
-        </ul>
-      </Fragment>
+      campaign.campaignDetail
+        ? <Fragment>
+          <h4>{campaign.campaignDetail.name}</h4>
+          <ul className="campaigns-datas nav">
+            <li>From {chartDate }</li>
+            <li className={`${campaign.campaignDetail.status.toLowerCase()}-campaign`}>{campaign.campaignDetail.status}</li>
+          </ul>
+        </Fragment>
+        : ''
     );
   };
 
@@ -366,7 +369,7 @@ const CampaignGraph = (props) => {
               <div className="col-md-6">
                 {
                   (props.campaignId)
-                    ? <SingleCampaignInfo />
+                    ? <SingleCampaignInfo campaignDetail={currentCampaign} />
                     : <AllCampaignInfo />
                 }
               </div>
@@ -413,6 +416,7 @@ const CampaignGraph = (props) => {
 
 CampaignGraph.propTypes = {
   campaignId: PropTypes.any,
+  campaignDetail: PropTypes.any,
 };
 
 export default CampaignGraph;
