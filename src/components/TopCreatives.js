@@ -76,6 +76,10 @@ const TopCreatives = (props) => {
       : <div className="col">No Creative found</div>;
   };
 
+  const loadCreativesByCampaign = (campaign) => {
+
+  };
+
   useEffect(() => {
     loadCreativeData(start, end);
   }, [props.campaignId]);
@@ -92,7 +96,7 @@ const TopCreatives = (props) => {
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              <DropdownFilter />
+              <DropdownFilter itemList={window.$campaigns} applyCallback={() => loadCreativesByCampaign(campaign)}/>
               <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
             </div>
           </div>

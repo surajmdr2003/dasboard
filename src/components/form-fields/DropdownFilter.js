@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 
 const DropdownFilter = (props) => {
   const [isOpen, toggleDropdown] = useState(false);
-  const [label, setLabel] = useState('Filter By Campaign');
+  const [label, setLabel] = useState(props.label ? props.label : 'Filter By Campaign');
 
   const showDropdown = () => {
     toggleDropdown(true);
@@ -50,6 +50,7 @@ const DropdownFilter = (props) => {
 };
 
 DropdownFilter.propTypes = {
+  label: PropTypes.string,
   itemList: PropTypes.array,
   dropwDownCallBack: PropTypes.func,
 };

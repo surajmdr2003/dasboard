@@ -376,14 +376,6 @@ const CampaignGraph = (props) => {
             </div>
           </div>
           <div className="card-body">
-            {/* {
-              isLoading
-                ? <div className="text-center m-5">
-                  <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
-                </div>
-                :
-
-            } */}
             <div className="row">
               <div className="col-md-8 pr-0 br">
                 <div className="campaigns-chart">
@@ -394,7 +386,6 @@ const CampaignGraph = (props) => {
                           <div className="number">{tabData(tab.slug)}</div>
                           <div className="title">{tab.label}</div>
                           { summaryData.change !== null && summaryData.change.length ? showChangeValue(summaryData.change, tab.slug) : ''}
-                          {/* <div className={'percent ' + ((summaryData[tab.slug + '_percent'] >= 0) ? 'up-percent' : 'down-percent')}>{summaryData.change}</div> */}
                         </li>);
                     })
                     }

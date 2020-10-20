@@ -68,6 +68,10 @@ const TopLandingPages = (props) => {
     loadLandingPagesData(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
   };
 
+  const loadLandingPagesByCampaign = (campaign) => {
+
+  };
+
   useEffect(() => {
     loadLandingPagesData(start, end);
   }, [props.campaignId]);
@@ -84,7 +88,7 @@ const TopLandingPages = (props) => {
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              <DropdownFilter />
+              <DropdownFilter itemList={window.$campaigns} applyCallback={() => loadLandingPagesByCampaign(campaign)} />
               <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
             </div>
           </div>
