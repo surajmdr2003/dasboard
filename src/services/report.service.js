@@ -1,4 +1,5 @@
-import { Auth, API } from 'aws-amplify';
+import { API } from 'aws-amplify';
+import AuthService from './auth.service';
 
 class ReportService {
     apiRequest = {
@@ -7,34 +8,28 @@ class ReportService {
       queryStringParameters: {},
     };
 
-    async getReports(page, perPage) {
-      const self = this;
-      return Auth.currentSession()
-        .then(async function(info) {
-          const accessToken = info.getAccessToken().getJwtToken();
+    async getReports(campaignId, page, perPage) {
+      const userInfo = await AuthService.getSessionInfo();
+      const accessToken = userInfo.getAccessToken().getJwtToken();
 
-          // Setting up header info
-          self.apiRequest.headers.authorization = `Bearer ${accessToken}`;
-          self.apiRequest.queryStringParameters.perPage = perPage;
-          self.apiRequest.queryStringParameters.pageNumber = page;
+      // Setting up header info
+      this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+      this.apiRequest.queryStringParameters.perPage = perPage;
+      this.apiRequest.queryStringParameters.pageNumber = page;
 
-          return await API.get('canpaignGroup', '/256/reports/months', self.apiRequest);
-        });
+      return await API.get('canpaignGroup', `/${campaignId}/reports/months`, this.apiRequest);
     }
 
     async emailReport(reportId) {
-      const self = this;
-      return Auth.currentSession()
-        .then(async function(info) {
-          const accessToken = info.getAccessToken().getJwtToken();
+      const userInfo = await AuthService.getSessionInfo();
+      const accessToken = userInfo.getAccessToken().getJwtToken();
 
-          // Setting up header info
-          self.apiRequest.headers.authorization = `Bearer ${accessToken}`;
-          self.apiRequest.queryStringParameters = {};
-          self.apiRequest.queryStringParameters.email = info.getIdToken().payload.email;
+      // Setting up header info
+      this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+      this.apiRequest.queryStringParameters = {};
+      this.apiRequest.queryStringParameters.email = info.getIdToken().payload.email;
 
-          return await API.post('emailReport', `/${reportId}/reports/email`, self.apiRequest);
-        });
+      return await API.post('emailReport', `/${reportId}/reports/email`, this.apiRequest);
     }
 }
 

@@ -9,7 +9,6 @@ import DatePickerField from './form-fields/DatePickerField';
 import AllCampaignsLifetimeData from './AllCampaignsLifetimeData';
 import CampaignDetail from './CampaignDetail';
 
-
 /**
  * Attribute for graph starts
  */
@@ -38,7 +37,6 @@ const legend = {
 const bar = {
   width: 10,
 };
-
 
 const axis = {
   x: {
@@ -153,7 +151,6 @@ const CampaignGraph = (props) => {
 
         const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformance';
         const apiPath = (props.campaignId) ? `/${props.campaignId}/performance` : '';
-
         const response = await API.post(apiEndPoint, apiPath, apiRequest);
 
         // Reformatting data for BarGraph
@@ -352,6 +349,8 @@ const CampaignGraph = (props) => {
     } else if (activeTab === 'ctr') {
       return showViewOf(handleNanValueWithCalculation(summaryData.clicks, summaryData.impressions));
     }
+
+    return '-';
   };
 
   const showViewOf = (val) => {

@@ -17,6 +17,7 @@ const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).f
 const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
 
 const Creatives = (props) => {
+  const campaignId = props.match.params.id;
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
   const [creativeList, setCreativeList] = useState([]);
@@ -24,9 +25,6 @@ const Creatives = (props) => {
     endDate: end,
     startDate: start,
   });
-
-  const campaignId = props.match.params.id;
-
   const apiRequest = {
     headers: { accept: '*/*' },
     response: true,
@@ -122,11 +120,7 @@ const Creatives = (props) => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                {
-                  window.$campaigns.length
-                    ? <PageTitleCampaignDropdown pageSlug="/dashboard/creatives" campaignId={campaignId} campaignList={window.$campaigns} />
-                    : ''
-                }
+                <PageTitleCampaignDropdown pageSlug="/dashboard/creatives" campaignId={campaignId} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
