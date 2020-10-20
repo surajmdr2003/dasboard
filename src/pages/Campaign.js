@@ -42,11 +42,7 @@ const Campaign = (props) => {
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-md-6">
-                  {
-                    window.$campaigns.length
-                      ? <PageTitleCampaignDropdown pageSlug="/dashboard/campaign" campaignId={campaignId} campaignList={window.$campaigns} />
-                      : ''
-                  }
+                  <PageTitleCampaignDropdown pageSlug="/dashboard/campaign" campaignId={campaignId} campaignList={window.$campaigns} />
                 </div>
                 <div className="col-md-6 text-right">
                   <Link to={reportUrl} className="btn btn-link btn-download-report">Download Report</Link>

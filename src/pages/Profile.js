@@ -1,8 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Auth, API } from 'aws-amplify';
 
 /** Components */
 import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
+
+// Services
+import AdvertiserService from '../services/advertiser.service';
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,21 +26,11 @@ const Profile = () => {
     payments: [],
     billingHistory: null,
   }, []);
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-  };
 
   useEffect(() => {
     setIsLoading(true);
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-        const response = await API.get('advertiser', '', apiRequest);
-
+    AdvertiserService.getAdvertiser(4955)
+      .then((response) => {
         // Updating the response to the state
         setProfile(response.data);
       })

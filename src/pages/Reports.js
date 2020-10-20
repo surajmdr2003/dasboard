@@ -1,13 +1,16 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 /** Services */
 import ReportService from '../services/report.service';
 
 /** Components */
+import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import DataTable from 'react-data-table-component';
 
-const Reports = () => {
+const Reports = (props) => {
+  const campaignId = props.match.params.id;
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,7 +61,7 @@ const Reports = () => {
 
   useEffect(() => {
     fetchCampaignReports(currentPage);
-  }, []);
+  }, [campaignId]);
 
   const getReportStatus = (row) => {
     return (
@@ -96,7 +99,7 @@ const Reports = () => {
 
   const fetchCampaignReports = async(page) => {
     setLoading(true);
-    ReportService.getReports(page, perPage)
+    ReportService.getReports(campaignId, page, perPage)
       .then((response) => {
         setData(response.data);
       })
@@ -121,7 +124,7 @@ const Reports = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                {/* <PageTitleCampaignDropdown /> */}
+                <PageTitleCampaignDropdown pageSlug="/dashboard/reports" campaignId={+campaignId} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <Link to="/dashboard/create-report" className="btn btn-primary btn-default">Create Custom Report</Link>
@@ -146,6 +149,10 @@ const Reports = () => {
       </section>
     </Fragment>
   );
+};
+
+Reports.propTypes = {
+  match: PropTypes.object,
 };
 
 export default Reports;
