@@ -98,12 +98,12 @@ const graphData = {
  */
 const now = new Date();
 const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const start = moment(start).subtract(6, 'days').format('YYYY-MM-DD');
+const start = moment(start).subtract(29, 'days').format('YYYY-MM-DD');
 
 const CampaignGraph = (props) => {
   const [gData, setData] = useState(initialData); // For graph data
   const [activeAttr, setActive] = useState('impressions'); // For active graph (tab)
-  const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days'); // For datepicker label
+  const [filterDateTitle, setFilterDateTitle] = useState('Last 30 Days'); // For datepicker label
   const [chartDate, setChartDate] = useState((moment(start).format('MMM DD YYYY') + ' - ' + moment(end).format('MMM DD YYYY')).toString()); // For datepicker label
   const [summaryData, setSummaryData] = useState({
     clicks: 0,
