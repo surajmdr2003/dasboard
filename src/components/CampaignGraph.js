@@ -5,10 +5,14 @@ import { Auth, API } from 'aws-amplify';
 import C3Chart from '@kaiouwang/react-c3js';
 import 'c3/c3.css';
 import moment from 'moment';
+
+// Components
 import DatePickerField from './form-fields/DatePickerField';
 import AllCampaignsLifetimeData from './AllCampaignsLifetimeData';
 import CampaignDetail from './CampaignDetail';
 
+// Services
+import AdvertiserService from '../services/advertiser.service';
 /**
  * Attribute for graph starts
  */
@@ -126,7 +130,7 @@ const CampaignGraph = (props) => {
   };
 
   useEffect(() => {
-    advertiserLifeTimeData();
+    advertiserLifeTimeData(4955);
     advertiserPerformanceData(start, end);
   }, [props.campaignId]);
 
@@ -180,18 +184,11 @@ const CampaignGraph = (props) => {
   /**
    * Call API for life time data
    */
-  const advertiserLifeTimeData = () => {
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-
-        const response = await API.post('advertiserPerformanceLifeTime', '', apiRequest);
-
-        // Set advertiser lifetime data
-        setLifeTimeData(response.data.summary[0]);
+  const advertiserLifeTimeData = (advertiserId) => {
+    AdvertiserService.getAdvertiserPerformanceLifetime(advertiserId)
+      .then((response) => {
+        // Set Advertiser lifetime Summary data
+        setLifeTimeData(response.data.summary.length ? response.data.summary[0] : null);
       })
       .catch(() => false)
       .finally();

@@ -65,7 +65,7 @@ class AdvertiserService {
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
-    return await API.get('advertiser', `/${advertiserId}/performance/lifetime`, this.apiRequest);
+    return await API.post('advertiser', `/${advertiserId}/performance/lifetime`, this.apiRequest);
   }
 
   async getAdvertiserPerformanceCampaigns(advertiserId) {
