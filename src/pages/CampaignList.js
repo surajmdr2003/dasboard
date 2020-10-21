@@ -7,7 +7,6 @@ import CampaignService from '../services/campaign.service';
 
 /** Components */
 import DatePickerField from '../components/form-fields/DatePickerField';
-import DropdownFilter from '../components/form-fields/DropdownFilter';
 
 /**
  * For Initial startdate and enddate
@@ -101,7 +100,6 @@ const CampaignList = () => {
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
-                  <DropdownFilter />
                   <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
                 </div>
               </div>

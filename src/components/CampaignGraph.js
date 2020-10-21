@@ -188,7 +188,6 @@ const CampaignGraph = (props) => {
         // Setting up header info
         apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
-
         const response = await API.post('advertiserPerformanceLifeTime', '', apiRequest);
 
         // Set advertiser lifetime data

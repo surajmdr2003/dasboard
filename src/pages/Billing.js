@@ -91,7 +91,6 @@ const Billing = () => {
 
   return (
     <Fragment>
-      <HeaderMain />
       <div className="main-container">
         <PageTitleWithOutFilter title="Your profile" />
         <section className="main-content-wrapper table-reports">
