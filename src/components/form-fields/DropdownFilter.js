@@ -37,7 +37,7 @@ const DropdownFilter = (props) => {
 
   useEffect(() => {
     setLabel(props.label ? props.label : 'Filter By Campaign');
-  }, [props]);
+  }, [props.itemList]);
 
   return (
     <div className="dropdown dropdown-filter">
