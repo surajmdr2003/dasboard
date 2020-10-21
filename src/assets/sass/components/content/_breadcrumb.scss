@@ -39,6 +39,10 @@ section.filter-bar {
             font-weight: normal;
             margin: 0;
         }
+
+        .dropdown-filter .dropdown-menu {
+            width: size(150);
+        }
     }
 }
 
