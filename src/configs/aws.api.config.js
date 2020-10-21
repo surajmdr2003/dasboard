@@ -76,6 +76,11 @@ const awsApiConfigs = {
       name: 'emailReport',
       endpoint: `${Config.apiPath}/months`,
     },
+    // Email Report Feature
+    {
+      name: 'stats',
+      endpoint: `${Config.apiPath}/months`,
+    },
   ],
 };
 

@@ -1,11 +1,16 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import C3Chart from '@kaiouwang/react-c3js';
 import 'c3/c3.css';
 
+
+/** Service */
+import StatsService from '../services/stats.service';
+
 /** Components */
-import { Auth, API } from 'aws-amplify';
-import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
+import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import ProgressBarBlock from '../components/ProgressBarBlock';
+import DropdownFilter from '../components/form-fields/DropdownFilter';
 
 const primaryColor = '#22a6de';
 const secondaryColor = '#faddb1';
@@ -25,13 +30,16 @@ const bar = {
 };
 
 
-const Stats = () => {
+const Stats = (props) => {
+  const campaignId = props.match.params.id;
+
+  const [months, setCampaignMonths] = useState([]);
   const [affinityData, setAffinityData] = useState([]);
   const [inMarketData, setInMarketData] = useState([]);
   const [genderData, setGenderData] = useState({
     columns: [
-      ['Male', 70],
-      ['Female', 30],
+      ['Male', 0],
+      ['Female', 0],
     ],
     type: 'donut',
     colors: {
@@ -39,6 +47,7 @@ const Stats = () => {
       Female: secondaryColor,
     },
   });
+
   const [genderAxisData] = useState({
     x: {
       type: 'category',
@@ -51,9 +60,10 @@ const Stats = () => {
       show: false,
     },
   });
+
   const [ageData, setAgeData] = useState({
     columns: [
-      ['Peoples' ],
+      ['Peoples'],
     ],
     type: 'bar',
     colors: {
@@ -61,27 +71,28 @@ const Stats = () => {
     },
   });
 
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
+  
+
+  /**
+  * API call to load month
+  */
+  const getCampaignMonths = () => {
+    StatsService.getCampaignMonths(campaignId)
+      .then((response) => {
+        setCampaignMonths(response.data);
+        loadStatsData(response.data[0].id);
+      })
+      .catch(() => false)
+      .finally();
   };
 
   /**
    * API call to load stats data
    */
-  const loadStatsData = () => {
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-
-        // const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformanceLandingPage';
-        const apiPath = '/4955/stats';
-        const response = await API.get('canpaignGroup', apiPath, apiRequest);
-
-        // Reformatting data for BarGraph
+  const loadStatsData = (monthId) => {
+    StatsService.getCampaignStatsOfMonth(monthId)
+      .then((response) => {
+        // setData(response.data);
         reformatDataForGraph(response.data);
       })
       .catch(() => false)
@@ -89,17 +100,43 @@ const Stats = () => {
   };
 
   const reformatDataForGraph = (graphData) => {
-    graphData.find(item => {
-      if (item.type === 'Gender Data') {
-        formateGenderData(item.stats);
-      } else if (item.type === 'Age Data') {
-        formateAgeData(item.stats);
-      } else if (item.type === 'Affinity Data') {
-        formateAffinityData(item.stats);
-      } else if (item.type === 'In Market Data') {
-        formateInMarketData(item.stats);
-      }
-    });
+    graphData.length
+      ? graphData.find(item => {
+        if (item.type === 'Gender Data') {
+          formateGenderData(item.stats);
+        } else if (item.type === 'Age Data') {
+          formateAgeData(item.stats);
+        } else if (item.type === 'Affinity Data') {
+          formateAffinityData(item.stats);
+        } else if (item.type === 'In Market Data') {
+          formateInMarketData(item.stats);
+        }
+      })
+      : (formateAffinityData([]),
+      formateInMarketData([]),
+      formateGenderData([{ 'field': 'Male', 'value': 0 }, { 'field': 'Female', 'value': 0 }]),
+      formateAgeData([{
+        'field': '15-25',
+        'value': 0,
+      },
+      {
+        'field': '25-35',
+        'value': 0,
+      },
+      {
+        'field': '35-45',
+        'value': 0,
+      },
+      {
+        'field': '45-55',
+        'value': 0,
+      },
+      {
+        'field': '55+',
+        'value': 0,
+      },
+      ])
+      );
   };
 
   const formateGenderData = (statsData) => {
@@ -133,14 +170,39 @@ const Stats = () => {
     setInMarketData(statsData);
   };
 
+  const affinityTotal = affinityData.length ? affinityData.map(item => item.value).reduce((prev, next) => prev + next) : 0;
+  const inMarketTotal = inMarketData.length ? inMarketData.map(item => item.value).reduce((prev, next) => prev + next) : 0;
+
+  const loadDataByMonth = (data) => {
+    loadStatsData(data.id);
+  };
+
   useEffect(() => {
-    loadStatsData();
-  }, []);
+    getCampaignMonths();
+  }, [campaignId]);
 
   return (
     <Fragment>
-      {/* <PageTitleWithFilter/> */}
-      <PageTitleWithOutFilter title="Stats" />
+      <section className="filter-bar ">
+        <div className="inner-filter-bar w-100">
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-md-6">
+                <PageTitleCampaignDropdown pageSlug="/dashboard/stats" campaignId={campaignId} campaignList={window.$campaigns} />
+              </div>
+              <div className="col-md-6 text-right">
+                <div className="block-filter">
+                  {
+                    months.length
+                      ? <DropdownFilter itemList={months} label={(months[0].name === '' ? months[0].id : months[0].name)} dropwDownCallBack={loadDataByMonth} />
+                      : 'No Month'
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="campaigns-charts">
         <div className="container">
           <div className="row bar-donut-charts mb-5">
@@ -171,9 +233,9 @@ const Stats = () => {
                 <div className="card-body">
                   <h4>Affinity data</h4>
                   <ul className="progress-chart-block">
-                    { affinityData.length
+                    {affinityData.length && affinityTotal > 0
                       ? affinityData.map((progressbar, i) => {
-                        return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field}/>;
+                        return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field} total={affinityTotal}/>;
                       })
                       : 'No Data'
                     }
@@ -186,9 +248,9 @@ const Stats = () => {
                 <div className="card-body">
                   <h4>In market data</h4>
                   <ul className="progress-chart-block">
-                    { inMarketData.length
+                    {inMarketData.length && inMarketTotal > 0
                       ? inMarketData.map((progressbar, i) => {
-                        return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field}/>;
+                        return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field} total={inMarketTotal}/>;
                       })
                       : 'No Data'
                     }
@@ -201,6 +263,10 @@ const Stats = () => {
       </section>
     </Fragment>
   );
+};
+
+Stats.propTypes = {
+  match: PropTypes.object,
 };
 
 export default Stats;
