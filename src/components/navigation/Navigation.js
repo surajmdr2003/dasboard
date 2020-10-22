@@ -28,6 +28,10 @@ const Navigation = () => {
     window.$campaigns.length === 0 && loadCampaignsData();
   }, []);
 
+  const isNavItemActive = (path) => {
+    return location.pathname.indexOf(path) !== -1;
+  };
+
   return (
     <Fragment>
       <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -39,23 +43,15 @@ const Navigation = () => {
         <ul className="navbar-nav mr-auto">
           <li><NavLink activeClassName={'active'} exact={true} to="/dashboard">Dashboard</NavLink></li>
           <li className="menu-item-has-children"><NavLink activeClassName={'active'} to={'/dashboard/campaigns'}>Campaigns</NavLink>
-            {
-              campaignList.length
-                ? <NavDropdownCampaign campaignNavItems={campaignList} />
-                : ''
-            }
+            <NavDropdownCampaign campaignNavItems={campaignList} />
           </li>
-          <li className="menu-item-has-children"><NavLink activeClassName={'active'} to={`/dashboard/creatives/${campaignList.length ? campaignList[0].id : ''}`}>Creatives</NavLink>
-            {
-              campaignList.length
-                ? <NavDropdownCreatives campaignNavItems={campaignList} />
-                : ''
-            }
+          <li className="menu-item-has-children"><NavLink isActive={() => isNavItemActive('/dashboard/creatives/')} to={`/dashboard/creatives/${campaignList.length ? campaignList[0].id : ''}`}>Creatives</NavLink>
+            <NavDropdownCreatives campaignNavItems={campaignList} />
           </li>
-          <li><NavLink activeClassName={'active'} to={`/dashboard/landing-pages/${campaignList.length ? campaignList[0].id : ''}`} >Landing pages</NavLink></li>
-          <li><NavLink activeClassName={'active'} to={`/dashboard/targeting/${campaignList.length ? campaignList[0].id : ''}`}> Targeting</NavLink></li>
-          <li><NavLink activeClassName={'active'} to={`/dashboard/stats/${campaignList.length ? campaignList[0].id : ''}`}>Stats</NavLink></li>
-          <li><NavLink activeClassName={'active'} to={`/dashboard/reports/${campaignList.length ? campaignList[0].id : ''}`}>Report</NavLink></li>
+          <li><NavLink isActive={() => isNavItemActive('/dashboard/landing-pages/')} to={`/dashboard/landing-pages/${campaignList.length ? campaignList[0].id : ''}`} >Landing pages</NavLink></li>
+          <li><NavLink isActive={() => isNavItemActive('/dashboard/targeting/')} to={`/dashboard/targeting/${campaignList.length ? campaignList[0].id : ''}`}> Targeting</NavLink></li>
+          <li><NavLink isActive={() => isNavItemActive('/dashboard/stats/')} to={`/dashboard/stats/${campaignList.length ? campaignList[0].id : ''}`}>Stats</NavLink></li>
+          <li><NavLink isActive={() => isNavItemActive('/dashboard/reports/')} to={`/dashboard/reports/${campaignList.length ? campaignList[0].id : ''}`}>Report</NavLink></li>
         </ul>
         <ul className="navbar-nav align-items-center secondary-menu">
           <li><i className="icon icon-notification" />
@@ -70,8 +66,7 @@ const Navigation = () => {
                   </span>
                   <div className="media-body">
                     <h5>Adds responsive display ads</h5>
-                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-                                            sollicitudin.</p>
+                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.</p>
                     <Link to="#" className="btn-link">Notify Sales</Link>
                   </div>
                 </li>
