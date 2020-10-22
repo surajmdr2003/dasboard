@@ -54,12 +54,15 @@ const Navigation = () => {
 
   return (
     <Fragment>
-      <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span className="navbar-toggler-icon" />
+      <button className="navbar-toggler" onClick={() => toggleDropdown(!isOpen)}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -53 384 384">
+          <path d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+          <path d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+          <path d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+        </svg>
       </button>
 
-      <div className="collapse navbar-collapse primary-navigation" id="navbarSupportedContent">
+      <div className={`collapse navbar-collapse primary-navigation ${isOpen ? 'show' : ''}`} id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li><NavLink activeClassName={'active'} exact={true} to="/dashboard">Dashboard</NavLink></li>
           <li className="menu-item-has-children"><NavLink activeClassName={'active'} to={'/dashboard/campaigns'}>Campaigns</NavLink>
