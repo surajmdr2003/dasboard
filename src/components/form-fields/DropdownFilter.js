@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
@@ -22,7 +22,7 @@ const DropdownFilter = (props) => {
    */
   const loadViewOfItems = (items) => {
     return items.map(item => {
-      return <Link className="dropdown-item" to="#" key={item.id} onClick={() => setDropdown(item)} >{item.name}</Link>;
+      return <Link className="dropdown-item" to="#" key={item.id} onClick={() => setDropdown(item)} >{item.name === '' ? item.id : item.name}</Link>;
     });
   };
 
@@ -31,9 +31,13 @@ const DropdownFilter = (props) => {
    * @param {Object} item
    */
   const setDropdown = (item) => {
-    setLabel(item.name);
+    setLabel(item.name === '' ? item.id : item.name);
     props.dropwDownCallBack(item);
   };
+
+  useEffect(() => {
+    setLabel(props.label ? props.label : 'Filter By Campaign');
+  }, [props.itemList]);
 
   return (
     <div className="dropdown dropdown-filter">
@@ -50,7 +54,7 @@ const DropdownFilter = (props) => {
 };
 
 DropdownFilter.propTypes = {
-  label: PropTypes.string,
+  label: PropTypes.any,
   itemList: PropTypes.array,
   dropwDownCallBack: PropTypes.func,
 };

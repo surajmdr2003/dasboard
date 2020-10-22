@@ -5,6 +5,10 @@ const awsApiConfigs = {
   endpoints: [
     // Advertiser APIs
     {
+      name: 'currentAdvertiser',
+      endpoint: `${Config.apiPath}/user/advertiser`,
+    },
+    {
       name: 'advertiser',
       endpoint: `${Config.apiPath}/advertisers`,
     },
@@ -74,6 +78,11 @@ const awsApiConfigs = {
     // Email Report Feature
     {
       name: 'emailReport',
+      endpoint: `${Config.apiPath}/months`,
+    },
+    // Email Report Feature
+    {
+      name: 'stats',
       endpoint: `${Config.apiPath}/months`,
     },
   ],

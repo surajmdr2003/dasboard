@@ -21,7 +21,10 @@ const Login = (props) => {
         setIsLoading(false);
         props.history.push('/dashboard');
       })
-      .catch(() => console.log('Not signed in yet!'));
+      .catch(() => {
+        console.log('Not signed in yet!');
+        setIsLoading(false);
+      });
   }, []);
 
   return (

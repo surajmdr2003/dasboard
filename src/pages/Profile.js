@@ -4,38 +4,54 @@ import React, { Fragment, useState, useEffect } from 'react';
 import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
 
 // Services
+import AuthService from '../services/auth.service';
 import AdvertiserService from '../services/advertiser.service';
 
 const Profile = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [profile, setProfile] =  useState({
-    id: 4955,
-    name: '',
-    email: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '91790',
-    website: null,
-    campaigns: {
-      active: 0,
-      inactive: 0,
-      paused: 0,
-      total: 0,
+  const [state, setState] =  useState({
+    isLoading: false,
+    profile: {
+      id: 4955,
+      name: '',
+      email: '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '91790',
+      website: null,
+      campaigns: {
+        active: 0,
+        inactive: 0,
+        paused: 0,
+        total: 0,
+      },
+      payments: [],
+      billingHistory: null,
     },
-    payments: [],
-    billingHistory: null,
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
-    AdvertiserService.getAdvertiser(4955)
-      .then((response) => {
-        // Updating the response to the state
-        setProfile(response.data);
+    setState({...state, isLoading: true});
+    AuthService.getSessionInfo()
+      .then(session => {
+        const permissions = session.getAccessToken().payload['cognito:groups'];
+
+        return (permissions.includes('ROLE_ADVERTISER') && permissions.includes('ROLE_USER')) || permissions.includes('ROLE_ADMIN');
       })
-      .catch(() => false)
-      .finally(() => setIsLoading(false));
+      .then(isAuthorized => {
+        if (!isAuthorized) {
+          return alert(' User not Authorized to access this Profile Page.');
+        }
+
+        return AdvertiserService.getAdvertiser()
+          .then((response) => {
+            setState({
+              isLoading: false,
+              profile: response.data,
+            });
+          })
+          .catch(() => false);
+      });
   }, []);
 
   return (
@@ -51,7 +67,7 @@ const Profile = () => {
                 </div>
                 <div className="content-block-body">
                   {
-                    isLoading
+                    state.isLoading
                       ? <div className="text-center m-5">
                         <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
                       </div>
@@ -62,8 +78,8 @@ const Profile = () => {
                               <img src="/assets/images/avatar.png" alt="company logo"/>
                             </span>
                             <div className="media-body">
-                              <h5>{profile.name}</h5>
-                              <p>{profile.email} | +1 (213) 393-3010 <br/> {profile.address}, {profile.city} {profile.state}</p>
+                              <h5>{state.profile.name}</h5>
+                              <p>{state.profile.email} | +1 (213) 393-3010 <br/> {state.profile.address}, {state.profile.city} {state.profile.state}</p>
                               <a href="#" className="btn-link">Edit Info</a>
                             </div>
                           </div>
@@ -77,16 +93,16 @@ const Profile = () => {
                               <h5>Campaigns</h5>
                               <ul className="campaigns-datas nav">
                                 <li>
-                                  {profile.campaigns.total} total campaigns
+                                  {state.profile.campaigns.total} total campaigns
                                 </li>
                                 <li className="active-campaigns">
-                                  {profile.campaigns.active} Active
+                                  {state.profile.campaigns.active} Active
                                 </li>
                                 <li className="inactive-campaigns">
-                                  {profile.campaigns.inactive} Inactive
+                                  {state.profile.campaigns.inactive} Inactive
                                 </li>
                                 <li className="paused-campaigns">
-                                  {profile.campaigns.paused} Paused
+                                  {state.profile.campaigns.paused} Paused
                                 </li>
                               </ul>
                             </div>
@@ -100,8 +116,8 @@ const Profile = () => {
                             <div className="media-body">
                               <h5>Payments</h5>
                               {
-                                profile.payments.length
-                                  ? profile.payments.map(() => {
+                                state.profile.payments.length
+                                  ? state.profile.payments.map(() => {
                                     <p>
                                       <img src="./assets/images/paypal-logo.png" className="paypal-logo" alt="paypal icon"/> <br/>
                                         payment@midfirst.com | Added on 12th Jan 2020
