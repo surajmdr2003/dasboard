@@ -32,7 +32,7 @@ const bar = {
 
 const Stats = (props) => {
   const campaignId = props.match.params.id;
-
+  const [dropdownLabel, setDropdownLabel] = useState('Filter By Month');
   const [months, setCampaignMonths] = useState([]);
   const [affinityData, setAffinityData] = useState([]);
   const [inMarketData, setInMarketData] = useState([]);
@@ -71,7 +71,6 @@ const Stats = (props) => {
     },
   });
 
-  
 
   /**
   * API call to load month
@@ -81,6 +80,7 @@ const Stats = (props) => {
       .then((response) => {
         setCampaignMonths(response.data);
         loadStatsData(response.data[0].id);
+        setDropdownLabel(response.data[0].id);
       })
       .catch(() => false)
       .finally();
@@ -175,6 +175,7 @@ const Stats = (props) => {
 
   const loadDataByMonth = (data) => {
     loadStatsData(data.id);
+    setDropdownLabel(data.id);
   };
 
   useEffect(() => {
@@ -194,7 +195,7 @@ const Stats = (props) => {
                 <div className="block-filter">
                   {
                     months.length
-                      ? <DropdownFilter itemList={months} label={(months[0].name === '' ? months[0].id : months[0].name)} dropwDownCallBack={loadDataByMonth} />
+                      ? <DropdownFilter itemList={[...months]} label={dropdownLabel} dropwDownCallBack={loadDataByMonth} />
                       : 'No Month'
                   }
                 </div>

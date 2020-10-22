@@ -18,10 +18,12 @@ class MapComponent extends PureComponent {
 
   render() {
     const drawings = [];
+    let zoom = 8;
     let centerLatLang = {...this.state.latlng};
 
     this.props.target && this.props.target.data.forEach((data, index) => {
       if (data.type === 'circle') {
+        zoom = data.radius > 500 ? 5 : 11;
         centerLatLang = data.center ? data.center : {...this.state.latlng};
         drawings.push((
           <CircleMarker key={data.center.lat + data.center.lng + index} center={[data.center.lat, data.center.lng]} color="blue" radius={data.radius}>
@@ -31,7 +33,9 @@ class MapComponent extends PureComponent {
       }
 
       if (data.type === 'poly') {
+        zoom = data.coordinates.length > 25 ? 5 : 11;
         centerLatLang = data.coordinates.length ? data.coordinates[0] : {...this.state.latlng};
+
         drawings.push((
           <Polygon key={index} color="purple" positions={data.coordinates.map(({lat, lng}) => [lat, lng])} >
             <Popup> {this.props.target.name}</Popup>
@@ -42,7 +46,7 @@ class MapComponent extends PureComponent {
 
     return (
       <div className="map leaflet-container">
-        <Map center={centerLatLang} zoom={10} className="custom-map--light" >
+        <Map center={centerLatLang} zoom={zoom} className="custom-map--light" >
           <TileLayer id="mapbox.streets" url={leafURL} attribution="<attribution>" />
           {drawings}
         </Map>

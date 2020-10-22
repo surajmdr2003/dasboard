@@ -9,8 +9,8 @@ class ReportService {
     };
 
     async getReports(campaignId, page, perPage) {
-      const userInfo = await AuthService.getSessionInfo();
-      const accessToken = userInfo.getAccessToken().getJwtToken();
+      const userSession = await AuthService.getSessionInfo();
+      const accessToken = userSession.getAccessToken().getJwtToken();
 
       // Setting up header info
       this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
@@ -21,13 +21,13 @@ class ReportService {
     }
 
     async emailReport(reportId) {
-      const userInfo = await AuthService.getSessionInfo();
-      const accessToken = userInfo.getAccessToken().getJwtToken();
+      const userSession = await AuthService.getSessionInfo();
+      const accessToken = userSession.getAccessToken().getJwtToken();
 
       // Setting up header info
       this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
       this.apiRequest.queryStringParameters = {};
-      this.apiRequest.queryStringParameters.email = info.getIdToken().payload.email;
+      this.apiRequest.queryStringParameters.email = userSession.getIdToken().payload.email;
 
       return await API.post('emailReport', `/${reportId}/reports/email`, this.apiRequest);
     }

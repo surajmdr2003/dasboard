@@ -1,13 +1,20 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { Auth, API } from 'aws-amplify';
 
 import C3Chart from '@kaiouwang/react-c3js';
 import 'c3/c3.css';
 import moment from 'moment';
+
+// Components
 import DatePickerField from './form-fields/DatePickerField';
 import AllCampaignsLifetimeData from './AllCampaignsLifetimeData';
+import SingleCampaignInfo from './SingleCompanyInfo';
+import AllCampaignInfo from './AllCampaignInfo';
 import CampaignDetail from './CampaignDetail';
+
+// Services
+import CampaignService from '../services/campaign.service';
+import AdvertiserService from '../services/advertiser.service';
 
 /**
  * Attribute for graph starts
@@ -101,6 +108,8 @@ const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).f
 const start = moment(start).subtract(29, 'days').format('YYYY-MM-DD');
 
 const CampaignGraph = (props) => {
+  const currentCampaign = window.$campaigns.find(item => item.id === parseInt(props.campaignId, 10));
+  const [userId, serUserId] = useState(null);
   const [gData, setData] = useState(initialData); // For graph data
   const [activeAttr, setActive] = useState('impressions'); // For active graph (tab)
   const [filterDateTitle, setFilterDateTitle] = useState('Last 30 Days'); // For datepicker label
@@ -116,85 +125,78 @@ const CampaignGraph = (props) => {
     impressions: 0,
     conversions: [],
   });
-
-  const currentCampaign = window.$campaigns.find(item => item.id === parseInt(props.campaignId, 10));
-
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-    queryStringParameters: {},
-  };
+  const [campaignInfo, setCampaignInfo] = useState({
+    campaigns: {
+      active: 0,
+      inactive: 0,
+      paused: 0,
+      total: 0,
+    },
+  });
 
   useEffect(() => {
-    advertiserLifeTimeData();
-    advertiserPerformanceData(start, end);
+    initialize();
   }, [props.campaignId]);
+
+  const initialize = async() => {
+    const userInfo = await AdvertiserService.getAdvertiser();
+
+    // Load Advertiser Lifetime Data
+    advertiserLifeTimeData(userInfo.data.id);
+    advertiserPerformanceData(userInfo.data.id, start, end);
+
+    // Set User Campaign Info
+    setCampaignInfo(userInfo.data.campaigns);
+    serUserId(userInfo.data.id);
+  };
 
   /**
    * Call API and generate graphs correspond to data
+   * @param {Number | String} advertiserId
    * @param {start date} sDate
    * @param {end date} eDate
    */
-  const advertiserPerformanceData = (sDate, eDate) => {
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
+  const advertiserPerformanceData = (advertiserId, sDate, eDate) => {
+    const makeApiCall = (props.campaignId)
+      ? CampaignService.getCampaignPerformance(props.campaignId)
+      : AdvertiserService.getAdvertiserPerformance(advertiserId, {
+        startDate: sDate,
+        endDate: eDate,
+        interval: checkInterval(sDate, eDate),
+        includeChange: true,
+      });
 
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    makeApiCall.then(response => {
+      // Reformatting data for BarGraph
+      reformatDataForGraph(response.data.data);
 
-        Object.assign(apiRequest.queryStringParameters, {
-          startDate: sDate,
-          endDate: eDate,
-          interval: checkInterval(sDate, eDate),
-          includeChange: true,
-        });
+      // Merge old summary data and new summarydata from api
+      setSummaryData(
+        (response.data.summary.length)
+          ? response.data.summary[0]
+          : {
+            clicks: 0,
+            impressions: 0,
+            conversions: [],
+            change: [],
+          }
+      );
 
-        const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformance';
-        const apiPath = (props.campaignId) ? `/${props.campaignId}/performance` : '';
-        const response = await API.post(apiEndPoint, apiPath, apiRequest);
-
-        // Reformatting data for BarGraph
-        reformatDataForGraph(response.data.data);
-
-        // Merge old summary data and new summarydata from api
-        setSummaryData(
-          (response.data.summary.length)
-            ? response.data.summary[0]
-            : {
-              clicks: 0,
-              impressions: 0,
-              conversions: [],
-              change: [],
-            }
-        );
-
-        setTimeout(() => {
-          updateGraph('impressions');
-        }, 1000);
-      })
-      .catch(() => false)
-      .finally();
+      setTimeout(() => {
+        updateGraph('impressions');
+      }, 500);
+    });
   };
 
   /**
    * Call API for life time data
    */
-  const advertiserLifeTimeData = () => {
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-
-        const response = await API.post('advertiserPerformanceLifeTime', '', apiRequest);
-
-        // Set advertiser lifetime data
-        setLifeTimeData(response.data.summary[0]);
+  const advertiserLifeTimeData = (advertiserId) => {
+    AdvertiserService.getAdvertiserPerformanceLifetime(advertiserId)
+      .then((response) => {
+        setLifeTimeData(response.data.summary.length ? response.data.summary[0] : null);
       })
-      .catch(() => false)
-      .finally();
+      .catch(() => false);
   };
 
   /**
@@ -287,41 +289,7 @@ const CampaignGraph = (props) => {
     const range = (moment(startDate).format('DD MMM YY') + ' - ' + moment(endDate).format('DD MMM YY')).toString();
     setFilterDateTitle(range);
     setChartDate((moment(startDate).format('MMM DD YYYY') + ' - ' + moment(endDate).format('MMM DD YYYY')).toString());
-    advertiserPerformanceData(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
-  };
-
-  /**
-   * Returns view of All Campaigns Data
-   */
-  const AllCampaignInfo = () => {
-    return (
-      <Fragment>
-        <h4>All Campaigns data</h4>
-        <ul className="campaigns-datas nav">
-          <li>12 total campaigns</li>
-          <li className="active-campaign">5 Active</li>
-          <li className="inactive-campaign">3 Inactive</li>
-          <li className="paused-campaign">4 Paused</li>
-        </ul>
-      </Fragment>
-    );
-  };
-
-  /**
-   * Returns view of Single Campaigns Data
-   */
-  const SingleCampaignInfo = (campaign) => {
-    return (
-      campaign.campaignDetail
-        ? <Fragment>
-          <h4>{campaign.campaignDetail.name}</h4>
-          <ul className="campaigns-datas nav">
-            <li>From {chartDate }</li>
-            <li className={`${campaign.campaignDetail.status.toLowerCase()}-campaign`}>{campaign.campaignDetail.status}</li>
-          </ul>
-        </Fragment>
-        : ''
-    );
+    advertiserPerformanceData(userId, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
   };
 
   const tabData = (slug) => {
@@ -369,7 +337,7 @@ const CampaignGraph = (props) => {
                 {
                   (props.campaignId)
                     ? <SingleCampaignInfo campaignDetail={currentCampaign} />
-                    : <AllCampaignInfo />
+                    : <AllCampaignInfo campaigns={campaignInfo}/>
                 }
               </div>
               <div className="col-md-6 text-right">
@@ -418,4 +386,4 @@ CampaignGraph.propTypes = {
   campaignDetail: PropTypes.any,
 };
 
-export default CampaignGraph;
+export default React.memo(CampaignGraph);
