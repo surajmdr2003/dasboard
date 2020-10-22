@@ -8,7 +8,17 @@ class AdvertiserService {
     queryStringParameters: {},
   };
 
-  async getAdvertiser(advertiserId) {
+  async getAdvertiser() {
+    const userInfo = await AuthService.getSessionInfo();
+    const accessToken = userInfo.getAccessToken().getJwtToken();
+
+    // Setting up header info
+    this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+    return await API.get('currentAdvertiser', '', this.apiRequest);
+  }
+
+  async getAdvertiserProfile(advertiserId) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
 
@@ -28,14 +38,17 @@ class AdvertiserService {
     return await API.get('advertiser', `/${advertiserId}/asset`, this.apiRequest);
   }
 
-  async getAdvertiserPerformance(advertiserId) {
+  async getAdvertiserPerformance(advertiserId, options) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
-    return await API.get('advertiser', `/${advertiserId}/performance`, this.apiRequest);
+    // Setting up Query Strings
+    Object.assign(this.apiRequest.queryStringParameters, options);
+
+    return await API.post('advertiser', `/${advertiserId}/performance`, this.apiRequest);
   }
 
   async getAdvertiserNotifications(advertiserId) {

@@ -8,6 +8,16 @@ class CampaignService {
     queryStringParameters: {},
   };
 
+  async getCampaignPerformance(campaignId) {
+    const userInfo = await AuthService.getSessionInfo();
+    const accessToken = userInfo.getAccessToken().getJwtToken();
+
+    // Setting up header info
+    this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+    return await API.get('canpaignGroup', `/${campaignId}/performance`, this.apiRequest);
+  }
+
   async getCampaignReports(campaignId) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
