@@ -1,13 +1,15 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import DataTable from 'react-data-table-component';
 
 /** Services */
 import ReportService from '../services/report.service';
 
 /** Components */
+import AlertComponent from '../components/AlertComponent';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
-import DataTable from 'react-data-table-component';
+
 
 const Reports = (props) => {
   const campaignId = props.match.params.id;
@@ -15,6 +17,12 @@ const Reports = (props) => {
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
+  const [emailNotification, setEmailNotification] = useState({
+    isSending: false,
+    show: false,
+    message: '',
+    status: 'light',
+  });
   const [columns] = useState([
     {
       name: 'Months',
@@ -87,14 +95,34 @@ const Reports = (props) => {
 
   const  sendEmail = async(event, reportId) => {
     event.preventDefault();
-    setLoading(true);
+    setEmailNotification({
+      ...setEmailNotification,
+      isSending: true,
+      show: true,
+      message: 'Sending requested report in you email...',
+      status: 'warning',
+    });
+
     ReportService.emailReport(reportId)
       .then((response) => {
         console.log(response);
-        alert('Email Sent!');
+        setEmailNotification({
+          ...setEmailNotification,
+          isSending: false,
+          show: true,
+          message: 'Requested report is emailed to your registered account email!',
+          status: 'success',
+        });
       })
-      .catch((error) => alert(error.message))
-      .finally(() => setLoading(false));
+      .catch((error) => {
+        setEmailNotification({
+          ...setEmailNotification,
+          isSending: false,
+          show: true,
+          message: error.message,
+          status: 'danger',
+        });
+      });
   };
 
   const fetchCampaignReports = async(page) => {
@@ -135,6 +163,7 @@ const Reports = (props) => {
       </section>
       <section className="main-content-wrapper table-reports">
         <div className="container">
+          <AlertComponent message={emailNotification.message} alert={emailNotification.status} show={emailNotification.show} isLoading={emailNotification.isSending} />
           <DataTable
             columns={columns}
             data={data.content}
