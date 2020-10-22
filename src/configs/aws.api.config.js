@@ -5,6 +5,10 @@ const awsApiConfigs = {
   endpoints: [
     // Advertiser APIs
     {
+      name: 'currentAdvertiser',
+      endpoint: `${Config.apiPath}/user/advertiser`,
+    },
+    {
       name: 'advertiser',
       endpoint: `${Config.apiPath}/advertisers`,
     },
