@@ -96,7 +96,7 @@ const Reports = (props) => {
     </ul>
   );
 
-  const sendEmail = async (event, reportId) => {
+  const sendEmail = async(event, reportId) => {
     event.preventDefault();
     setEmailNotification({
       ...setEmailNotification,
@@ -128,7 +128,7 @@ const Reports = (props) => {
       });
   };
 
-  const fetchCampaignReports = async (page) => {
+  const fetchCampaignReports = async(page) => {
     setLoading(true);
     ReportService.getReports(campaignId, page, perPage)
       .then((response) => {
@@ -143,7 +143,7 @@ const Reports = (props) => {
     fetchCampaignReports(page);
   };
 
-  const handlePerRowsChange = async (newPerPage, page) => {
+  const handlePerRowsChange = async(newPerPage, page) => {
     setPerPage(newPerPage);
     fetchCampaignReports(page);
   };
