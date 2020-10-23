@@ -15,7 +15,7 @@ class CampaignService {
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
-    return await API.get('canpaignGroup', `/${campaignId}/performance`, this.apiRequest);
+    return await API.post('canpaignGroup', `/${campaignId}/performance`, this.apiRequest);
   }
 
   async getCampaignReports(campaignId) {

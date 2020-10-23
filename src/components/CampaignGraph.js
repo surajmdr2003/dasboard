@@ -336,7 +336,7 @@ const CampaignGraph = (props) => {
               <div className="col-md-6">
                 {
                   (props.campaignId)
-                    ? <SingleCampaignInfo campaignDetail={currentCampaign} />
+                    ? <SingleCampaignInfo campaignDetail={currentCampaign} chartDate={chartDate}/>
                     : <AllCampaignInfo campaigns={campaignInfo}/>
                 }
               </div>

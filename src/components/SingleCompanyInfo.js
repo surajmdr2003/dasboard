@@ -1,20 +1,26 @@
 import React, {Fragment} from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Returns view of Single Campaigns Data
  */
-const SingleCampaignInfo = (campaign) => {
+const SingleCampaignInfo = ({campaignDetail, chartDate}) => {
   return (
-    campaign.campaignDetail
+    campaignDetail
       ? <Fragment>
-        <h4>{campaign.campaignDetail.name}</h4>
+        <h4>{campaignDetail.name}</h4>
         <ul className="campaigns-datas nav">
           <li>From {chartDate }</li>
-          <li className={`${campaign.campaignDetail.status.toLowerCase()}-campaign`}>{campaign.campaignDetail.status}</li>
+          <li className={`${campaignDetail.status.toLowerCase()}-campaign`}>{campaignDetail.status}</li>
         </ul>
       </Fragment>
       : ''
   );
 };
+
+SingleCampaignInfo.propTypes = {
+  campaignDetail: PropTypes.object,
+  chartDate: PropTypes.string,
+}
 
 export default SingleCampaignInfo;
