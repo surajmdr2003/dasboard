@@ -18,6 +18,7 @@ const Navigation = () => {
     username: null,
     permissions: [],
   });
+  const [isOpen, toggleDropdown] = useState(false);
 
   const loadCampaignsData = () => {
     return AdvertiserService.getAdvertiser()
@@ -79,20 +80,20 @@ const Navigation = () => {
         <ul className="navbar-nav align-items-center secondary-menu">
           <li>
             <i className="icon icon-advertiser"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 20 18">
-              <g fill="none" fill-rule="evenodd">
-                <g fill="#A0A0A0" fill-rule="nonzero">
+              <g fill="none" fillRule="evenodd">
+                <g fill="#A0A0A0" fillRule="nonzero">
                   <path d="M1140.833 26.938v3.125c0 .517-.42.937-.937.937h-3.958c-.518 0-.938-.42-.938-.938v-3.125c0-.517.42-.937.938-.937h3.958c.518 0 .937.42.937.938zm7.084 9.375v-3.126c0-.517-.42-.937-.938-.937h-3.958c-.518 0-.938.42-.938.938v3.124c0 .518.42.938.938.938h3.958c.518 0 .938-.42.938-.938zm1.25-9.376v3.125c0 .518.42.938.937.938h3.958c.518 0 .938-.42.938-.938v-3.125c0-.517-.42-.937-.938-.937h-3.958c-.518 0-.937.42-.937.938zm-1.25 3.125v-3.125c0-.517-.42-.937-.938-.937h-3.958c-.518 0-.938.42-.938.938v3.125c0 .517.42.937.938.937h3.958c.518 0 .938-.42.938-.938zm-8.021 2.188h-3.958c-.518 0-.938.42-.938.938v3.124c0 .518.42.938.938.938h3.958c.518 0 .937-.42.937-.938v-3.124c0-.518-.42-.938-.937-.938zM1135 39.438v3.124c0 .518.42.938.938.938h3.958c.518 0 .937-.42.937-.938v-3.124c0-.518-.42-.938-.937-.938h-3.958c-.518 0-.938.42-.938.938zm15.104-2.188h3.958c.518 0 .938-.42.938-.938v-3.124c0-.518-.42-.938-.938-.938h-3.958c-.518 0-.937.42-.937.938v3.124c0 .518.42.938.937.938zm0 6.25h3.958c.518 0 .938-.42.938-.938v-3.124c0-.518-.42-.938-.938-.938h-3.958c-.518 0-.937.42-.937.938v3.124c0 .518.42.938.937.938zm-8.02-4.063v3.126c0 .517.419.937.937.937h3.958c.518 0 .938-.42.938-.938v-3.124c0-.518-.42-.938-.938-.938h-3.958c-.518 0-.938.42-.938.938z" transform="translate(-1135 -26)" />
                 </g>
               </g>
             </svg></i>
-            <div className="dropdown-menu advertiser-dropdown-menu show">
+            <div className="dropdown-menu advertiser-dropdown-menu">
               <ul className="list-group advertiser">
                 <li className="list-group-item">
                   <div className="search-advitiser">
                     <input type="text" name="search" className="form-control" placeholder="Search advertiser by name…" />
                     <button type="submit">
                       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="16" viewBox="0 0 15 16">
-                        <g fill="#505050" fill-rule="nonzero">
+                        <g fill="#505050" fillRule="nonzero">
                           <path d="M1381.722 105.187l-2.87-2.87c1.07-1.2 1.735-2.788 1.735-4.523 0-3.746-3.048-6.794-6.793-6.794-3.746 0-6.794 3.048-6.794 6.794 0 3.745 3.048 6.793 6.794 6.793 1.33 0 2.561-.389 3.6-1.037l2.983 2.983c.178.178.421.276.664.276.244 0 .487-.098.665-.276.39-.373.39-.973.016-1.346zm-12.825-7.393c0-2.692 2.189-4.897 4.897-4.897 2.707 0 4.88 2.205 4.88 4.897 0 2.691-2.189 4.896-4.88 4.896-2.692 0-4.897-2.189-4.897-4.896z" transform="translate(-1367 -91)" />
                         </g>
                       </svg>
@@ -101,12 +102,13 @@ const Navigation = () => {
                 </li>
                 <li className="list-group-item">Congressional FCU</li>
                 <li className="list-group-item">US Eagle Federal Credit Union</li>
-                <li className="list-group-item">New Planet Energy	</li>
+                <li className="list-group-item">New Planet Energy      </li>
                 <li className="list-group-item">Vestibulum at eros</li>
               </ul>
             </div>
           </li>
-          <li><i className="icon icon-notification" />
+          <li>
+            <i className="icon icon-notification" />
             <div className="dropdown-menu notification-dropdown-menu">
               <div className="notification-header">
                 Notifications <Link to="/dashboard/all-notifications.html" className="btn-link">See All</Link>
