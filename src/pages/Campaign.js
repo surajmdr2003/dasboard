@@ -44,7 +44,7 @@ const Campaign = (props) => {
                   <PageTitleCampaignDropdown pageSlug="/dashboard/campaign" campaignId={campaignId} campaignList={window.$campaigns} />
                 </div>
                 <div className="col-md-6 text-right">
-                  <a href={reportUrl} target="_blank" className="btn btn-link btn-download-report">Download Report</a>
+                  <a href={reportUrl} download className="btn btn-link btn-download-report">Download Report</a>
                 </div>
               </div>
             </div>
