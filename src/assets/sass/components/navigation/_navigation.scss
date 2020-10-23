@@ -233,7 +233,18 @@ li.menu-item-has-children {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
+
+.icon-advertiser {
+    margin-right: size(20);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+
 
 .secondary-menu {
     @include desktop-down() {
@@ -272,6 +283,9 @@ li.menu-item-has-children {
             }
             .icon-notification { 
                 background-color: $primary;
+            }
+            .icon-advertiser svg path { 
+                fill: $primary;
             }
         }
     
@@ -401,6 +415,53 @@ button.navbar-toggler {
                 @include desktop-down() {
                     display: none;
                 }
+            }
+        }
+    }
+}
+
+.advertiser-dropdown-menu {
+    min-width: size(280);
+    font-size: size(13);
+    .list-group-item {
+        padding: 1rem 1.25rem;
+        border-left: 0;
+        border-right: 0;
+
+        &:last-child {
+            border: 0;
+        }
+        &:first-child {
+            border-top: 0;
+        }
+
+        .search-advitiser {
+            position: relative;
+            .form-control {
+                border: 0;
+                padding: 0 30px 0 0;
+                height: 20px;
+                outline: none;
+
+                &:focus, &:active, &:hover {
+                    border: 0;
+                    outline: 0 !important;
+                    box-shadow: none !important;
+                } 
+            }
+            button {
+                border: 0;
+                background: none;
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+
+                &:focus, &:active, &:hover {
+                    border: 0;
+                    outline: 0 !important;
+                    box-shadow: none !important;
+                } 
             }
         }
     }
