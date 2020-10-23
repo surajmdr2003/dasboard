@@ -21,6 +21,6 @@ const SingleCampaignInfo = ({campaignDetail, chartDate}) => {
 SingleCampaignInfo.propTypes = {
   campaignDetail: PropTypes.object,
   chartDate: PropTypes.string,
-}
+};
 
 export default SingleCampaignInfo;

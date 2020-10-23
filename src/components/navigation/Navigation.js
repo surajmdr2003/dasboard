@@ -8,23 +8,43 @@ import NavDropdownCampaign from './NavDropdownCampaign';
 import NavDropdownCreatives from './NavDropdownCreatives';
 
 // Services
+import AuthService from '../../services/auth.service';
 import AdvertiserService from '../../services/advertiser.service';
 
 const Navigation = () => {
   const [campaignList, setCampaignList] = useState(window.$campaigns);
+  const [currentUser, setCurrentUser] = useState({
+    fullname: null,
+    username: null,
+    permissions: [],
+  });
 
   const loadCampaignsData = () => {
-    AdvertiserService.getAdvertiserCampaignGroups(4955)
-      .then((response) => {
-        // assign on global variable
-        window.$campaigns = response.data;
-        PubSub.publish('CAMPAIGNS:LOADED', response.data);
-        setCampaignList(response.data);
+    return AdvertiserService.getAdvertiser()
+      .then((advertiser) => {
+        AdvertiserService.getAdvertiserCampaignGroups(advertiser.data.id)
+          .then((response) => {
+            window.$campaigns = response.data;
+            PubSub.publish('CAMPAIGNS:LOADED', response.data);
+            setCampaignList(response.data);
+          });
       })
       .catch(() => false);
   };
 
+  const loadCurrentUser = () => {
+    return AuthService.getSessionInfo()
+      .then(session => {
+        setCurrentUser({
+          fullname: session.getIdToken().payload.name,
+          username: session.getIdToken().payload['cognito:username'],
+          permissions: session.getAccessToken().payload['cognito:groups'],
+        });
+      });
+  };
+
   useEffect(() => {
+    loadCurrentUser();
     window.$campaigns.length === 0 && loadCampaignsData();
   }, []);
 
@@ -99,7 +119,7 @@ const Navigation = () => {
               <img src="/assets/images/avatar.png" className="profile-icon align-self-center mr-3"
                 alt="Midfirst Bank's profile picture" />
               <div className="media-body  align-self-center">
-                <h6 className="mt-0">Midfirst Bank</h6>
+                <h6 className="mt-0">{currentUser.fullname}</h6>
               </div>
             </div>
             <ul className="dropdown-menu profile-dropdown-menu">
