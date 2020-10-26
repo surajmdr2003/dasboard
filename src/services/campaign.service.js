@@ -28,6 +28,29 @@ class CampaignService {
     return await API.get('canpaignGroup', `/${campaignId}/report`, this.apiRequest);
   }
 
+  async getCampaignCreatives(campaignId, dateRangeFilter) {
+    const userInfo = await AuthService.getSessionInfo();
+    const accessToken = userInfo.getAccessToken().getJwtToken();
+
+    // Setting up header info
+    this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
+
+    return await API.post('canpaignGroup', `/${campaignId}/performance/asset`, this.apiRequest);
+  }
+
+  async getCampaignLandingPages(campaignId, dateRangeFilter, campaignFilter = null) {
+    const userInfo = await AuthService.getSessionInfo();
+    const accessToken = userInfo.getAccessToken().getJwtToken();
+
+    // Setting up header info
+    this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
+    campaignFilter && Object.assign(this.apiRequest.queryStringParameters, {filter: campaignFilter});
+
+    return await API.post('canpaignGroup', `/${campaignId}/performance/landingpage`, this.apiRequest);
+  }
+
   async getCampaignList(dateRangeFilter) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();

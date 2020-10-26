@@ -81,24 +81,27 @@ class AdvertiserService {
     return await API.post('advertiser', `/${advertiserId}/performance/lifetime`, this.apiRequest);
   }
 
-  async getAdvertiserPerformanceCampaigns(advertiserId) {
+  async getAdvertiserPerformanceCampaigns(advertiserId, dateRangeFilter) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
 
-    return await API.get('advertiser', `/${advertiserId}/performance/campaigns`, this.apiRequest);
+    return await API.post('advertiser', `/${advertiserId}/performance/campaigns`, this.apiRequest);
   }
 
-  async getAdvertiserPerformanceLandingPages(advertiserId) {
+  async getAdvertiserPerformanceLandingPages(advertiserId, dateRangeFilter, campaignFilter = null) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
+    campaignFilter && Object.assign(this.apiRequest.queryStringParameters, {filter: campaignFilter});
 
-    return await API.get('advertiser', `/${advertiserId}/performance/landingpage`, this.apiRequest);
+    return await API.post('advertiser', `/${advertiserId}/performance/landingpage`, this.apiRequest);
   }
 
   async getAdvertiserPerformanceAssets(advertiserId) {
@@ -109,6 +112,21 @@ class AdvertiserService {
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
     return await API.get('advertiser', `/${advertiserId}/performance/asset`, this.apiRequest);
+  }
+
+  async searchAdvertisers(searchQuery) {
+    const userInfo = await AuthService.getSessionInfo();
+    const accessToken = userInfo.getAccessToken().getJwtToken();
+
+    // Setting up header info
+    this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+    // Setting up Query Strings
+    Object.assign(this.apiRequest.queryStringParameters, {
+      nameOrId: searchQuery,
+    });
+
+    return await API.get('advertiser', '/search', this.apiRequest);
   }
 }
 
