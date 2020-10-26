@@ -1,16 +1,16 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 
 /** Components */
 import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
 
-// Services
-import AuthService from '../services/auth.service';
-import AdvertiserService from '../services/advertiser.service';
+// Context
+import GlobalContext from '../context/GlobalContext';
 
 const Profile = () => {
-  const [state, setState] =  useState({
+  const {user} = React.useContext(GlobalContext);
+  const [state] =  useState({
     isLoading: false,
-    profile: {
+    profile: user || {
       id: 4955,
       name: '',
       email: '',
@@ -28,30 +28,6 @@ const Profile = () => {
       payments: [],
       billingHistory: null,
     },
-  }, []);
-
-  useEffect(() => {
-    setState({...state, isLoading: true});
-    AuthService.getSessionInfo()
-      .then(session => {
-        const permissions = session.getAccessToken().payload['cognito:groups'];
-
-        return (permissions.includes('ROLE_ADVERTISER') && permissions.includes('ROLE_USER')) || permissions.includes('ROLE_ADMIN');
-      })
-      .then(isAuthorized => {
-        if (!isAuthorized) {
-          return alert(' User not Authorized to access this Profile Page.');
-        }
-
-        return AdvertiserService.getAdvertiser()
-          .then((response) => {
-            setState({
-              isLoading: false,
-              profile: response.data,
-            });
-          })
-          .catch(() => false);
-      });
   }, []);
 
   return (

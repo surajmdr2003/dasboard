@@ -1,11 +1,12 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import C3Chart from '@kaiouwang/react-c3js';
 import 'c3/c3.css';
 
-
 /** Service */
 import StatsService from '../services/stats.service';
+
+// Context
+import GlobalContext from '../context/GlobalContext';
 
 /** Components */
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
@@ -29,9 +30,8 @@ const bar = {
   },
 };
 
-
-const Stats = (props) => {
-  const campaignId = props.match.params.id;
+const Stats = () => {
+  const {activeCampaign, setActiveCampaign} = React.useContext(GlobalContext);
   const [dropdownLabel, setDropdownLabel] = useState('Filter By Month');
   const [months, setCampaignMonths] = useState([]);
   const [affinityData, setAffinityData] = useState([]);
@@ -76,7 +76,7 @@ const Stats = (props) => {
   * API call to load month
   */
   const getCampaignMonths = () => {
-    StatsService.getCampaignMonths(campaignId)
+    StatsService.getCampaignMonths(setActiveCampaign.id)
       .then((response) => {
         setCampaignMonths(response.data);
         loadStatsData(response.data[0].id);
@@ -180,7 +180,7 @@ const Stats = (props) => {
 
   useEffect(() => {
     getCampaignMonths();
-  }, [campaignId]);
+  }, [activeCampaign.id]);
 
   return (
     <Fragment>
@@ -189,7 +189,7 @@ const Stats = (props) => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/stats" campaignId={campaignId} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageSlug="/dashboard/stats" campaignId={setActiveCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
@@ -264,10 +264,6 @@ const Stats = (props) => {
       </section>
     </Fragment>
   );
-};
-
-Stats.propTypes = {
-  match: PropTypes.object,
 };
 
 export default Stats;

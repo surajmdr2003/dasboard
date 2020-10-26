@@ -1,35 +1,26 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { PropTypes } from 'prop-types';
 import moment from 'moment';
-import { Auth, API } from 'aws-amplify';
+
+// Context
+import GlobalContext from '../context/GlobalContext';
 
 /** Components */
 import DatePickerField from '../components/form-fields/DatePickerField';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import TableLandingPages from '../components/TableLandingPages';
 
-/**
- * For Initial startdate and enddate
- */
-const now = new Date();
-const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
+// Campaign Service
+import CampaignService from '../services/campaign.service';
 
-const LandingPages = (props) => {
-  const campaignId = props.match.params.id;
+const LandingPages = () => {
+  const {setActiveCampaign, dateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
+  const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
   const [topLandingPageList, setLandingPagesList] = useState([]);
   const [dateFilter, setDateFilter] = useState({
-    endDate: end,
-    startDate: start,
+    endDate: dateFilterRange.endDate,
+    startDate: dateFilterRange.startDate,
   });
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-    queryStringParameters: {},
-  };
-
 
   /**
    * Call API and generate graphs correspond to data
@@ -37,16 +28,8 @@ const LandingPages = (props) => {
    */
   const loadLandingPagesData = (dateRangeFilter) => {
     setIsLoading(true);
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-
-        Object.assign(apiRequest.queryStringParameters, dateRangeFilter);
-
-        const response = await API.post('canpaignGroup', `/${campaignId}/performance/landingpage`, apiRequest);
+    CampaignService.getCampaignLandingPages(setActiveCampaign.id, dateRangeFilter)
+      .then((response) => {
         setLandingPagesList(response.data.summary);
         setIsLoading(false);
       })
@@ -67,7 +50,7 @@ const LandingPages = (props) => {
 
   useEffect(() => {
     loadLandingPagesData(dateFilter);
-  }, [campaignId]);
+  }, [setActiveCampaign.id]);
 
   return (
     <Fragment>
@@ -76,7 +59,7 @@ const LandingPages = (props) => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/landing-pages" campaignId={campaignId} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageSlug="/dashboard/landing-pages" campaignId={setActiveCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
@@ -101,10 +84,6 @@ const LandingPages = (props) => {
       </section>
     </Fragment>
   );
-};
-
-LandingPages.propTypes = {
-  match: PropTypes.any,
 };
 
 export default LandingPages;
