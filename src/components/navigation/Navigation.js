@@ -22,11 +22,11 @@ const Navigation = () => {
   const [isOpen, toggleDropdown] = useState(false);
 
   const loadCampaignsData = () => {
-    return user && AdvertiserService.getAdvertiserCampaignGroups(user.id)
+    return AdvertiserService.getAdvertiserCampaignGroups(user.id)
       .then((response) => {
         window.$campaigns = response.data;
         PubSub.publish('CAMPAIGNS:LOADED', response.data);
-        setActiveCampaign({id: response.data.length ? response.data[0] : { id: null}});
+        setActiveCampaign(response.data.length ? response.data[3] : { id: null});
         setCampaignList(response.data);
       })
       .catch(() => console.log('No campaigns available for user: ' + user.id));

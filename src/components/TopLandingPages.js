@@ -16,11 +16,12 @@ import DropdownFilter from '../components/form-fields/DropdownFilter';
 import TableLandingPages from '../components/TableLandingPages';
 
 const TopLandingPages = (props) => {
-  const {user, setActiveCampaign, dateFilterRange} = React.useContext(GlobalContext);
+  const {user, activeCampaign, dateFilterRange} = React.useContext(GlobalContext);
+  const [pageMode] = useState(props.campaignId ? 'detail' : '');
+  const [campaignId, setCampaignId] = useState(props.campaignId || activeCampaign.id);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(`Last ${dateFilterRange.days} Days`);
   const [topLandingPageList, setLandingPagesList] = useState([]);
-  const [filteredCampaignId, setFilteredCampaignId] = useState();
   const [dateFilter, setDateFilter] = useState({
     endDate: dateFilterRange.endDate,
     startDate: dateFilterRange.startDate,
@@ -28,13 +29,14 @@ const TopLandingPages = (props) => {
 
   /**
    * Call API and generate graphs correspond to data
-   * @param {Integer} campaignFilter
+   * @param {Integer} campId
+   * @param {Object} campaignFilter
    * @param {Object} dateRangeFilter
    */
-  const loadLandingPagesData = (dateRangeFilter, campaignFilter) => {
+  const loadLandingPagesData = (campId, dateRangeFilter, campaignFilter) => {
     setIsLoading(true);
-    const landingPageApiCall = (setActiveCampaign.id)
-      ? CampaignService.getCampaignLandingPages(setActiveCampaign.id, dateRangeFilter, campaignFilter)
+    const landingPageApiCall = (campId)
+      ? CampaignService.getCampaignLandingPages(campId, dateRangeFilter, campaignFilter)
       : AdvertiserService.getAdvertiserPerformanceLandingPages(user.id, dateRangeFilter, campaignFilter);
 
     landingPageApiCall.then((response) => {
@@ -53,17 +55,17 @@ const TopLandingPages = (props) => {
   const datepickerCallback = (startDate, endDate) => {
     setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
-    loadLandingPagesData({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') }, filteredCampaignId);
+    loadLandingPagesData(campaignId, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
 
   const loadLandingPagesByCampaign = (campaign) => {
-    setFilteredCampaignId(campaign.id);
-    loadLandingPagesData(dateFilter, campaign.id);
+    setCampaignId(campaign.id);
   };
 
   useEffect(() => {
-    loadLandingPagesData(dateFilter);
-  }, [props.campaignId]);
+    setCampaignId(campaignId);
+    campaignId && loadLandingPagesData(campaignId, dateFilter);
+  }, [campaignId]);
 
   return (
     <section className="top-landingpage-content">
@@ -72,23 +74,19 @@ const TopLandingPages = (props) => {
           <div className="col-md-5">
             <div className="block-title">
               Top Landing Pages
-              <Link to={`/dashboard/landing-pages${props.campaignId ? '/' + props.campaignId : ''}`} className="btn-link">See All</Link>
+              <Link to={`/dashboard/landing-pages${campaignId ? '/' + campaignId : ''}`} className="btn-link">See All</Link>
             </div>
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              {
-                !props.campaignId
-                  ? <DropdownFilter itemList={window.$campaigns} dropwDownCallBack={loadLandingPagesByCampaign} />
-                  : ''
-              }
+              { pageMode !== 'detail' ? <DropdownFilter itemList={window.$campaigns} label={activeCampaign ? activeCampaign.name : null} dropwDownCallBack={loadLandingPagesByCampaign} /> : ''}
               <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
             </div>
           </div>
         </div>
         {
           isLoading
-            ? <div className="text-center m-5">
+            ? <div className="col text-center m-5">
               <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
             </div>
             : <TableLandingPages landingPages={topLandingPageList} />
