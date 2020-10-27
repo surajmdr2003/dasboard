@@ -61,12 +61,13 @@ class AdvertiserService {
     return await API.get('advertiser', `/${advertiserId}/notifications`, this.apiRequest);
   }
 
-  async getAdvertiserCampaignGroups(advertiserId) {
+  async getAdvertiserCampaignGroups(advertiserId, dateRangeFilter) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
 
     return await API.get('advertiser', `/${advertiserId}/campaigngroup`, this.apiRequest);
   }
@@ -104,14 +105,17 @@ class AdvertiserService {
     return await API.post('advertiser', `/${advertiserId}/performance/landingpage`, this.apiRequest);
   }
 
-  async getAdvertiserPerformanceAssets(advertiserId) {
+  async getAdvertiserPerformanceAssets(advertiserId, dateRangeFilter, campaignFilter = null) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
+    campaignFilter && Object.assign(this.apiRequest.queryStringParameters, {filter: campaignFilter});
 
-    return await API.get('advertiser', `/${advertiserId}/performance/asset`, this.apiRequest);
+
+    return await API.post('advertiser', `/${advertiserId}/performance/asset`, this.apiRequest);
   }
 
   async searchAdvertisers(searchQuery) {
