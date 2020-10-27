@@ -2,35 +2,33 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
+// Context
+import GlobalContext from '../context/GlobalContext';
+
 // Services
-import CampaignService from '../services/campaign.service';
+import AdvertiserService from '../services/advertiser.service';
 
 /** Components */
 import DatePickerField from '../components/form-fields/DatePickerField';
 
-/**
- * For Initial startdate and enddate
- */
-const now = new Date();
-const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
-
 const CampaignList = () => {
+  const {user, dateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
+  const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
   const [campaigns, setCampaigns] = useState([]);
   const [dateFilter, setDateFilter] = useState({
-    endDate: end,
-    startDate: start,
+    endDate: dateFilterRange.endDate,
+    startDate: dateFilterRange.startDate,
   });
 
   /**
    * Call API and generate graphs correspond to data
+   * @param {Integer} userId
    * @param {object} dateRangeFilter
    */
-  const loadCampaignListData = (dateRangeFilter) => {
+  const loadCampaignListData = (userId, dateRangeFilter) => {
     setIsLoading(true);
-    CampaignService.getCampaignList(dateRangeFilter)
+    AdvertiserService.getAdvertiserPerformanceCampaigns(userId, dateRangeFilter)
       .then((response) => {
         setCampaigns(response.data.summary);
       })
@@ -86,7 +84,7 @@ const CampaignList = () => {
 
 
   useEffect(() => {
-    loadCampaignListData(dateFilter);
+    loadCampaignListData(user.id, dateFilter);
   }, []);
 
   return (

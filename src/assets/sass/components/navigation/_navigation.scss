@@ -421,8 +421,11 @@ button.navbar-toggler {
 }
 
 .advertiser-dropdown-menu {
-    min-width: size(280);
+    min-width: size(300);
     font-size: size(13);
+    max-height: 400px;
+    overflow: scroll;
+
     .list-group-item {
         padding: 1rem 1.25rem;
         border-left: 0;

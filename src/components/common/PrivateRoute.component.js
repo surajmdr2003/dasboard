@@ -4,14 +4,28 @@ import { Route, Redirect } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
 const PrivateRoute = ({ component: Component, ...args }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [state, setState] = useState({
+    isLoading: true,
+    isLoggedIn: false,
+  });
 
   useEffect(() => {
+    setState({...state, isLoading: true});
     Auth.currentAuthenticatedUser()
-      .then(() => setIsLoggedIn(true))
-      .catch(() => setIsLoggedIn(false))
-      .finally(() => setIsLoading(false));
+      .then(session => {
+        console.log(session);
+        setState({
+          isLoading: false,
+          isLoggedIn: true,
+        });
+      })
+      .catch(() => {
+        console.log('Not signed in yet!');
+        setState({
+          isLoading: false,
+          isLoggedIn: false,
+        });
+      });
   }, []);
 
   /**
@@ -33,17 +47,15 @@ const PrivateRoute = ({ component: Component, ...args }) => {
       <Route
         {...args}
         render={props =>
-          isLoggedIn ? (
-            <Component {...props} />
-          ) : (
-            <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-          )
+          state.isLoggedIn
+            ? <Component {...props} />
+            : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
         }
       />
     );
   };
 
-  return ((isLoading && !isLoggedIn) ? renderLoader() : renderComponent());
+  return ((state.isLoading && !state.isLoggedIn) ? renderLoader() : renderComponent());
 };
 
 // Props Validation

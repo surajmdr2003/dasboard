@@ -2,7 +2,9 @@ import React, { useEffect, useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { Auth, API } from 'aws-amplify';
+
+// Services
+import CampaignService from '../../services/campaign.service';
 
 const NavDropdownCampaign = (props) => {
   const initSummary = {
@@ -13,7 +15,7 @@ const NavDropdownCampaign = (props) => {
   };
   const [isLoading, setIsLoading] = useState(false);
   const [currentCampaignCat, setcurrentCampaignCat] = useState('ACTIVE');
-  const [currentCampaign, setcurrentCampaign] = useState(256);
+  const [currentCampaign, setcurrentCampaign] = useState('');
   const [campaignNavItemsOfStatus, setCampaignNavItemsOfStatus] = useState([]);
   const [navCampaignSummary, setNavCampaignSummary] = useState(initSummary);
 
@@ -41,30 +43,14 @@ const NavDropdownCampaign = (props) => {
   const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
   const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
 
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-    queryStringParameters: {},
-  };
-
   /**
    * Load Campaign Summary data for menu
    * @param {Int} campaignId
    */
   const loadCampaignSummaryData = (campaignId) => {
     setIsLoading(true);
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-
-        Object.assign(apiRequest.queryStringParameters, {
-          startDate: start,
-          endDate: end,
-        });
-
-        const response = await API.post('canpaignGroup', `/${campaignId}/performance`, apiRequest);
+    CampaignService.getCampaignPerformance(campaignId, {startDate: start, endDate: end})
+      .then((response) => {
         response.data.summary.length ? setNavCampaignSummary(response.data.summary[0]) : setNavCampaignSummary(initSummary);
       })
       .catch(() => false)
@@ -143,7 +129,7 @@ const NavDropdownCampaign = (props) => {
                   </div>
                   : <Fragment>
                     <div className="overview-title">
-                      <h5>Overview of {(props.campaignNavItems.length) ? props.campaignNavItems[0].name : ''}</h5>
+                      <h5>Overview of {(navCampaignSummary && navCampaignSummary.name) ? navCampaignSummary.name : 'N/A'}</h5>
                       <p>Last 7 days</p>
                     </div>
                     <ul className="nav nav-pills nav-fill overview-detail">

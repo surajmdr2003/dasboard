@@ -2,56 +2,48 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 import PubSub from 'pubsub-js';
+import _debounce from 'lodash/debounce';
+
+// Context
+import GlobalContext from '../../context/GlobalContext';
 
 // Components
 import NavDropdownCampaign from './NavDropdownCampaign';
 import NavDropdownCreatives from './NavDropdownCreatives';
 
 // Services
-import AuthService from '../../services/auth.service';
 import AdvertiserService from '../../services/advertiser.service';
 
 const Navigation = () => {
+  const {user, setActiveCampaign} = React.useContext(GlobalContext);
   const [campaignList, setCampaignList] = useState(window.$campaigns);
-  const [currentUser, setCurrentUser] = useState({
-    fullname: null,
-    username: null,
-    permissions: [],
-  });
+  const [avaliableUsers, setAvailableUsers] = useState([]);
+  const [isSearching, setIsSearcing] = useState(false);
   const [isOpen, toggleDropdown] = useState(false);
 
   const loadCampaignsData = () => {
-    return AdvertiserService.getAdvertiser()
-      .then((advertiser) => {
-        AdvertiserService.getAdvertiserCampaignGroups(advertiser.data.id)
-          .then((response) => {
-            window.$campaigns = response.data;
-            PubSub.publish('CAMPAIGNS:LOADED', response.data);
-            setCampaignList(response.data);
-          });
+    return AdvertiserService.getAdvertiserCampaignGroups(user.id)
+      .then((response) => {
+        window.$campaigns = response.data;
+        PubSub.publish('CAMPAIGNS:LOADED', response.data);
+        setActiveCampaign(response.data.length ? response.data[3] : { id: null});
+        setCampaignList(response.data);
       })
-      .catch(() => false);
+      .catch(() => console.log('No campaigns available for user: ' + user.id));
   };
 
-  const loadCurrentUser = () => {
-    return AuthService.getSessionInfo()
-      .then(session => {
-        setCurrentUser({
-          fullname: session.getIdToken().payload.name,
-          username: session.getIdToken().payload['cognito:username'],
-          permissions: session.getAccessToken().payload['cognito:groups'],
-        });
+  const searchAdvertisers = (searchQuery) => {
+    setIsSearcing(true);
+    AdvertiserService.searchAdvertisers(searchQuery)
+      .then(response => {
+        setAvailableUsers(response.data.content);
+        setIsSearcing(false);
       });
   };
 
   useEffect(() => {
-    loadCurrentUser();
     window.$campaigns.length === 0 && loadCampaignsData();
   }, []);
-
-  const isNavItemActive = (path) => {
-    return location.pathname.indexOf(path) !== -1;
-  };
 
   return (
     <Fragment>
@@ -69,13 +61,13 @@ const Navigation = () => {
           <li className="menu-item-has-children"><NavLink activeClassName={'active'} to={'/dashboard/campaigns'}>Campaigns</NavLink>
             <NavDropdownCampaign campaignNavItems={campaignList} />
           </li>
-          <li className="menu-item-has-children"><NavLink isActive={() => isNavItemActive('/dashboard/creatives/')} to={`/dashboard/creatives/${campaignList.length ? campaignList[0].id : ''}`}>Creatives</NavLink>
+          <li className="menu-item-has-children"><NavLink to="/dashboard/creatives">Creatives</NavLink>
             <NavDropdownCreatives campaignNavItems={campaignList} />
           </li>
-          <li><NavLink isActive={() => isNavItemActive('/dashboard/landing-pages/')} to={`/dashboard/landing-pages/${campaignList.length ? campaignList[0].id : ''}`} >Landing pages</NavLink></li>
-          <li><NavLink isActive={() => isNavItemActive('/dashboard/targeting/')} to={`/dashboard/targeting/${campaignList.length ? campaignList[0].id : ''}`}> Targeting</NavLink></li>
-          <li><NavLink isActive={() => isNavItemActive('/dashboard/stats/')} to={`/dashboard/stats/${campaignList.length ? campaignList[0].id : ''}`}>Stats</NavLink></li>
-          <li><NavLink isActive={() => isNavItemActive('/dashboard/reports/')} to={`/dashboard/reports/${campaignList.length ? campaignList[0].id : ''}`}>Report</NavLink></li>
+          <li><NavLink to="/dashboard/landing-pages">Landing pages</NavLink></li>
+          <li><NavLink to="/dashboard/targeting">Targeting</NavLink></li>
+          <li><NavLink to="/dashboard/stats">Stats</NavLink></li>
+          <li><NavLink to="/dashboard/reports">Report</NavLink></li>
         </ul>
         <ul className="navbar-nav align-items-center secondary-menu">
           <li>
@@ -90,20 +82,21 @@ const Navigation = () => {
               <ul className="list-group advertiser">
                 <li className="list-group-item">
                   <div className="search-advitiser">
-                    <input type="text" name="search" className="form-control" placeholder="Search advertiser by name…" />
+                    <input type="text" name="search" className="form-control" placeholder="Search advertiser by name…" onChange={(e) => _debounce(searchAdvertisers(e.target.value), 5000)}/>
                     <button type="submit">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="16" viewBox="0 0 15 16">
-                        <g fill="#505050" fillRule="nonzero">
-                          <path d="M1381.722 105.187l-2.87-2.87c1.07-1.2 1.735-2.788 1.735-4.523 0-3.746-3.048-6.794-6.793-6.794-3.746 0-6.794 3.048-6.794 6.794 0 3.745 3.048 6.793 6.794 6.793 1.33 0 2.561-.389 3.6-1.037l2.983 2.983c.178.178.421.276.664.276.244 0 .487-.098.665-.276.39-.373.39-.973.016-1.346zm-12.825-7.393c0-2.692 2.189-4.897 4.897-4.897 2.707 0 4.88 2.205 4.88 4.897 0 2.691-2.189 4.896-4.88 4.896-2.692 0-4.897-2.189-4.897-4.896z" transform="translate(-1367 -91)" />
-                        </g>
-                      </svg>
+                      {
+                        isSearching
+                          ? <div className="spinner-grow spinner-grow-sm" role="status"> <span className="sr-only">Loading...</span></div>
+                          : <svg xmlns="http://www.w3.org/2000/svg" width="15" height="16" viewBox="0 0 15 16">
+                            <g fill="#505050" fillRule="nonzero">
+                              <path d="M1381.722 105.187l-2.87-2.87c1.07-1.2 1.735-2.788 1.735-4.523 0-3.746-3.048-6.794-6.793-6.794-3.746 0-6.794 3.048-6.794 6.794 0 3.745 3.048 6.793 6.794 6.793 1.33 0 2.561-.389 3.6-1.037l2.983 2.983c.178.178.421.276.664.276.244 0 .487-.098.665-.276.39-.373.39-.973.016-1.346zm-12.825-7.393c0-2.692 2.189-4.897 4.897-4.897 2.707 0 4.88 2.205 4.88 4.897 0 2.691-2.189 4.896-4.88 4.896-2.692 0-4.897-2.189-4.897-4.896z" transform="translate(-1367 -91)" />
+                            </g>
+                          </svg>
+                      }
                     </button>
                   </div>
                 </li>
-                <li className="list-group-item">Congressional FCU</li>
-                <li className="list-group-item">US Eagle Federal Credit Union</li>
-                <li className="list-group-item">New Planet Energy      </li>
-                <li className="list-group-item">Vestibulum at eros</li>
+                {avaliableUsers.map(advertiser =>  <li key={advertiser.id} className="list-group-item">{advertiser.name}</li>)}
               </ul>
             </div>
           </li>
@@ -153,7 +146,7 @@ const Navigation = () => {
               <img src="/assets/images/avatar.png" className="profile-icon align-self-center mr-3"
                 alt="Midfirst Bank's profile picture" />
               <div className="media-body  align-self-center">
-                <h6 className="mt-0">{currentUser.fullname}</h6>
+                <h6 className="mt-0">{user ? user.name : 'Guest'}</h6>
               </div>
             </div>
             <ul className="dropdown-menu profile-dropdown-menu">
