@@ -108,8 +108,12 @@ const Reports = () => {
   };
 
   const fetchCampaignReports = async(page) => {
+    if (activeCampaign && activeCampaign.id === null) {
+      return console.log('No Active campaign selected!');
+    }
+
     setLoading(true);
-    ReportService.getReports(activeCampaign.id, page, perPage)
+    return ReportService.getReports(activeCampaign.id, page, perPage)
       .then((response) => {
         setData(response.data);
       })

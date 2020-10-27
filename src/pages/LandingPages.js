@@ -13,7 +13,7 @@ import TableLandingPages from '../components/TableLandingPages';
 import CampaignService from '../services/campaign.service';
 
 const LandingPages = () => {
-  const {setActiveCampaign, dateFilterRange} = React.useContext(GlobalContext);
+  const {activeCampaign, dateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
   const [topLandingPageList, setLandingPagesList] = useState([]);
@@ -27,8 +27,12 @@ const LandingPages = () => {
    * @param {object} dateRangeFilter
    */
   const loadLandingPagesData = (dateRangeFilter) => {
+    if (activeCampaign && activeCampaign.id === null) {
+      return console.log('No Active campaign selected!');
+    }
+
     setIsLoading(true);
-    CampaignService.getCampaignLandingPages(setActiveCampaign.id, dateRangeFilter)
+    return CampaignService.getCampaignLandingPages(activeCampaign.id, dateRangeFilter)
       .then((response) => {
         setLandingPagesList(response.data.summary);
         setIsLoading(false);
@@ -50,7 +54,7 @@ const LandingPages = () => {
 
   useEffect(() => {
     loadLandingPagesData(dateFilter);
-  }, [setActiveCampaign.id]);
+  }, [activeCampaign.id]);
 
   return (
     <Fragment>
@@ -59,7 +63,7 @@ const LandingPages = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/landing-pages" campaignId={setActiveCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageSlug="/dashboard/landing-pages" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">

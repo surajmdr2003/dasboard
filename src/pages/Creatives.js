@@ -1,7 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { PropTypes } from 'prop-types';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
+
+// Context
+import GlobalContext from '../context/GlobalContext';
 
 /** Components */
 import DatePickerField from '../components/form-fields/DatePickerField';
@@ -11,24 +13,17 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 /** Services */
 import CampaignService from '../services/campaign.service';
 
-/**
- * For Initial startdate and enddate
- */
-const now = new Date();
-const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const start = moment(start).subtract(29, 'days').format('YYYY-MM-DD');
-
-const Creatives = (props) => {
-  const campaignId = props.match.params.id;
+const Creatives = () => {
+  const {activeCampaign, dateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterDateTitle, setFilterDateTitle] = useState('Last 30 Days');
+  const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
   const [groupedCreatives, setGroupedCreatives] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [filterLabel, setFilterLabel] = useState('Filter By Size');
   const [sizeFilters, setSizeFilters] = useState(['All Size']);
   const [dateFilter, setDateFilter] = useState({
-    endDate: end,
-    startDate: start,
+    endDate: dateFilterRange.endDate,
+    startDate: dateFilterRange.startDate,
   });
 
   /**
@@ -36,8 +31,12 @@ const Creatives = (props) => {
    * @param {object} dateRangeFilter
    */
   const loadCreativesData = (dateRangeFilter) => {
+    if (activeCampaign && activeCampaign.id === null) {
+      return console.log('No Active campaign selected!');
+    }
+
     setIsLoading(true);
-    CampaignService.getCampaignCreatives(campaignId, dateRangeFilter)
+    return CampaignService.getCampaignCreatives(activeCampaign.id, dateRangeFilter)
       .then(response => {
         const gCreatives = groupBy(response.data.summary.map(summary => ({...summary, size: calculateAssetDimensional(summary.assetUrl)})), 'size');
         setSizeFilters(['All Size', ...Object.keys(gCreatives)]);
@@ -117,10 +116,9 @@ const Creatives = (props) => {
       : <tr><td colSpan="7" className="text-center">No creative in this campaign</td></tr>;
   };
 
-
   useEffect(() => {
     loadCreativesData(dateFilter);
-  }, [campaignId]);
+  }, [activeCampaign.id]);
 
   const loadDataByMonth = (data) => {
     setSelectedSize(data.name);
@@ -134,7 +132,7 @@ const Creatives = (props) => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/creatives" campaignId={campaignId} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageSlug="/dashboard/creatives" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
@@ -176,10 +174,6 @@ const Creatives = (props) => {
       </section>
     </Fragment>
   );
-};
-
-Creatives.propTypes = {
-  match: PropTypes.any,
 };
 
 export default Creatives;

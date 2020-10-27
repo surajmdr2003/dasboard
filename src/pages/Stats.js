@@ -31,7 +31,7 @@ const bar = {
 };
 
 const Stats = () => {
-  const {activeCampaign, setActiveCampaign} = React.useContext(GlobalContext);
+  const {activeCampaign} = React.useContext(GlobalContext);
   const [dropdownLabel, setDropdownLabel] = useState('Filter By Month');
   const [months, setCampaignMonths] = useState([]);
   const [affinityData, setAffinityData] = useState([]);
@@ -76,7 +76,11 @@ const Stats = () => {
   * API call to load month
   */
   const getCampaignMonths = () => {
-    StatsService.getCampaignMonths(setActiveCampaign.id)
+    if (activeCampaign && activeCampaign.id === null) {
+      return console.log('No Active campaign selected!');
+    }
+
+    return StatsService.getCampaignMonths(activeCampaign.id)
       .then((response) => {
         setCampaignMonths(response.data);
         loadStatsData(response.data[0].id);
@@ -189,7 +193,7 @@ const Stats = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/stats" campaignId={setActiveCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageSlug="/dashboard/stats" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">

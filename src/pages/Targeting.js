@@ -8,7 +8,7 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import GlobalContext from '../context/GlobalContext';
 
 const Targeting = () => {
-  const {setActiveCampaign} = React.useContext(GlobalContext);
+  const {activeCampaign} = React.useContext(GlobalContext);
 
   return (
     <Fragment>
@@ -17,13 +17,13 @@ const Targeting = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/targeting" campaignId={+setActiveCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageSlug="/dashboard/targeting" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
               </div>
             </div>
           </div>
         </div>
       </section>
-      <TopTargets campaignId={+setActiveCampaign.id}/>
+      <TopTargets campaignId={+activeCampaign.id}/>
     </Fragment>
   );
 };
