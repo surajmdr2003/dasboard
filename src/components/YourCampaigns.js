@@ -1,54 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
 import moment from 'moment';
-import { Auth, API } from 'aws-amplify';
+
+// Context
+import GlobalContext from '../context/GlobalContext';
+
+// Services
+import AdvertiserService from '../services/advertiser.service';
 
 /** Components */
 import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 
 const YourCampaigns = () => {
+  const {user, dateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterDateTitle, setFilterDateTitle] = useState('Last 30 Days');
+  const [filterDateTitle, setFilterDateTitle] = useState(`Last ${dateFilterRange.days} Days`);
   const [campaginList, setCampaginList] = useState([]);
   const [filteredCampaginList, setFilteredCampaginList] = useState([]);
   const dropDownStatus = [{id: 1, name: 'ACTIVE'}, {id: 2, name: 'INACTIVE'}, {id: 3, name: 'PAUSED'}];
-
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-    queryStringParameters: {},
-  };
-
-  /**
- * For Initial startdate and enddate
- */
-  const now = new Date();
-  const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-  const start = moment(start).subtract(29, 'days').format('YYYY-MM-DD');
+  const [dateFilter, setDateFilter] = useState({
+    endDate: dateFilterRange.endDate,
+    startDate: dateFilterRange.startDate,
+  });
 
   /**
    * Call API and generate graphs correspond to data
    * @param {start date} sDate
    * @param {end date} eDate
    */
-  const campaignsData = (sDate, eDate) => {
+  const campaignsData = () => {
     setIsLoading(true);
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-
-        Object.assign(apiRequest.queryStringParameters, {
-          startDate: sDate,
-          endDate: eDate,
-        });
-
-        const response = await API.post('advertiserPerformanceCampaigns', '', apiRequest);
-
+    AdvertiserService.getAdvertiserPerformanceCampaigns(user.id, dateFilter)
+      .then((response) => {
         setCampaginList(response.data.summary);
         setFilteredCampaginList(response.data.summary);
         setIsLoading(false);
@@ -65,7 +49,7 @@ const YourCampaigns = () => {
   const datepickerCallback = (startDate, endDate) => {
     const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
     setFilterDateTitle(range);
-    campaignsData(moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
+    setDateFilter({startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')});
   };
 
   /**
@@ -114,7 +98,7 @@ const YourCampaigns = () => {
   };
 
   useEffect(() => {
-    campaignsData(start, end);
+    campaignsData();
   }, []);
 
   return (

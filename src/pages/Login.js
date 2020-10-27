@@ -13,12 +13,15 @@ const loginBanner = './assets/images/login-banner.jpg';
 
 const Login = (props) => {
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     setIsLoading(true);
     Auth.currentAuthenticatedUser()
-      .then(user => {
-        console.log('currentAuthenticatedUser', user);
+      .then(() => {
+        // Hide loader/spinner
         setIsLoading(false);
+
+        // Redirect user to Dashboard
         props.history.push('/dashboard');
       })
       .catch(() => {

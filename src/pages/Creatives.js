@@ -1,53 +1,46 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { PropTypes } from 'prop-types';
 import moment from 'moment';
-import { Auth, API } from 'aws-amplify';
+import groupBy from 'lodash/groupBy';
+
+// Context
+import GlobalContext from '../context/GlobalContext';
 
 /** Components */
 import DatePickerField from '../components/form-fields/DatePickerField';
+import DropdownFilter from '../components/form-fields/DropdownFilter';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 
+/** Services */
+import CampaignService from '../services/campaign.service';
 
-/**
- * For Initial startdate and enddate
- */
-const now = new Date();
-const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
-
-const Creatives = (props) => {
-  const campaignId = props.match.params.id;
+const Creatives = () => {
+  const {activeCampaign, dateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
-  const [creativeList, setCreativeList] = useState([]);
+  const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
+  const [groupedCreatives, setGroupedCreatives] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [filterLabel, setFilterLabel] = useState('Filter By Size');
+  const [sizeFilters, setSizeFilters] = useState(['All Size']);
   const [dateFilter, setDateFilter] = useState({
-    endDate: end,
-    startDate: start,
+    endDate: dateFilterRange.endDate,
+    startDate: dateFilterRange.startDate,
   });
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-    queryStringParameters: {},
-  };
-
 
   /**
    * Call API and generate graphs correspond to data
    * @param {object} dateRangeFilter
    */
   const loadCreativesData = (dateRangeFilter) => {
+    if (activeCampaign && activeCampaign.id === null) {
+      return console.log('No Active campaign selected!');
+    }
+
     setIsLoading(true);
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-
-        Object.assign(apiRequest.queryStringParameters, dateRangeFilter);
-
-        const response = await API.post('canpaignGroup', `/${campaignId}/performance/asset`, apiRequest);
-        setCreativeList(response.data.summary);
+    return CampaignService.getCampaignCreatives(activeCampaign.id, dateRangeFilter)
+      .then(response => {
+        const gCreatives = groupBy(response.data.summary.map(summary => ({...summary, size: calculateAssetDimensional(summary.assetUrl)})), 'size');
+        setSizeFilters(['All Size', ...Object.keys(gCreatives)]);
+        setGroupedCreatives(gCreatives);
         setIsLoading(false);
       })
       .catch(() => false)
@@ -84,9 +77,25 @@ const Creatives = (props) => {
     return (img.width + '*' + img.height);
   };
 
-  const loadViewOfCreative = (creativesList) => {
-    return creativesList.length
-      ? creativesList.map(creative => {
+  const getFilteredOrAllCreatives = (size) => {
+    let list = [];
+
+    if (size && size !== 'All Size') {
+      list = groupedCreatives[size];
+    } else {
+      for (const creativeGroup in groupedCreatives) {
+        list = [...list, ...groupedCreatives[creativeGroup]];
+      }
+    }
+
+    return list;
+  };
+
+  const loadViewOfCreative = () => {
+    const creatives = getFilteredOrAllCreatives(selectedSize) || [];
+
+    return creatives && creatives.length
+      ? creatives.map(creative => {
         return (<tr key={creative.campaignAssetId}>
           <td scope="row">
             <div className="campaign-media media">
@@ -96,7 +105,7 @@ const Creatives = (props) => {
               </div>
             </div>
           </td>
-          <td>{calculateAssetDimensional(creative.assetUrl)}</td>
+          <td>{creative.size}</td>
           <td>{creative.impressions}</td>
           <td>{creative.clicks}</td>
           <td>{handleNanValueWithCalculation(creative.clicks, creative.impressions)}%</td>
@@ -107,10 +116,14 @@ const Creatives = (props) => {
       : <tr><td colSpan="7" className="text-center">No creative in this campaign</td></tr>;
   };
 
-
   useEffect(() => {
     loadCreativesData(dateFilter);
-  }, [campaignId]);
+  }, [activeCampaign.id]);
+
+  const loadDataByMonth = (data) => {
+    setSelectedSize(data.name);
+    setFilterLabel('Size: ' + data.name);
+  };
 
   return (
     <Fragment>
@@ -119,11 +132,11 @@ const Creatives = (props) => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/creatives" campaignId={campaignId} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageSlug="/dashboard/creatives" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
-                  {/* <DropdownFilter /> */}
+                  {sizeFilters.length ? <DropdownFilter itemList={sizeFilters.map((item) => ({id: item, name: item}))} label={filterLabel} dropwDownCallBack={loadDataByMonth} /> : ''}
                   <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
                 </div>
               </div>
@@ -152,7 +165,7 @@ const Creatives = (props) => {
                     ? <tr><td colSpan="7"><div className="text-center m-5">
                       <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
                     </div></td></tr>
-                    : loadViewOfCreative(creativeList)
+                    : loadViewOfCreative()
                 }
               </tbody>
             </table>
@@ -161,10 +174,6 @@ const Creatives = (props) => {
       </section>
     </Fragment>
   );
-};
-
-Creatives.propTypes = {
-  match: PropTypes.any,
 };
 
 export default Creatives;

@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import PubSub from 'pubsub-js';
 
+// Context
+import GlobalContext from '../context/GlobalContext';
+
 const PageTitleCampaignDropdown = (props) => {
-  const [campaignList, setCampaignList] = useState(props.campaignList);
+  const {setActiveCampaign} = React.useContext(GlobalContext);
+  const [campaignList, setCampaignList] = useState(props.campaignList || []);
   const [currentCampaignCat, setcurrentCampaignCat] = useState('ACTIVE');
-  const [campaignNavItemsOfStatus, setCampaignNavItemsOfStatus] = useState([]);
 
   useEffect(() => {
     initialize();
@@ -38,8 +41,6 @@ const PageTitleCampaignDropdown = (props) => {
    * @param {String} status
    */
   const setCampaignNav = (status) => {
-    const campaignNavItemsWithStatus = campaignList.filter(item => item.status === status);
-    setCampaignNavItemsOfStatus(campaignNavItemsWithStatus);
     setcurrentCampaignCat(status);
   };
 
@@ -47,11 +48,13 @@ const PageTitleCampaignDropdown = (props) => {
    * Returns view of Campiagns list for breadcrumb
    * @param {Array} campaignsOfStatus
    */
-  const loadCampaignListForPageFilter = (campaignsOfStatus) => {
+  const loadCampaignListForPageFilter = (status) => {
+    const campaignsOfStatus = campaignList.filter(item => item.status === status);
+
     return campaignsOfStatus.length
       ? campaignsOfStatus.map((item) => {
         return (<li className="nav-item" key={item.id}>
-          <Link to={`${props.pageSlug}/${item.id}`} className={parseInt(props.campaignId, 10) === item.id ? 'text-primary' : ''}>{item.name}</Link>
+          <Link onClick={() => setActiveCampaign(item)} to={`${props.pageSlug}`} className={parseInt(props.campaignId, 10) === item.id ? 'text-primary' : ''}>{item.name}</Link>
         </li>);
       })
       : <li className="nav-item no-campaign">No Campaign</li>;
@@ -80,7 +83,7 @@ const PageTitleCampaignDropdown = (props) => {
         </div>
         <div className="card-body p-0">
           <ul className="campaign-list">
-            {loadCampaignListForPageFilter(campaignNavItemsOfStatus)}
+            {loadCampaignListForPageFilter(currentCampaignCat)}
           </ul>
         </div>
       </div>

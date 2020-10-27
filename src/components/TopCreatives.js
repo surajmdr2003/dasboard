@@ -1,63 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { Auth, API } from 'aws-amplify';
+
+// Context
+import GlobalContext from '../context/GlobalContext';
+
+// Services
+import CampaignService from '../services/campaign.service';
+import AdvertiserService from '../services/advertiser.service';
 
 /** Components */
 import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 import TopCreativeAdsBlock from './TopCreativeAdsBlock';
 
-/**
-* For Initial startdate and enddate
-*/
-const now = new Date();
-const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const start = moment(start).subtract(29, 'days').format('YYYY-MM-DD');
-
 const TopCreatives = (props) => {
+  const { user, activeCampaign, dateFilterRange} = React.useContext(GlobalContext);
+  const [pageMode] = useState(props.campaignId ? 'detail' : '');
+  const [campaignId, setCampaignId] = useState(props.campaignId || activeCampaign.id);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterDateTitle, setFilterDateTitle] = useState('Last 30 Days');
+  const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
   const [creatives, setTopCreativeList] = useState([]);
-  const [filteredCampaignId, setFilteredCampaignId] = useState();
   const [dateFilter, setDateFilter] = useState({
-    endDate: end,
-    startDate: start,
+    endDate: dateFilterRange.endDate,
+    startDate: dateFilterRange.startDate,
   });
-
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-    queryStringParameters: {},
-  };
-
 
   /**
    * Call API and generate graphs correspond to data
+   * @param {Integer} campId
    * @param {object} dateRangeFilter
+   * @param {object} campaignFilter
    */
-  const loadCreativeData = (dateRangeFilter, campaignFilter) => {
+  const loadCreativeData = (campId, dateRangeFilter, campaignFilter) => {
     setIsLoading(true);
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
+    const makeApiCall = campId
+      ? CampaignService.getCampaignPerformanceAssets(campId, dateRangeFilter, campaignFilter)
+      : AdvertiserService.getAdvertiserPerformanceAssets(user.id, dateRangeFilter, campaignFilter);
 
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-
-        Object.assign(apiRequest.queryStringParameters, dateRangeFilter);
-
-        campaignFilter
-          ? Object.assign(apiRequest.queryStringParameters, {
-            filter: campaignFilter,
-          })
-          : '';
-
-        const apiEndPoint = (props.campaignId) ? 'canpaignGroup' : 'advertiserPerformanceAsset';
-        const apiPath = (props.campaignId) ? `/${props.campaignId}/performance/asset` : '';
-        const response = await API.post(apiEndPoint, apiPath, apiRequest);
-
+    makeApiCall
+      .then((response) => {
         setTopCreativeList(response.data.summary);
         setIsLoading(false);
       })
@@ -73,7 +56,7 @@ const TopCreatives = (props) => {
   const datepickerCallback = (startDate, endDate) => {
     setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
-    loadCreativeData({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') }, filteredCampaignId);
+    loadCreativeData(campaignId, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
 
   const loadCreativeList = (tFiveCreatives) => {
@@ -85,13 +68,13 @@ const TopCreatives = (props) => {
   };
 
   const loadCreativesByCampaign = (campaign) => {
-    setFilteredCampaignId(campaign.id);
-    loadCreativeData(dateFilter, campaign.id);
+    setCampaignId(campaign.id);
   };
 
   useEffect(() => {
-    loadCreativeData(dateFilter);
-  }, [props.campaignId]);
+    setCampaignId(campaignId);
+    campaignId && loadCreativeData(campaignId, dateFilter);
+  }, [campaignId]);
 
   return (
     <section className="top-creatives-content">
@@ -105,11 +88,7 @@ const TopCreatives = (props) => {
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              {
-                !props.campaignId
-                  ? <DropdownFilter itemList={window.$campaigns} dropwDownCallBack={loadCreativesByCampaign} />
-                  : ''
-              }
+              { pageMode !== 'detail' ? <DropdownFilter itemList={window.$campaigns} label={activeCampaign ? activeCampaign.name : null} dropwDownCallBack={loadCreativesByCampaign} /> : ''}
               <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
             </div>
           </div>
@@ -118,7 +97,7 @@ const TopCreatives = (props) => {
         <div className="creative-list row">
           {
             isLoading
-              ? <div className="text-center m-5">
+              ? <div className="col text-center m-5">
                 <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
               </div>
               : loadCreativeList(creatives)

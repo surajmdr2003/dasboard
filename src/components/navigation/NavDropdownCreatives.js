@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { Auth, API } from 'aws-amplify';
+
+// Services
+import CampaignService from '../../services/campaign.service';
 
 const NavDropdownCreatives = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [currentCampaign, setcurrentCampaign] = useState(75);
+  const [currentCampaign, setcurrentCampaign] = useState('');
   const [topCreatives, setTopCreatives] = useState([]);
 
   /**
@@ -16,34 +18,18 @@ const NavDropdownCreatives = (props) => {
   const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
   const start = moment(start).subtract(7, 'days').format('YYYY-MM-DD');
 
-  const apiRequest = {
-    headers: { accept: '*/*' },
-    response: true,
-    queryStringParameters: {},
-  };
-
   /**
    * Load Campaign Summary data for menu
    * @param {Int} campaignId
    */
   const loadTopFiveCreativesData = (campaignId) => {
     setIsLoading(true);
-    Auth.currentSession()
-      .then(async function(info) {
-        const accessToken = info.getAccessToken().getJwtToken();
-        // Setting up header info
-        apiRequest.headers.authorization = `Bearer ${accessToken}`;
-
-        Object.assign(apiRequest.queryStringParameters, {
-          startDate: start,
-          endDate: end,
-        });
-
-        const response = await API.post('canpaignGroup', `/${campaignId}/performance/asset`, apiRequest);
+    CampaignService.getCampaignPerformanceAssets(campaignId, {startDate: start, endDate: end})
+      .then((response) => {
         setTopCreatives(response.data.summary.slice(0, 5));
-        setIsLoading(false);
       })
-      .catch(() => false);
+      .catch(() => false)
+      .finally(() => setIsLoading(false));
 
     setcurrentCampaign(campaignId);
   };
@@ -102,13 +88,13 @@ const NavDropdownCreatives = (props) => {
             <div className="pl-3 creatives-overview">
               <div className="overview-title">
                 <h5>Top 5 Creatives
-                  <Link to="#" className="btn-link">See All Campaigns</Link>
+                  <Link to="/dashboard/creatives" className="btn-link">See All Creatives</Link>
                 </h5>
               </div>
               <ul className="row overview-detail">
                 {
                   isLoading
-                    ? <div className="text-center m-5">
+                    ? <div className="col text-center m-5">
                       <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
                     </div>
                     : loadNavTopCreatives(topCreatives)

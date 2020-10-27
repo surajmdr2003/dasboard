@@ -20,14 +20,15 @@ class ReportService {
       return await API.get('canpaignGroup', `/${campaignId}/reports/months`, this.apiRequest);
     }
 
-    async emailReport(reportId) {
+    async emailReport(reportId, info) {
       const userSession = await AuthService.getSessionInfo();
       const accessToken = userSession.getAccessToken().getJwtToken();
 
       // Setting up header info
       this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
       this.apiRequest.queryStringParameters = {};
-      this.apiRequest.queryStringParameters.email = userSession.getIdToken().payload.email;
+      this.apiRequest.queryStringParameters.email = info.emailAddress;
+      this.apiRequest.queryStringParameters.message = info.message;
 
       return await API.post('emailReport', `/${reportId}/reports/email`, this.apiRequest);
     }

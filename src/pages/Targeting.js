@@ -1,12 +1,14 @@
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
 
 /** Components */
 import TopTargets from '../components/TopTargets';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 
-const Targeting = (props) => {
-  const campaignId = props.match.params.id;
+// Context
+import GlobalContext from '../context/GlobalContext';
+
+const Targeting = () => {
+  const {activeCampaign} = React.useContext(GlobalContext);
 
   return (
     <Fragment>
@@ -15,19 +17,15 @@ const Targeting = (props) => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/targeting" campaignId={+campaignId} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageSlug="/dashboard/targeting" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
               </div>
             </div>
           </div>
         </div>
       </section>
-      <TopTargets campaignId={+campaignId}/>
+      <TopTargets campaignId={+activeCampaign.id}/>
     </Fragment>
   );
-};
-
-Targeting.propTypes = {
-  match: PropTypes.object,
 };
 
 export default Targeting;

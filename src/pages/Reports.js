@@ -1,22 +1,30 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import DataTable from 'react-data-table-component';
+
+// Context
+import GlobalContext from '../context/GlobalContext';
 
 /** Services */
 import ReportService from '../services/report.service';
 
 /** Components */
 import AlertComponent from '../components/AlertComponent';
+import ErrorMessage from '../components/common/ErrorMessage.component';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 
-
-const Reports = (props) => {
-  const campaignId = props.match.params.id;
+const Reports = () => {
+  const {activeCampaign} = React.useContext(GlobalContext);
+  const [isModalOpen, toggleModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
+  const [currentReport, setCurrentReport] = useState({
+    startDate: '',
+    endDate: '',
+  });
   const [emailNotification, setEmailNotification] = useState({
     isSending: false,
     show: false,
@@ -69,7 +77,7 @@ const Reports = (props) => {
 
   useEffect(() => {
     fetchCampaignReports(currentPage);
-  }, [campaignId]);
+  }, [activeCampaign.id]);
 
   const getReportStatus = (row) => {
     return (
@@ -88,46 +96,24 @@ const Reports = (props) => {
 
   const getActionBlock = (row) => (
     <ul>
-      <li><a href="#" onClick={(e) => sendEmail(e, row.id)}>Email</a></li>
+      <li><a href="#" onClick={(e) => sendEmail(e, row)}>Email</a></li>
       <li><a target="_blank" href={row.reportUrl}>Download</a></li>
     </ul>
   );
 
-  const  sendEmail = async(event, reportId) => {
+  const sendEmail = async(event, report) => {
     event.preventDefault();
-    setEmailNotification({
-      ...setEmailNotification,
-      isSending: true,
-      show: true,
-      message: 'Sending requested report in you email...',
-      status: 'warning',
-    });
-
-    ReportService.emailReport(reportId)
-      .then((response) => {
-        console.log(response);
-        setEmailNotification({
-          ...setEmailNotification,
-          isSending: false,
-          show: true,
-          message: 'Requested report is emailed to your registered account email!',
-          status: 'success',
-        });
-      })
-      .catch((error) => {
-        setEmailNotification({
-          ...setEmailNotification,
-          isSending: false,
-          show: true,
-          message: error.message,
-          status: 'danger',
-        });
-      });
+    setCurrentReport(report);
+    toggleModal(true);
   };
 
   const fetchCampaignReports = async(page) => {
+    if (activeCampaign && activeCampaign.id === null) {
+      return console.log('No Active campaign selected!');
+    }
+
     setLoading(true);
-    ReportService.getReports(campaignId, page, perPage)
+    return ReportService.getReports(activeCampaign.id, page, perPage)
       .then((response) => {
         setData(response.data);
       })
@@ -145,6 +131,39 @@ const Reports = (props) => {
     fetchCampaignReports(page);
   };
 
+  const { register, handleSubmit, errors, isSubmitting } = useForm();
+  const onSubmit = (formData, e) => {
+    setEmailNotification({
+      ...setEmailNotification,
+      isSending: true,
+      show: true,
+      message: 'Email is being sent...',
+      status: 'warning',
+    });
+
+    ReportService.emailReport(currentReport.id, formData)
+      .then((response) => {
+        console.log(response);
+        setEmailNotification({
+          ...setEmailNotification,
+          isSending: false,
+          show: true,
+          message: 'Report is emailed to your email!',
+          status: 'success',
+        });
+        e.target.reset();
+      })
+      .catch((error) => {
+        setEmailNotification({
+          ...setEmailNotification,
+          isSending: false,
+          show: true,
+          message: error.message,
+          status: 'danger',
+        });
+      });
+  };
+
   return (
     <Fragment>
       <section className="filter-bar ">
@@ -152,7 +171,7 @@ const Reports = (props) => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/reports" campaignId={+campaignId} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageSlug="/dashboard/reports" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <Link to="/dashboard/create-report" className="btn btn-primary btn-default">Create Custom Report</Link>
@@ -163,7 +182,6 @@ const Reports = (props) => {
       </section>
       <section className="main-content-wrapper table-reports">
         <div className="container">
-          <AlertComponent message={emailNotification.message} alert={emailNotification.status} show={emailNotification.show} isLoading={emailNotification.isSending} />
           <DataTable
             columns={columns}
             data={data.content}
@@ -174,14 +192,59 @@ const Reports = (props) => {
             onChangeRowsPerPage={handlePerRowsChange}
             onChangePage={handlePageChange}
           />
+          <div className={`custom-modal ${(isModalOpen ? 'show' : 'hide')}`}>
+            <div className="modal-block">
+              <div className="modal-header">
+                <header>
+                  <h4>Email Report</h4>
+                  <div>From {currentReport.startDate} to {currentReport.endDate}</div>
+                </header>
+                <span className="icon-close" onClick={() => toggleModal(false)}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 492 492">
+                    <path d="M300.188,246L484.14,62.04c5.06-5.064,7.852-11.82,7.86-19.024c0-7.208-2.792-13.972-7.86-19.028L468.02,7.872    c-5.068-5.076-11.824-7.856-19.036-7.856c-7.2,0-13.956,2.78-19.024,7.856L246.008,191.82L62.048,7.872    c-5.06-5.076-11.82-7.856-19.028-7.856c-7.2,0-13.96,2.78-19.02,7.856L7.872,23.988c-10.496,10.496-10.496,27.568,0,38.052    L191.828,246L7.872,429.952c-5.064,5.072-7.852,11.828-7.852,19.032c0,7.204,2.788,13.96,7.852,19.028l16.124,16.116    c5.06,5.072,11.824,7.856,19.02,7.856c7.208,0,13.968-2.784,19.028-7.856l183.96-183.952l183.952,183.952    c5.068,5.072,11.824,7.856,19.024,7.856h0.008c7.204,0,13.96-2.784,19.028-7.856l16.12-16.116    c5.06-5.064,7.852-11.824,7.852-19.028c0-7.204-2.792-13.96-7.852-19.028L300.188,246z" />
+                  </svg>
+                </span>
+              </div>
+              <div className="modal-body">
+                <AlertComponent message={emailNotification.message} alert={emailNotification.status} show={emailNotification.show} isLoading={emailNotification.isSending} />
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="form-group">
+                    <label htmlFor="emailAddress" className="label">Email address</label>
+                    <input
+                      id="emailAddress"
+                      name="emailAddress"
+                      type="text"
+                      className="form-control"
+                      placeholder="you@example.com"
+                      autoFocus
+                      ref={register({
+                        required: 'Please enter email address.',
+                      })}
+                    />
+                    <ErrorMessage error={errors.emailAddress} />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="message" className="label">Leave a message</label>
+                    <textarea
+                      rows="5"
+                      id="message"
+                      name="message"
+                      type="text"
+                      className="form-control"
+                      placeholder="Type your message here"
+                    />
+                  </div>
+                  <div className="form-group mb-0">
+                    <button disabled={isSubmitting} type="submit" className="mt-3 btn btn-default btn-primary">Email Report</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </Fragment>
   );
-};
-
-Reports.propTypes = {
-  match: PropTypes.object,
 };
 
 export default Reports;

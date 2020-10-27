@@ -16,6 +16,9 @@ import CampaignDetail from './CampaignDetail';
 import CampaignService from '../services/campaign.service';
 import AdvertiserService from '../services/advertiser.service';
 
+// Contexts
+import GlobalContext from '../context/GlobalContext';
+
 /**
  * Attribute for graph starts
  */
@@ -100,20 +103,14 @@ const graphData = {
   convrate: [],
 };
 
-/**
- * For Initial startdate and enddate
- */
-const now = new Date();
-const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
-const start = moment(start).subtract(29, 'days').format('YYYY-MM-DD');
-
 const CampaignGraph = (props) => {
+  const {dateFilterRange} = React.useContext(GlobalContext);
   const currentCampaign = window.$campaigns.find(item => item.id === parseInt(props.campaignId, 10));
   const [userId, serUserId] = useState(null);
   const [gData, setData] = useState(initialData); // For graph data
   const [activeAttr, setActive] = useState('impressions'); // For active graph (tab)
-  const [filterDateTitle, setFilterDateTitle] = useState('Last 30 Days'); // For datepicker label
-  const [chartDate, setChartDate] = useState((moment(start).format('MMM DD YYYY') + ' - ' + moment(end).format('MMM DD YYYY')).toString()); // For datepicker label
+  const [filterDateTitle, setFilterDateTitle] = useState(`Last ${dateFilterRange.days} Days`); // For datepicker label
+  const [chartDate, setChartDate] = useState((moment(dateFilterRange.startDate).format('MMM DD YYYY') + ' - ' + moment(dateFilterRange.endDate).format('MMM DD YYYY')).toString()); // For datepicker label
   const [summaryData, setSummaryData] = useState({
     clicks: 0,
     impressions: 0,
@@ -143,7 +140,7 @@ const CampaignGraph = (props) => {
 
     // Load Advertiser Lifetime Data
     advertiserLifeTimeData(userInfo.data.id);
-    advertiserPerformanceData(userInfo.data.id, start, end);
+    advertiserPerformanceData(userInfo.data.id, dateFilterRange.startDate, dateFilterRange.endDate);
 
     // Set User Campaign Info
     setCampaignInfo(userInfo.data.campaigns);

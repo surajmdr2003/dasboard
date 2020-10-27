@@ -33,7 +33,7 @@ class MapComponent extends PureComponent {
       }
 
       if (data.type === 'poly') {
-        zoom = data.coordinates.length > 25 ? 5 : 11;
+        zoom = data.coordinates.length > 400 ? 5 : 11;
         centerLatLang = data.coordinates.length ? data.coordinates[0] : {...this.state.latlng};
 
         drawings.push((

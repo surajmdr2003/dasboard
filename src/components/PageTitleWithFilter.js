@@ -11,8 +11,8 @@ const PageTitleWithFilter = (props) => {
   };
 
   /**
-     * View of Filter Buttons
-     */
+   * View of Filter Buttons
+   */
   const FilterFeilds = (<div className="block-filter">
     <div className="dropdown dropdown-filter">
       <button className="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
