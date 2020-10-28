@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
 /** Components */
 import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
@@ -6,11 +6,14 @@ import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
 // Context
 import GlobalContext from '../context/GlobalContext';
 
+// Services
+import AdvertiserService from '../services/advertiser.service';
+
 const Profile = () => {
   const {user} = React.useContext(GlobalContext);
-  const [state] =  useState({
+  const [state, setState] =  useState({
     isLoading: false,
-    profile: user || {
+    profile: {
       id: '',
       name: '',
       email: '',
@@ -28,7 +31,14 @@ const Profile = () => {
       payments: [],
       billingHistory: null,
     },
-  }, []);
+  });
+
+  useEffect(() => {
+    setState({...state, isLoading: true});
+    AdvertiserService.getAdvertiserProfile(user.id)
+      .then(response => setState({...state, isLoading: false, profile: response.data}))
+      .catch((error) => console.log(error));
+  }, [user.id]);
 
   return (
     <Fragment>

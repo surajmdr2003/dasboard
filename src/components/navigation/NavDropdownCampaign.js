@@ -16,7 +16,6 @@ const NavDropdownCampaign = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentCampaignCat, setcurrentCampaignCat] = useState('ACTIVE');
   const [currentCampaign, setcurrentCampaign] = useState('');
-  const [campaignNavItemsOfStatus, setCampaignNavItemsOfStatus] = useState([]);
   const [navCampaignSummary, setNavCampaignSummary] = useState(initSummary);
 
   /**
@@ -26,14 +25,7 @@ const NavDropdownCampaign = (props) => {
    * @param {String} status
    */
   const setCampaignNav = (status) => {
-    const campaignNavItemsWithStatus = props.campaignNavItems.filter(item => item.status === status);
-
-    setCampaignNavItemsOfStatus(campaignNavItemsWithStatus.slice(0, 5));
     setcurrentCampaignCat(status);
-
-    campaignNavItemsOfStatus.length
-      ? loadCampaignSummaryData(campaignNavItemsOfStatus[0].id)
-      : '';
   };
 
   /**
@@ -79,7 +71,9 @@ const NavDropdownCampaign = (props) => {
     return ((conversions.length === 0 && clicks === 0) ? 0 : ((conversions.length / clicks) * 100)).toFixed(2);
   };
 
-  const loadCampaignListForNav = (campaignsOfStatus) => {
+  const loadCampaignListForNav = (status) => {
+    const campaignsOfStatus = props.campaignNavItems.filter(item => item.status === status).slice(0, 5);
+
     return campaignsOfStatus.length
       ? campaignsOfStatus.map((item) => {
         return (<li className="nav-item" key={item.id}>
@@ -117,7 +111,7 @@ const NavDropdownCampaign = (props) => {
           </div>
           <div className="col-sm-2 br">
             <ul className="nav flex-column">
-              { loadCampaignListForNav(campaignNavItemsOfStatus) }
+              { loadCampaignListForNav(currentCampaignCat) }
             </ul>
           </div>
           <div className="col-sm-8 pt-4">
