@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import PubSub from 'pubsub-js';
@@ -74,20 +74,27 @@ const PageTitleCampaignDropdown = (props) => {
   }, []);
 
   return (
-    <div className="campaigns-link">
-      Landing Pages - <a href="#" className="btn-breadcrumb">{showCurrentCampaign(props.campaignId)}</a>
-      <div className="campaign-dropdown-menu dropdown-menu">
-        <div className="card-header">
-          <div className={(currentCampaignCat === 'ACTIVE' ? 'active' : '')} onClick={() => setCampaignNav('ACTIVE')}>Active campaigns</div>
-          <div className={(currentCampaignCat === 'INACTIVE' ? 'active' : '')} onClick={() => setCampaignNav('INACTIVE')}>Inactive campaigns</div>
-        </div>
-        <div className="card-body p-0">
-          <ul className="campaign-list">
-            {loadCampaignListForPageFilter(currentCampaignCat)}
-          </ul>
-        </div>
-      </div>
-    </div>
+    <Fragment>
+      {
+        campaignList.length
+          ? <div className="campaigns-link">
+              Landing Pages - <a href="#" className="btn-breadcrumb">{showCurrentCampaign(props.campaignId)}</a>
+            <div className="campaign-dropdown-menu dropdown-menu">
+              <div className="card-header">
+                <div className={(currentCampaignCat === 'ACTIVE' ? 'active' : '')} onClick={() => setCampaignNav('ACTIVE')}>Active campaigns</div>
+                <div className={(currentCampaignCat === 'INACTIVE' ? 'active' : '')} onClick={() => setCampaignNav('INACTIVE')}>Inactive campaigns</div>
+              </div>
+              <div className="card-body p-0">
+                <ul className="campaign-list">
+                  {loadCampaignListForPageFilter(currentCampaignCat)}
+                </ul>
+              </div>
+            </div>
+          </div>
+          : ''
+      }
+    </Fragment>
+
   );
 };
 
