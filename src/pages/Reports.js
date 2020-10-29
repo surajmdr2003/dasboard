@@ -21,6 +21,7 @@ const Reports = () => {
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
+  const { register, handleSubmit, errors, isSubmitting } = useForm();
   const [currentReport, setCurrentReport] = useState({
     startDate: '',
     endDate: '',
@@ -97,7 +98,7 @@ const Reports = () => {
   const getActionBlock = (row) => (
     <ul>
       <li><a href="#" onClick={(e) => sendEmail(e, row)}>Email</a></li>
-      <li><a target="_blank" href={row.reportUrl}>Download</a></li>
+      <li><a href="#" onClick={(e) => downloadReport(e, row.id)}>Download</a></li>
     </ul>
   );
 
@@ -131,7 +132,47 @@ const Reports = () => {
     fetchCampaignReports(page);
   };
 
-  const { register, handleSubmit, errors, isSubmitting } = useForm();
+  const downloadReport = (e, reportId) => {
+    e.preventDefault();
+
+    let reportWindow;
+
+    setEmailNotification({
+      ...setEmailNotification,
+      isSending: true,
+      show: true,
+      message: 'Report is being downloaded...',
+      status: 'warning',
+    });
+
+    ReportService.downloadReport(reportId)
+      .then((response) => {
+        console.log(response);
+        setEmailNotification({
+          ...setEmailNotification,
+          isSending: false,
+          show: true,
+          message: (response.data && response.data.value) ? 'Report is downloaded successfully!' : "Report can\'t be downloaded",
+          status: (response.data && response.data.value) ? 'success' : 'danger',
+        });
+
+        if (response.data && response.data.value) {
+          // Redirect to the report url
+          reportWindow = window.open('', '_blank');
+          reportWindow.location = response.data.value;
+        }
+      })
+      .catch((error) => {
+        setEmailNotification({
+          ...setEmailNotification,
+          isSending: false,
+          show: true,
+          message: error.message,
+          status: 'danger',
+        });
+      });
+  };
+
   const onSubmit = (formData, e) => {
     setEmailNotification({
       ...setEmailNotification,
@@ -182,6 +223,7 @@ const Reports = () => {
       </section>
       <section className="main-content-wrapper table-reports">
         <div className="container">
+          <AlertComponent message={emailNotification.message} alert={emailNotification.status} show={emailNotification.show} isLoading={emailNotification.isSending} />
           <DataTable
             columns={columns}
             data={data.content}
