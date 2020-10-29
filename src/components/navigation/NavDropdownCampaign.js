@@ -105,7 +105,7 @@ const NavDropdownCampaign = (props) => {
                 >Inactive</Link>
               </li>
               <li className="nav-item">
-                <Link to="/campaign/256" className="nav-link btn-link">See All Campaigns</Link>
+                <Link to="/dashboard/campaigns" className="nav-link btn-link">See All Campaigns</Link>
               </li>
             </ul>
           </div>
@@ -148,7 +148,7 @@ const NavDropdownCampaign = (props) => {
                         <div className="title">Conv rate</div>
                       </li>
                     </ul>
-                    <Link to="#" className="btn-link">View Performance</Link>
+                    {navCampaignSummary.id ? <Link to={'/dashboard/campaigns' + navCampaignSummary.id} className="btn-link">View Performance</Link> : ''}
                   </Fragment>
               }
             </div>

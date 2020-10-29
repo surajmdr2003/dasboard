@@ -113,12 +113,7 @@ const Navigation = () => {
                         </button>
                       </div>
                     </li>
-                    {avaliableUsers.map(advertiser =>  (<li key={advertiser.id} className="list-group-item">
-                      <div className="row">
-                        <div className="col-6 text-left">{advertiser.name}</div>
-                        <div className="col-6 text-right"><button onClick={() => setUser({permissions: user.permissions, ...advertiser})} className="btn btn-primary btn-sm">Login</button></div>
-                      </div>
-                    </li>))}
+                    {avaliableUsers.map(advertiser => (<li key={advertiser.id} className={'list-group-item' + (user.id === advertiser.id ? ' active' : '')}  style={{'cursor': 'pointer'}} onClick={() => setUser({permissions: user.permissions, ...advertiser})}>{advertiser.name}</li>))}
                   </ul>
                 </div>
               </li>
