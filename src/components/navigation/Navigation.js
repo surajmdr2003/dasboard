@@ -19,7 +19,8 @@ const Navigation = () => {
   const [campaignList, setCampaignList] = useState(window.$campaigns);
   const [avaliableUsers, setAvailableUsers] = useState([]);
   const [isSearching, setIsSearcing] = useState(false);
-  const [isOpen, toggleDropdown] = useState(false);
+  const [isOpen, toggleNavDropdown] = useState(false);
+  const [isDropdownOpen, toggleDropdown] = useState(false);
   const initCampaigns = {id: null, name: 'No Campaign Found'};
 
   const loadCampaignsData = () => {
@@ -56,13 +57,23 @@ const Navigation = () => {
       });
   };
 
+  const showDropdown = () => {
+    toggleDropdown(true);
+    document.addEventListener('click', hideDropdown);
+  };
+
+  const hideDropdown = () => {
+    toggleDropdown(false);
+    document.removeEventListener('click', hideDropdown);
+  };
+
   useEffect(() => {
     loadCampaignsData();
   }, [user.id]);
 
   return (
     <Fragment>
-      <button className="navbar-toggler" onClick={() => toggleDropdown(!isOpen)}>
+      <button className="navbar-toggler" onClick={() => toggleNavDropdown(!isOpen)}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -53 384 384">
           <path d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
           <path d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
@@ -87,15 +98,15 @@ const Navigation = () => {
         <ul className="navbar-nav align-items-center secondary-menu">
           {
             checkPermission()
-              ? <li>
-                <i className="icon icon-advertiser"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 20 18">
+              ? <li className={`${(isDropdownOpen ? 'show-dropdown-menu' : 'hide-dropdown-menu')}`}>
+                <i className="icon icon-advertiser"  onMouseEnter={() => showDropdown()} ><svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 20 18" >
                   <g fill="none" fillRule="evenodd">
                     <g fill="#A0A0A0" fillRule="nonzero">
                       <path d="M1140.833 26.938v3.125c0 .517-.42.937-.937.937h-3.958c-.518 0-.938-.42-.938-.938v-3.125c0-.517.42-.937.938-.937h3.958c.518 0 .937.42.937.938zm7.084 9.375v-3.126c0-.517-.42-.937-.938-.937h-3.958c-.518 0-.938.42-.938.938v3.124c0 .518.42.938.938.938h3.958c.518 0 .938-.42.938-.938zm1.25-9.376v3.125c0 .518.42.938.937.938h3.958c.518 0 .938-.42.938-.938v-3.125c0-.517-.42-.937-.938-.937h-3.958c-.518 0-.937.42-.937.938zm-1.25 3.125v-3.125c0-.517-.42-.937-.938-.937h-3.958c-.518 0-.938.42-.938.938v3.125c0 .517.42.937.938.937h3.958c.518 0 .938-.42.938-.938zm-8.021 2.188h-3.958c-.518 0-.938.42-.938.938v3.124c0 .518.42.938.938.938h3.958c.518 0 .937-.42.937-.938v-3.124c0-.518-.42-.938-.937-.938zM1135 39.438v3.124c0 .518.42.938.938.938h3.958c.518 0 .937-.42.937-.938v-3.124c0-.518-.42-.938-.937-.938h-3.958c-.518 0-.938.42-.938.938zm15.104-2.188h3.958c.518 0 .938-.42.938-.938v-3.124c0-.518-.42-.938-.938-.938h-3.958c-.518 0-.937.42-.937.938v3.124c0 .518.42.938.937.938zm0 6.25h3.958c.518 0 .938-.42.938-.938v-3.124c0-.518-.42-.938-.938-.938h-3.958c-.518 0-.937.42-.937.938v3.124c0 .518.42.938.937.938zm-8.02-4.063v3.126c0 .517.419.937.937.937h3.958c.518 0 .938-.42.938-.938v-3.124c0-.518-.42-.938-.938-.938h-3.958c-.518 0-.938.42-.938.938z" transform="translate(-1135 -26)" />
                     </g>
                   </g>
                 </svg></i>
-                <div className="dropdown-menu advertiser-dropdown-menu">
+                <div className={'dropdown-menu advertiser-dropdown-menu'}>
                   <ul className="list-group advertiser">
                     <li className="list-group-item">
                       <div className="search-advitiser">
@@ -113,7 +124,7 @@ const Navigation = () => {
                         </button>
                       </div>
                     </li>
-                    {avaliableUsers.map(advertiser => (<li key={advertiser.id} className={'list-group-item' + (user.id === advertiser.id ? ' active' : '')}  style={{'cursor': 'pointer'}} onClick={() => setUser({permissions: user.permissions, ...advertiser})}>{advertiser.name}</li>))}
+                    {avaliableUsers.map(advertiser => (<li key={advertiser.id} className={'list-group-item' + (user.id === advertiser.id ? ' active' : '')} onClick={() => showDropdown()} style={{'cursor': 'pointer'}} onClick={() => setUser({permissions: user.permissions, ...advertiser})}>{advertiser.name}</li>))}
                   </ul>
                 </div>
               </li>

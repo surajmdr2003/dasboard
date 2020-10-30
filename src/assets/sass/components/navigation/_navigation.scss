@@ -255,7 +255,7 @@ li.menu-item-has-children {
     > li {
         position: relative;
         padding: size(5) 0;
-        height: size(50);
+        height: size(65);
         align-items: center;
         display: flex;
     
@@ -263,6 +263,10 @@ li.menu-item-has-children {
             flex-wrap: wrap;
             height: initial;
             width: 100%;
+        }
+
+        .dropdown-menu { 
+            margin: 0;
         }
     
         &:hover {
@@ -297,6 +301,24 @@ li.menu-item-has-children {
                 width: 100%;
             }
         } 
+    }
+}
+
+.show-dropdown-menu {
+    .dropdown-menu {
+        display: block !important;
+    }
+    &:after {
+        content: "";
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: -1;
+        height: 100vh;
+        pointer-events: none;
     }
 }
 
@@ -424,7 +446,7 @@ button.navbar-toggler {
     min-width: size(300);
     font-size: size(13);
     max-height: 400px;
-    overflow: scroll;
+    overflow-y: auto;
 
     .list-group-item {
         padding: 1rem 1.25rem;
