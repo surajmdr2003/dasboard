@@ -22,7 +22,7 @@ const TopCreativeAdsBlock = (props) => {
   };
 
   return (
-    <div className="col-lg-3 col-sm-6">
+    <div className="p-2">
       <div className="card card-creative">
         <div className="card-creative-thumb">
           <span className="badge badge-secondary">{calculateAssetDimensional(props.creative.assetUrl)}</span>
