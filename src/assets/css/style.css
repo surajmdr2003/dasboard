@@ -10970,10 +10970,16 @@ li.menu-item-has-children:hover > a:after {
   border-radius: 50%;
   border: solid 1px #eaeaea;
 }
+
 .menu-profile h6 {
   font-size: 0.8125rem;
   margin-bottom: 0;
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
 .menu-profile h6:after {
   content: "";
   border-top: 5px solid #c0c0c0;

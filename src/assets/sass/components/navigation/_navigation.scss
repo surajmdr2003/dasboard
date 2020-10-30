@@ -164,6 +164,10 @@ li.menu-item-has-children {
     h6 { 
         font-size: size(13);
         margin-bottom: 0;
+        max-width: size(140);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &:after {
             content: '';
