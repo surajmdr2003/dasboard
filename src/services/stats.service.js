@@ -25,7 +25,7 @@ class StatsService {
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
-    return await API.post('stats', `/${monthId}/stats/`, this.apiRequest);
+    return await API.post('stats', `/${monthId}/stats`, this.apiRequest);
   }
 }
 

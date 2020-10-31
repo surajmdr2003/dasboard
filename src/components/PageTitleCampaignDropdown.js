@@ -54,7 +54,11 @@ const PageTitleCampaignDropdown = (props) => {
     return campaignsOfStatus.length
       ? campaignsOfStatus.map((item) => {
         return (<li className="nav-item" key={item.id}>
-          <Link onClick={() => setActiveCampaign(item)} to={`${props.pageSlug}`} className={parseInt(props.campaignId, 10) === item.id ? 'text-primary' : ''}>{item.name}</Link>
+          {
+            (props.campaignId && props.pageSlug)
+              ? <Link onClick={() => setActiveCampaign(item)} to={`${props.pageSlug}/${item.id}`} className={parseInt(props.campaignId, 10) === item.id ? 'text-primary' : ''}>{item.name}</Link>
+              : <a onClick={() => setActiveCampaign(item)} className={parseInt(props.campaignId, 10) === item.id ? 'text-primary' : ''}>{item.name}</a>
+          }
         </li>);
       })
       : <li className="nav-item no-campaign">No Campaign</li>;

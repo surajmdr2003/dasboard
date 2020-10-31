@@ -17,7 +17,7 @@ const Targeting = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/targeting" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
               </div>
             </div>
           </div>

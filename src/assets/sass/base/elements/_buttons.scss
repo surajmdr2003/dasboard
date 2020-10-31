@@ -126,7 +126,9 @@
 	.dropdown-menu {
 		font-size: size(13);
 		width: size(220);
-		
+		max-height: size(215);
+		overflow-y: auto;
+
 		.dropdown-item {
 			border-bottom: 1px solid #eaeaea;
 			padding: .5rem 1rem;
@@ -137,4 +139,32 @@
 			}
 		}
 	}
+}
+
+.advertiser-dropdown-menu,
+.dropdown-filter .dropdown-menu {
+	&::-webkit-scrollbar {
+		width: .3rem;
+	}
+	
+	&::-webkit-scrollbar-track {
+		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	}
+	
+	&::-webkit-scrollbar-thumb {
+	background-color: rgba(0,0,0,0.3);
+	outline: 1px solid slategrey;
+	}
+} 
+
+.slick-prev:before, .slick-next:before {
+    color: $primary;
+}
+
+.slick-dots li {
+    margin: 0 0px;
+}
+
+.slick-dots li.slick-active button:before {
+    color: $primary;
 }
