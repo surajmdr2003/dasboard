@@ -10,6 +10,7 @@ import GlobalContext from '../../context/GlobalContext';
 // Components
 import NavDropdownCampaign from './NavDropdownCampaign';
 import NavDropdownCreatives from './NavDropdownCreatives';
+import NotificationList from '../NotificationList';
 
 // Services
 import AdvertiserService from '../../services/advertiser.service';
@@ -134,40 +135,10 @@ const Navigation = () => {
             <i className="icon icon-notification" />
             <div className="dropdown-menu notification-dropdown-menu">
               <div className="notification-header">
-                Notifications <Link to="/dashboard/all-notifications.html" className="btn-link">See All</Link>
+                Notifications <Link to="/dashboard/notifications" className="btn-link">See All</Link>
               </div>
               <ul className="notifications list-unstyled">
-                <li className="media">
-                  <span className="icon-box mr-3">
-                    <i className="icon-bulb" />
-                  </span>
-                  <div className="media-body">
-                    <h5>Adds responsive display ads</h5>
-                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.</p>
-                    <Link to="#" className="btn-link">Notify Sales</Link>
-                  </div>
-                </li>
-                <li className="media">
-                  <span className="icon-box mr-3">
-                    <i className="icon-pause" />
-                  </span>
-                  <div className="media-body">
-                    <h5>List-based media object</h5>
-                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-                                            sollicitudin.</p>
-                  </div>
-                </li>
-                <li className="media">
-                  <span className="icon-box mr-3">
-                    <i className="icon-Rectangle" />
-                  </span>
-                  <div className="media-body">
-                    <h5>List-based media object</h5>
-                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-                                            sollicitudin. Cras purus odio,</p>
-                    <Link to="#" className="btn-link">See Report</Link>
-                  </div>
-                </li>
+                <NotificationList displaySummary={true} />
               </ul>
             </div>
           </li>
