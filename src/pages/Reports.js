@@ -212,7 +212,7 @@ const Reports = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/reports" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <Link to="/dashboard/create-report" className="btn btn-primary btn-default">Create Custom Report</Link>

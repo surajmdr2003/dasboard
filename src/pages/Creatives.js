@@ -109,8 +109,8 @@ const Creatives = () => {
           <td>{creative.impressions}</td>
           <td>{creative.clicks}</td>
           <td>{handleNanValueWithCalculation(creative.clicks, creative.impressions)}%</td>
-          <td>{creative.conversions.length}</td>
-          <td>{handleNanValueWithCalculation(creative.conversions.length, creative.clicks)}%</td>
+          <td>{creative.conversions.reduce((sum, next) => sum + next.count, 0)}</td>
+          <td>{handleNanValueWithCalculation(creative.conversions.reduce((sum, next) => sum + next.count, 0), creative.clicks)}%</td>
         </tr>);
       })
       : <tr><td colSpan="7" className="text-center">No creative in this campaign</td></tr>;
@@ -132,7 +132,7 @@ const Creatives = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/creatives" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown campaignId={activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">

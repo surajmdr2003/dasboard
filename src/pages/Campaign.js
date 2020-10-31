@@ -41,7 +41,7 @@ const Campaign = (props) => {
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-md-6">
-                  <PageTitleCampaignDropdown pageSlug="/dashboard/campaign" campaignId={campaignId} campaignList={window.$campaigns} />
+                  <PageTitleCampaignDropdown pageSlug="/dashboard/campaigns" campaignId={campaignId} campaignList={window.$campaigns} />
                 </div>
                 <div className="col-md-6 text-right">
                   <a href={reportUrl} download className="btn btn-link btn-download-report">Download Report</a>
