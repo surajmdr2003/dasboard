@@ -66,13 +66,13 @@ const AllCampaignsLifetimeData = (props) => {
                 <li className="nav-item">
                   <div className="data">
                     <h5>Conversion</h5>
-                    <p>{props.summaryData.conversions.length}</p>
+                    <p>{props.summaryData.conversions.reduce((sum, next) => sum + next.count, 0)}</p>
                   </div>
                 </li>
                 <li className="nav-item">
                   <div className="data">
                     <h5>Con rate</h5>
-                    <p>{handleNanValueWithCalculation(props.summaryData.conversions.length, props.summaryData.clicks)} %</p>
+                    <p>{handleNanValueWithCalculation(props.summaryData.conversions.reduce((sum, next) => sum + next.count, 0), props.summaryData.clicks)} %</p>
                   </div>
                 </li>
               </ul>

@@ -193,7 +193,7 @@ const Stats = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageSlug="/dashboard/stats" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown campaignId={activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">

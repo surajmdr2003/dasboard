@@ -30,6 +30,12 @@ const awsApiConfigs = {
       name: 'stats',
       endpoint: `${Config.apiPath}/months`,
     },
+
+    // Notification Feature
+    {
+      name: 'notifications',
+      endpoint: `${Config.apiPath}/notification`,
+    },
   ],
 };
 

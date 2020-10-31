@@ -68,7 +68,7 @@ const NavDropdownCampaign = (props) => {
    * @param {Object} param
    */
   const calculateConvRate = ({ conversions, clicks }) => {
-    return ((conversions.length === 0 && clicks === 0) ? 0 : ((conversions.length / clicks) * 100)).toFixed(2);
+    return ((conversions.length === 0 && clicks === 0) ? 0 : ((conversions.reduce((sum, next) => sum + next.count, 0) / clicks) * 100)).toFixed(2);
   };
 
   const loadCampaignListForNav = (status) => {
@@ -105,7 +105,7 @@ const NavDropdownCampaign = (props) => {
                 >Inactive</Link>
               </li>
               <li className="nav-item">
-                <Link to="/campaign/256" className="nav-link btn-link">See All Campaigns</Link>
+                <Link to="/dashboard/campaigns" className="nav-link btn-link">See All Campaigns</Link>
               </li>
             </ul>
           </div>
@@ -140,7 +140,7 @@ const NavDropdownCampaign = (props) => {
                         <div className="title">CTR</div>
                       </li>
                       <li className="nav-item">
-                        <div className="number">{navCampaignSummary.conversions.length}</div>
+                        <div className="number">{navCampaignSummary.conversions.reduce((sum, next) => sum + next.count, 0)}</div>
                         <div className="title">Conversion</div>
                       </li>
                       <li className="nav-item">
@@ -148,7 +148,7 @@ const NavDropdownCampaign = (props) => {
                         <div className="title">Conv rate</div>
                       </li>
                     </ul>
-                    <Link to="#" className="btn-link">View Performance</Link>
+                    {navCampaignSummary.id ? <Link to={'/dashboard/campaigns/' + navCampaignSummary.id} className="btn-link">View Performance</Link> : ''}
                   </Fragment>
               }
             </div>

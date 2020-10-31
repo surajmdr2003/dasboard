@@ -15,8 +15,21 @@ import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 import TopCreativeAdsBlock from './TopCreativeAdsBlock';
 
+/** Slick slider */
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+const settings = {
+  dots: true,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 4,
+  slidesToScroll: 4,
+};
+
 const TopCreatives = (props) => {
-  const { user, activeCampaign, dateFilterRange} = React.useContext(GlobalContext);
+  const { user, activeCampaign, dateFilterRange } = React.useContext(GlobalContext);
   const [pageMode] = useState(props.campaignId ? 'detail' : '');
   const [campaignId, setCampaignId] = useState(props.campaignId || activeCampaign.id);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +39,7 @@ const TopCreatives = (props) => {
     endDate: dateFilterRange.endDate,
     startDate: dateFilterRange.startDate,
   });
+
 
   /**
    * Call API and generate graphs correspond to data
@@ -61,7 +75,7 @@ const TopCreatives = (props) => {
 
   const loadCreativeList = (tFiveCreatives) => {
     return tFiveCreatives.length
-      ? tFiveCreatives.slice(0, 4).map(creative => {
+      ? tFiveCreatives.map(creative => {
         return <TopCreativeAdsBlock key={creative.campaignAssetId} creative={creative} />;
       })
       : <div className="col">No Creative found</div>;
@@ -78,6 +92,7 @@ const TopCreatives = (props) => {
 
   return (
     <section className="top-creatives-content">
+
       <div className="container">
         <div className="row align-items-center filter-block">
           <div className="col-md-5">
@@ -88,22 +103,21 @@ const TopCreatives = (props) => {
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              { pageMode !== 'detail' ? <DropdownFilter itemList={window.$campaigns} label={activeCampaign ? activeCampaign.name : null} dropwDownCallBack={loadCreativesByCampaign} /> : ''}
+              {pageMode !== 'detail' ? <DropdownFilter itemList={window.$campaigns} label={activeCampaign ? activeCampaign.name : null} dropwDownCallBack={loadCreativesByCampaign} /> : ''}
               <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
             </div>
           </div>
         </div>
 
-        <div className="creative-list row">
+        <div className="creative-list">
           {
             isLoading
               ? <div className="col text-center m-5">
                 <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
               </div>
-              : loadCreativeList(creatives)
+              : <Slider {...settings}> {loadCreativeList(creatives)}</Slider>
           }
         </div>
-
       </div>
     </section>
   );

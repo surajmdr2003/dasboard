@@ -84,8 +84,8 @@ const YourCampaigns = () => {
           <td>{campaign.clicks}</td>
           <td>{handleNanValueWithCalculation(campaign.clicks, campaign.impressions)}%</td>
           <td>{campaign.conversions.length}</td>
-          <td>{handleNanValueWithCalculation(campaign.conversions.length, campaign.clicks)}%</td>
-          <td><Link to={`/dashboard/campaign/${campaign.id}`}>See details</Link></td>
+          <td>{handleNanValueWithCalculation(campaign.conversions.reduce((sum, next) => sum + next.count, 0), campaign.clicks)}%</td>
+          <td><Link to={`/dashboard/campaigns/${campaign.id}`}>See details</Link></td>
         </tr>);
       })
       : <tr><td colSpan="7" className="text-center">No campaign</td></tr>;

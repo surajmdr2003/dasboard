@@ -74,9 +74,9 @@ const CampaignList = () => {
           <td>{campaign.impressions}</td>
           <td>{campaign.clicks}</td>
           <td>{handleNanValueWithCalculation(campaign.clicks, campaign.impressions)}%</td>
-          <td>{campaign.conversions.length}</td>
-          <td>{handleNanValueWithCalculation(campaign.conversions.length, campaign.clicks)}%</td>
-          <td><Link to={`/dashboard/campaign/${campaign.id}`}>See details</Link></td>
+          <td>{campaign.conversions.reduce((sum, next) => sum + next.count, 0)}</td>
+          <td>{handleNanValueWithCalculation(campaign.conversions.reduce((sum, next) => sum + next.count, 0), campaign.clicks)}%</td>
+          <td><Link to={`/dashboard/campaigns/${campaign.id}`}>See details</Link></td>
         </tr>);
       })
       : <tr><td colSpan="7" className="text-center">No campaign</td></tr>;
@@ -85,7 +85,7 @@ const CampaignList = () => {
 
   useEffect(() => {
     loadCampaignListData(user.id, dateFilter);
-  }, []);
+  }, [user.id]);
 
   return (
     <Fragment>

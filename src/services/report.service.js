@@ -32,6 +32,16 @@ class ReportService {
 
       return await API.post('emailReport', `/${reportId}/reports/email`, this.apiRequest);
     }
+
+    async downloadReport(monthId) {
+      const userSession = await AuthService.getSessionInfo();
+      const accessToken = userSession.getAccessToken().getJwtToken();
+
+      // Setting up header info
+      this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+      return await API.get('emailReport', `/${monthId}/report`, this.apiRequest);
+    }
 }
 
 module.exports = new ReportService();

@@ -29,7 +29,10 @@
     "react-leaflet": "^2.7.0",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
-    "styled-components": "^5.2.0"
+    "react-slick": "^0.27.12",
+    "slick-carousel": "^1.8.1",
+    "styled-components": "^5.2.0",
+    "url-loader": "^4.1.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

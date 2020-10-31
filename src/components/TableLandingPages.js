@@ -35,8 +35,8 @@ const TableLandingPages = (props) => {
           <td>{landingPage.impressions}</td>
           <td>{landingPage.clicks}</td>
           <td>{handleNanValueWithCalculation(landingPage.clicks, landingPage.impressions)}%</td>
-          <td>{landingPage.conversions.length}</td>
-          <td>{handleNanValueWithCalculation(landingPage.conversions.length, landingPage.clicks)}%</td>
+          <td>{landingPage.conversions.reduce((sum, next) => sum + next.count, 0)}</td>
+          <td>{handleNanValueWithCalculation(landingPage.conversions.reduce((sum, next) => sum + next.count, 0), landingPage.clicks)}%</td>
         </tr>);
       })
       : <tr><td colSpan="6" className="text-center">No Landing Page found</td></tr>;
