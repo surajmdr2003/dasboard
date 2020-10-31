@@ -34,8 +34,8 @@ const TopCreativeAdsBlock = (props) => {
             <li><strong>Impressions</strong>{props.creative.impressions}</li>
             <li><strong>Clicks</strong>{props.creative.clicks}</li>
             <li><strong>CTR</strong>{handleNanValueWithCalculation(props.creative.clicks, props.creative.impressions)}%</li>
-            <li><strong>Conversion</strong>{props.creative.conversions.length}</li>
-            <li><strong>Conv rate</strong>{handleNanValueWithCalculation(props.creative.conversions.length, props.creative.clicks)}%</li>
+            <li><strong>Conversion</strong>{props.creative.conversions.reduce((sum, next) => sum + next.count, 0)}</li>
+            <li><strong>Conv rate</strong>{handleNanValueWithCalculation(props.creative.conversions.reduce((sum, next) => sum + next.count, 0), props.creative.clicks)}%</li>
           </ul>
         </div>
       </div>

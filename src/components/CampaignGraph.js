@@ -105,6 +105,7 @@ const graphData = {
 
 const CampaignGraph = (props) => {
   const {dateFilterRange} = React.useContext(GlobalContext);
+  const [isLoading, setIsLoading] = useState(false);
   const currentCampaign = window.$campaigns.find(item => item.id === parseInt(props.campaignId, 10));
   const [userId, serUserId] = useState(null);
   const [gData, setData] = useState(initialData); // For graph data
@@ -136,6 +137,7 @@ const CampaignGraph = (props) => {
   }, [props.campaignId]);
 
   const initialize = async() => {
+    setIsLoading(true);
     const userInfo = await AdvertiserService.getAdvertiser();
 
     // Load Advertiser Lifetime Data
@@ -181,6 +183,7 @@ const CampaignGraph = (props) => {
 
       setTimeout(() => {
         updateGraph('impressions');
+        setIsLoading(false);
       }, 500);
     });
   };
@@ -291,9 +294,9 @@ const CampaignGraph = (props) => {
 
   const tabData = (slug) => {
     if (slug === 'conversions') {
-      return summaryData[slug].length;
+      return summaryData.conversions.reduce((sum, next) => sum + next.count, 0);
     } else if (slug === 'convrate') {
-      return handleNanValueWithCalculation(summaryData.conversions.length, summaryData.clicks) + '%';
+      return handleNanValueWithCalculation(summaryData.conversions.reduce((sum, next) => sum + next.count, 0), summaryData.clicks) + '%';
     } else if (slug === 'ctr') {
       return handleNanValueWithCalculation(summaryData.clicks, summaryData.impressions) + '%';
     }
@@ -312,7 +315,7 @@ const CampaignGraph = (props) => {
     } else if (activeTab === 'conversions') {
       return showViewOf(conversionChange);
     } else if (activeTab === 'convrate') {
-      return showViewOf(handleNanValueWithCalculation(summaryData.conversions.length, summaryData.clicks));
+      return showViewOf(handleNanValueWithCalculation(summaryData.conversions.reduce((sum, next) => sum + next.count, 0), summaryData.clicks));
     } else if (activeTab === 'ctr') {
       return showViewOf(handleNanValueWithCalculation(summaryData.clicks, summaryData.impressions));
     }
@@ -343,34 +346,40 @@ const CampaignGraph = (props) => {
             </div>
           </div>
           <div className="card-body">
-            <div className="row">
-              <div className="col-md-8 pr-0 br">
-                <div className="campaigns-chart">
-                  <ul className="nav nav-pills nav-fill bb">
-                    {campaignTabs.map((tab) => {
-                      return (
-                        <li key={tab.slug} className={'nav-item ' + ((activeAttr === tab.slug) ? 'active' : '')} onClick={() => updateGraph(tab.slug)}>
-                          <div className="number">{tabData(tab.slug)}</div>
-                          <div className="title">{tab.label}</div>
-                          { summaryData.change !== null && summaryData.change.length ? showChangeValue(summaryData.change, tab.slug) : ''}
-                        </li>);
-                    })
+            {
+              (isLoading)
+                ? <div className="text-center m-5">
+                  <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+                </div>
+                : <div className="row">
+                  <div className="col-md-8 pr-0 br">
+                    <div className="campaigns-chart">
+                      <ul className="nav nav-pills nav-fill bb">
+                        {campaignTabs.map((tab) => {
+                          return (
+                            <li key={tab.slug} className={'nav-item ' + ((activeAttr === tab.slug) ? 'active' : '')} onClick={() => updateGraph(tab.slug)}>
+                              <div className="number">{tabData(tab.slug)}</div>
+                              <div className="title">{tab.label}</div>
+                              { summaryData.change !== null && summaryData.change.length ? showChangeValue(summaryData.change, tab.slug) : ''}
+                            </li>);
+                        })
+                        }
+                      </ul>
+                      <div className="chart-block">
+                        <div className="date-range">{chartDate}</div>
+                        <C3Chart size={size} data={gData} bar={bar} axis={axis} unloadBeforeLoad={true} legend={legend} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-4">
+                    {
+                      (props.campaignId)
+                        ? <CampaignDetail />
+                        : <AllCampaignsLifetimeData summaryData={lifeTimeData} />
                     }
-                  </ul>
-                  <div className="chart-block">
-                    <div className="date-range">{chartDate}</div>
-                    <C3Chart size={size} data={gData} bar={bar} axis={axis} unloadBeforeLoad={true} legend={legend} />
                   </div>
                 </div>
-              </div>
-              <div className="col-md-4">
-                {
-                  (props.campaignId)
-                    ? <CampaignDetail />
-                    : <AllCampaignsLifetimeData summaryData={lifeTimeData} />
-                }
-              </div>
-            </div>
+            }
           </div>
         </div>
       </div>
