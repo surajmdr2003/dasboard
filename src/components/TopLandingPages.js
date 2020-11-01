@@ -74,7 +74,7 @@ const TopLandingPages = (props) => {
           <div className="col-md-5">
             <div className="block-title">
               Top Landing Pages
-              <Link to={`/dashboard/landing-pages${campaignId ? '/' + campaignId : ''}`} className="btn-link">See All</Link>
+              <Link to={'/dashboard/landing-pages'} className="btn-link">See All</Link>
             </div>
           </div>
           <div className="col-md-7">

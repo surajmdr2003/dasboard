@@ -161,7 +161,9 @@ section.all-campaigns-content {
             width: 280px;
             position: relative;
             padding: 14px;
-            background-color: #fff;
+            background-color: #f8f8f8;
+            object-fit: contain;
+            display: block;
         }
 
         &:before {

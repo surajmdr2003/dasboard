@@ -142,7 +142,8 @@
 }
 
 .advertiser-dropdown-menu,
-.dropdown-filter .dropdown-menu {
+.dropdown-filter .dropdown-menu,
+ul.campaign-list {
 	&::-webkit-scrollbar {
 		width: .3rem;
 	}

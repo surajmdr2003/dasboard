@@ -89,10 +89,12 @@ table {
         .campaign-media {
             align-items: center;
         
-            .table-campaign-image {
+            .table-campaign-image, object {
                 width: size(40);
                 height: size(50);
-                object-fit: cover;
+				object-fit: contain;
+				border: 1px solid #ddd;
+				margin-right: 5px;
             }
         
             p {
