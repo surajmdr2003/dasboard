@@ -2,10 +2,12 @@ import React, { Fragment } from 'react';
 
 /** Components */
 import NotificationList from '../components/NotificationList';
+import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
 
 const Notifications = () => {
   return (
     <Fragment>
+      <PageTitleWithOutFilter title="Notifications" />
       <section className="profile-content">
         <div className="container">
           <div className="row">
