@@ -3,19 +3,24 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
+// Context
+import GlobalContext from '../../context/GlobalContext';
+
 // Services
 import CampaignService from '../../services/campaign.service';
 
 const NavDropdownCampaign = (props) => {
   const initSummary = {
+    id: '',
+    name: '',
     clicks: 0,
     conversions: [],
     impressions: 0,
-    name: null,
   };
+  const {activeCampaign} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentCampaignCat, setcurrentCampaignCat] = useState('ACTIVE');
-  const [currentCampaign, setcurrentCampaign] = useState('');
+  const [currentCampaignCat, setCurrentCampaignCat] = useState('ACTIVE');
+  const [currentCampaign, setCurrentCampaign] = useState('');
   const [navCampaignSummary, setNavCampaignSummary] = useState(initSummary);
 
   /**
@@ -25,7 +30,7 @@ const NavDropdownCampaign = (props) => {
    * @param {String} status
    */
   const setCampaignNav = (status) => {
-    setcurrentCampaignCat(status);
+    setCurrentCampaignCat(status);
   };
 
   /**
@@ -43,17 +48,17 @@ const NavDropdownCampaign = (props) => {
     setIsLoading(true);
     CampaignService.getCampaignPerformance(campaignId, {startDate: start, endDate: end})
       .then((response) => {
-        response.data.summary.length ? setNavCampaignSummary(response.data.summary[0]) : setNavCampaignSummary(initSummary);
+        setNavCampaignSummary(response.data.summary.length ? response.data.summary[0] : {...initSummary, id: campaignId});
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
 
-    setcurrentCampaign(campaignId);
+    setCurrentCampaign(campaignId);
   };
 
   useEffect(() => {
     setCampaignNav(currentCampaignCat);
-  }, []);
+  }, [activeCampaign.id]);
 
   /**
    * Canclates CTR Properly
@@ -148,7 +153,7 @@ const NavDropdownCampaign = (props) => {
                         <div className="title">Conv rate</div>
                       </li>
                     </ul>
-                    {navCampaignSummary.id ? <Link to={'/dashboard/campaigns/' + navCampaignSummary.id} className="btn-link">View Performance</Link> : ''}
+                    <Link to={'/dashboard/campaigns/' + navCampaignSummary.id || activeCampaign.id} className="btn-link">View Performance</Link>
                   </Fragment>
               }
             </div>
