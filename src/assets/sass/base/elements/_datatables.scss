@@ -133,3 +133,15 @@ table {
 .jzCzGz {
     color: $primary !important;
 }
+
+.table-CampaignList .rdt_Table {
+	.rdt_TableRow, .rdt_TableHeadRow {
+		> div:first-child {
+			min-width: 200px;
+		}
+	} 
+
+	.guAIKK {
+		padding-left: 0;
+	}
+}

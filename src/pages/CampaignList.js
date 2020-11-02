@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import DataTable from 'react-data-table-component';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -20,6 +21,58 @@ const CampaignList = () => {
     endDate: dateFilterRange.endDate,
     startDate: dateFilterRange.startDate,
   });
+
+  const [columns] = useState([
+    {
+      name: 'Campaigns name',
+      selector: 'name',
+      sortable: true,
+      cell: row => (<div className="campaign">
+        <div className="c-name">{(row.name === null || row.name === '') ? 'No Data' : row.name}</div>
+        <div className="c-date">
+          {row.startDate + ' - ' + row.endDate}</div>
+      </div>),
+    },
+    {
+      name: 'Status',
+      selector: 'status',
+      sortable: false,
+      cell: row => (<div className={`status ${row.status.toLowerCase()}-campaign`}>{row.status.toLowerCase()}</div>),
+    },
+    {
+      name: 'Impressions',
+      selector: 'impressions',
+      sortable: true,
+      cell: row => (<div row={row}>{row.impressions}</div>),
+    },
+    {
+      name: 'Clicks',
+      selector: 'clicks',
+      sortable: true,
+      cell: row => (<div row={row}>{row.clicks}</div>),
+    },
+    {
+      name: 'CTR',
+      sortable: false,
+      cell: row => (<div row={row}>{handleNanValueWithCalculation(row.clicks, row.impressions)}%</div>),
+    },
+    {
+      name: 'Conversion',
+      sortable: false,
+      cell: row => (<div row={row}>{row.conversions.reduce((sum, next) => sum + next.count, 0)}</div>),
+    },
+    {
+      name: 'Conv rate',
+      sortable: false,
+      cell: row => (<div row={row}>{handleNanValueWithCalculation(row.conversions.reduce((sum, next) => sum + next.count, 0), row.clicks)}%</div>),
+    },
+    {
+      name: '',
+      sortable: false,
+      cell: row => (<div row={row}><Link to={`/dashboard/campaigns/${row.id}`}>See details</Link></div>),
+    },
+  ]);
+
 
   /**
    * Call API and generate graphs correspond to data
@@ -59,30 +112,6 @@ const CampaignList = () => {
     return ((fNum / sNum) * 100).toFixed(2);
   };
 
-  const loadViewOfCampaigns = (campaignList) => {
-    return campaignList.length
-      ? campaignList.map(campaign => {
-        return (<tr key={campaign.id}>
-          <th scope="row">
-            <div className="campaign">
-              <div className="c-name">{(campaign.name === null || campaign.name === '') ? 'No Data' : campaign.name}</div>
-              <div className="c-date">
-                {campaign.startDate + ' - ' + campaign.endDate}</div>
-            </div>
-          </th>
-          <td><div className={`status ${campaign.status.toLowerCase()}-campaign`}>{campaign.status}</div></td>
-          <td>{campaign.impressions}</td>
-          <td>{campaign.clicks}</td>
-          <td>{handleNanValueWithCalculation(campaign.clicks, campaign.impressions)}%</td>
-          <td>{campaign.conversions.reduce((sum, next) => sum + next.count, 0)}</td>
-          <td>{handleNanValueWithCalculation(campaign.conversions.reduce((sum, next) => sum + next.count, 0), campaign.clicks)}%</td>
-          <td><Link to={`/dashboard/campaigns/${campaign.id}`}>See details</Link></td>
-        </tr>);
-      })
-      : <tr><td colSpan="7" className="text-center">No campaign</td></tr>;
-  };
-
-
   useEffect(() => {
     loadCampaignListData(user.id, dateFilter);
   }, [user.id]);
@@ -108,29 +137,19 @@ const CampaignList = () => {
       <section className="main-content-wrapper table-CampaignList">
         <div className="container">
           <div className="table-responsive table-CampaignList">
-            <table className="table">
-              <thead className="thead-light">
-                <tr>
-                  <th scope="col">Campaign name</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Impressions</th>
-                  <th scope="col">Clicks</th>
-                  <th scope="col">CTR</th>
-                  <th scope="col">Conversion</th>
-                  <th scope="col">Conv rate</th>
-                  <th scope="col" />
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  isLoading
-                    ? <tr><td colSpan="7"><div className="text-center m-5">
-                      <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
-                    </div></td></tr>
-                    : loadViewOfCampaigns(campaigns)
-                }
-              </tbody>
-            </table>
+            {
+              isLoading
+                ?
+                <div className="text-center m-5">
+                  <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+                </div>
+                : <DataTable
+                  columns={columns}
+                  data={campaigns}
+                  persistTableHead
+                  pagination={campaigns.length > 10 ? true : false}
+                />
+            }
           </div>
         </div>
       </section>
