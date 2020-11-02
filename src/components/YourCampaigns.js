@@ -35,7 +35,6 @@ const YourCampaigns = () => {
       .then((response) => {
         setCampaginList(response.data.summary);
         setFilteredCampaginList(response.data.summary);
-        setIsLoading(false);
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
