@@ -16,9 +16,8 @@ import DropdownFilter from '../components/form-fields/DropdownFilter';
 import TableLandingPages from '../components/TableLandingPages';
 
 const TopLandingPages = (props) => {
-  const {user, activeCampaign, dateFilterRange} = React.useContext(GlobalContext);
-  const [pageMode] = useState(props.campaignId ? 'detail' : '');
-  const [campaignId, setCampaignId] = useState(props.campaignId || activeCampaign.id);
+  const {user, dateFilterRange} = React.useContext(GlobalContext);
+  const [campaignId, setCampaignId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(`Last ${dateFilterRange.days} Days`);
   const [topLandingPageList, setLandingPagesList] = useState([]);
@@ -55,7 +54,7 @@ const TopLandingPages = (props) => {
   const datepickerCallback = (startDate, endDate) => {
     setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
-    loadLandingPagesData(campaignId, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
+    loadLandingPagesData(campaignId || props.campaignId, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
 
   const loadLandingPagesByCampaign = (campaign) => {
@@ -63,9 +62,8 @@ const TopLandingPages = (props) => {
   };
 
   useEffect(() => {
-    setCampaignId(campaignId);
-    campaignId && loadLandingPagesData(campaignId, dateFilter);
-  }, [campaignId]);
+    loadLandingPagesData(campaignId || props.campaignId, dateFilter);
+  }, [props.campaignId, campaignId]);
 
   return (
     <section className="top-landingpage-content">
@@ -74,12 +72,12 @@ const TopLandingPages = (props) => {
           <div className="col-md-5">
             <div className="block-title">
               Top Landing Pages
-              <Link to={`/dashboard/landing-pages${campaignId ? '/' + campaignId : ''}`} className="btn-link">See All</Link>
+              <Link to={'/dashboard/landing-pages'} className="btn-link">See All</Link>
             </div>
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              { pageMode !== 'detail' ? <DropdownFilter itemList={window.$campaigns} label={activeCampaign ? activeCampaign.name : null} dropwDownCallBack={loadLandingPagesByCampaign} /> : ''}
+              {!props.campaignId ? <DropdownFilter itemList={window.$campaigns} label="Filter By Campaign" dropwDownCallBack={loadLandingPagesByCampaign} /> : ''}
               <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
             </div>
           </div>

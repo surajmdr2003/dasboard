@@ -238,7 +238,7 @@ const CampaignGraph = (props) => {
         graphData.conversions.push(element.conversions.length);
         graphData.convrate.push(handleNanValueWithCalculation(element.conversions.length, element.clicks));
       })
-      : graphData.date.push(end);
+      : graphData.date.push(dateFilterRange.endDate);
     graphData.impressions.push(0);
     graphData.clicks.push(0);
     graphData.ctr.push(0);

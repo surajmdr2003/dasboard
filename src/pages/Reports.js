@@ -35,43 +35,44 @@ const Reports = () => {
   const [columns] = useState([
     {
       name: 'Months',
-      selector: 'avatar',
+      selector: 'months',
       sortable: true,
       cell: row => getMonthBlock(row),
     },
     {
       name: 'Status',
-      selector: 'id',
+      selector: 'status',
       sortable: true,
       cell: (row) => getReportStatus(row),
     },
     {
       name: 'Impressions',
-      selector: 'id',
+      selector: 'impressions',
       sortable: true,
       cell: row => (<div row={row}>{row.impressions}</div>),
     },
     {
       name: 'Clicks',
-      selector: 'id',
+      selector: 'clicks',
       sortable: true,
       cell: row => (<div row={row}>{row.clicks}</div>),
     },
     {
       name: 'CTR',
-      selector: 'id',
+      selector: 'ctr',
       sortable: true,
       cell: row => (<div row={row}>{(row.clicks / row.impressions).toFixed(2)}</div>),
     },
     {
       name: 'Conv rate',
-      selector: 'id',
+      selector: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{(row.conversions / row.clicks).toFixed(2)}%</div>),
     },
     {
       name: '',
       selector: 'id',
+      sortable: false,
       cell: row => getActionBlock(row),
     },
   ]);
