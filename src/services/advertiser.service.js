@@ -35,7 +35,7 @@ class AdvertiserService {
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
-    return await API.get('advertiser', '/4955/notification', this.apiRequest);
+    return await API.get('advertiser', `/${advertiserId}/notification`, this.apiRequest);
   }
 
   async getAdvertiserAssets(advertiserId) {
