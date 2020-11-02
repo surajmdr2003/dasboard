@@ -103,6 +103,8 @@ ul.campaign-list {
     padding: 5px 0;
     margin: 0;
     list-style: none;
+    max-height: 15rem;
+    overflow-y: auto;
 
     li {
         cursor: pointer;

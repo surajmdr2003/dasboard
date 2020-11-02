@@ -29,9 +29,8 @@ const settings = {
 };
 
 const TopCreatives = (props) => {
-  const { user, activeCampaign, dateFilterRange } = React.useContext(GlobalContext);
-  const [pageMode] = useState(props.campaignId ? 'detail' : '');
-  const [campaignId, setCampaignId] = useState(props.campaignId || activeCampaign.id);
+  const { user, dateFilterRange } = React.useContext(GlobalContext);
+  const [campaignId, setCampaignId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
   const [creatives, setTopCreativeList] = useState([]);
@@ -39,7 +38,6 @@ const TopCreatives = (props) => {
     endDate: dateFilterRange.endDate,
     startDate: dateFilterRange.startDate,
   });
-
 
   /**
    * Call API and generate graphs correspond to data
@@ -56,7 +54,6 @@ const TopCreatives = (props) => {
     makeApiCall
       .then((response) => {
         setTopCreativeList(response.data.summary);
-        setIsLoading(false);
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
@@ -70,7 +67,7 @@ const TopCreatives = (props) => {
   const datepickerCallback = (startDate, endDate) => {
     setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
-    loadCreativeData(campaignId, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
+    loadCreativeData(campaignId || props.campaignId, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
 
   const loadCreativeList = (tFiveCreatives) => {
@@ -86,13 +83,11 @@ const TopCreatives = (props) => {
   };
 
   useEffect(() => {
-    setCampaignId(campaignId);
-    campaignId && loadCreativeData(campaignId, dateFilter);
-  }, [campaignId]);
+    loadCreativeData(campaignId || props.campaignId, dateFilter);
+  }, [props.campaignId, campaignId]);
 
   return (
     <section className="top-creatives-content">
-
       <div className="container">
         <div className="row align-items-center filter-block">
           <div className="col-md-5">
@@ -103,7 +98,7 @@ const TopCreatives = (props) => {
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              {pageMode !== 'detail' ? <DropdownFilter itemList={window.$campaigns} label={activeCampaign ? activeCampaign.name : null} dropwDownCallBack={loadCreativesByCampaign} /> : ''}
+              {!props.campaignId ? <DropdownFilter itemList={window.$campaigns} label="Filter By Campaign" dropwDownCallBack={loadCreativesByCampaign} /> : ''}
               <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
             </div>
           </div>
