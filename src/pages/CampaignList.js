@@ -69,7 +69,7 @@ const CampaignList = () => {
     {
       name: '',
       sortable: false,
-      cell: row => (<div row={row}><Link onClick={() => setActiveCampaign(row)} to={`/dashboard/campaigns/${row.id}`}>See details</Link></div>),
+      cell: row => (<div row={row}><Link onClick={() => setActiveCampaign(row)} to={'/dashboard/campaign'}>See details</Link></div>),
     },
   ]);
 
