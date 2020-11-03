@@ -17,7 +17,7 @@ const NavDropdownCampaign = (props) => {
     conversions: [],
     impressions: 0,
   };
-  const {activeCampaign} = React.useContext(GlobalContext);
+  const {activeCampaign, setActiveCampaign} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [currentCampaignCat, setCurrentCampaignCat] = useState('ACTIVE');
   const [currentCampaign, setCurrentCampaign] = useState('');
@@ -153,7 +153,7 @@ const NavDropdownCampaign = (props) => {
                         <div className="title">Conv rate</div>
                       </li>
                     </ul>
-                    <Link to={'/dashboard/campaigns/' + navCampaignSummary.id || activeCampaign.id} className="btn-link">View Performance</Link>
+                    <Link onClick={() => setActiveCampaign({id: navCampaignSummary.id || activeCampaign.id})} to={'/dashboard/campaigns/' + navCampaignSummary.id || activeCampaign.id} className="btn-link">View Performance</Link>
                   </Fragment>
               }
             </div>
