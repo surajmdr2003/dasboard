@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 const TopCreativeAdsBlock = (props) => {
+  const [heightWidth, setHeightWidth] = useState('0*0');
   /**
- * Handle NAN and Infinity value
- * @param {Int} fNum
- * @param {Int} sNum
- */
+   * Handle NAN and Infinity value
+   * @param {Int} fNum
+   * @param {Int} sNum
+   */
   const handleNanValueWithCalculation = (fNum, sNum) => {
     if (sNum === 0) {
       return (fNum * 100).toFixed(2);
@@ -17,15 +18,22 @@ const TopCreativeAdsBlock = (props) => {
   const calculateAssetDimensional = (asset) => {
     const img = new Image();
     img.src = asset;
-    img.onload;
+    // Important to use function decleration for "this" scope
+    img.onload = function() {
+      setHeightWidth(this.width + '*' + this.height);
+    };
     return (img.width + '*' + img.height);
   };
+
+  useEffect(() => {
+    calculateAssetDimensional(props.creative.assetUrl);
+  }, [props.creative]);
 
   return (
     <div className="p-2">
       <div className="card card-creative">
         <div className="card-creative-thumb">
-          <span className="badge badge-secondary">{calculateAssetDimensional(props.creative.assetUrl)}</span>
+          <span className="badge badge-secondary">{heightWidth}</span>
           <object data={props.creative.assetUrl} />
         </div>
         <div className="card-body">
@@ -48,4 +56,4 @@ TopCreativeAdsBlock.propTypes = {
   creative: PropTypes.object,
 };
 
-export default TopCreativeAdsBlock;
+export default React.memo(TopCreativeAdsBlock);

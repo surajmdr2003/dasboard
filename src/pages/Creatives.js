@@ -7,6 +7,7 @@ import DataTable from 'react-data-table-component';
 import GlobalContext from '../context/GlobalContext';
 
 /** Components */
+import ImageSizeRow from '../components/common/ImageSizeRow';
 import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
@@ -43,7 +44,7 @@ const Creatives = () => {
       name: 'Size',
       selector: 'size',
       sortable: false,
-      cell: row => (<div row={row}>{row.size}</div>),
+      cell: row => (<ImageSizeRow row={row} />),
     },
     {
       name: 'Impressions',
