@@ -84,7 +84,7 @@ const TopCreatives = (props) => {
 
   useEffect(() => {
     loadCreativeData(campaignId || props.campaignId, dateFilter);
-  }, [props.campaignId, campaignId]);
+  }, [props.campaignId, campaignId, user.id]);
 
   return (
     <section className="top-creatives-content">

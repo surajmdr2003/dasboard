@@ -63,7 +63,7 @@ const TopLandingPages = (props) => {
 
   useEffect(() => {
     loadLandingPagesData(campaignId || props.campaignId, dateFilter);
-  }, [props.campaignId, campaignId]);
+  }, [props.campaignId, campaignId, user.id]);
 
   return (
     <section className="top-landingpage-content">
