@@ -13,7 +13,7 @@ import AdvertiserService from '../services/advertiser.service';
 import DatePickerField from '../components/form-fields/DatePickerField';
 
 const CampaignList = () => {
-  const {user, dateFilterRange} = React.useContext(GlobalContext);
+  const {user, setActiveCampaign, dateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
   const [campaigns, setCampaigns] = useState([]);
@@ -69,7 +69,7 @@ const CampaignList = () => {
     {
       name: '',
       sortable: false,
-      cell: row => (<div row={row}><Link to={`/dashboard/campaigns/${row.id}`}>See details</Link></div>),
+      cell: row => (<div row={row}><Link onClick={() => setActiveCampaign(row)} to={`/dashboard/campaigns/${row.id}`}>See details</Link></div>),
     },
   ]);
 

@@ -1,5 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+
+// Contexts
+import GlobalContext from '../context/GlobalContext';
 
 /** Components */
 import CampaignGraph from '../components/CampaignGraph';
@@ -11,8 +13,8 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 // Services
 import CampaignService from '../services/campaign.service';
 
-const Campaign = (props) => {
-  const campaignId = props.match.params.id;
+const Campaign = () => {
+  const {user, activeCampaign} = React.useContext(GlobalContext);
   const [reportUrl, setReportUrl] = useState('');
 
   /**
@@ -30,8 +32,8 @@ const Campaign = (props) => {
   };
 
   useEffect(() => {
-    loadCampaignReport(campaignId);
-  }, [campaignId]);
+    activeCampaign.id && loadCampaignReport(activeCampaign.id);
+  }, [user.id, activeCampaign.id]);
 
   return (
     <Fragment>
@@ -41,7 +43,7 @@ const Campaign = (props) => {
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-md-6">
-                  <PageTitleCampaignDropdown pageSlug="/dashboard/campaigns" campaignId={campaignId} campaignList={window.$campaigns} />
+                  <PageTitleCampaignDropdown campaignId={activeCampaign.id} campaignList={window.$campaigns} />
                 </div>
                 <div className="col-md-6 text-right">
                   <a href={reportUrl} download className="btn btn-link btn-download-report">Download Report</a>
@@ -50,17 +52,13 @@ const Campaign = (props) => {
             </div>
           </div>
         </section>
-        <CampaignGraph campaignId = {campaignId}/>
-        <TopCreatives campaignId = {campaignId}/>
-        <TopLandingPages campaignId = {campaignId}/>
-        <TopTargets campaignId = {campaignId}/>
+        { activeCampaign.id ? <CampaignGraph campaignId = {activeCampaign.id}/> : ''}
+        { activeCampaign.id ? <TopCreatives campaignId = {activeCampaign.id + ''}/> : ''}
+        { activeCampaign.id ? <TopLandingPages campaignId = {activeCampaign.id + ''}/> : ''}
+        { activeCampaign.id ? <TopTargets campaignId = {activeCampaign.id + ''}/> : ''}
       </div>
     </Fragment>
   );
-};
-
-Campaign.propTypes = {
-  match: PropTypes.object,
 };
 
 export default Campaign;
