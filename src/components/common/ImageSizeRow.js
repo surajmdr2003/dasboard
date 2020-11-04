@@ -17,3 +17,5 @@ const ImageSizeRow = ({row}) => {
 ImageSizeRow.propTypes = {
   row: PropTypes.object,
 };
+
+export default ImageSizeRow;

@@ -34,7 +34,14 @@ const TopCreativeAdsBlock = (props) => {
       <div className="card card-creative">
         <div className="card-creative-thumb">
           <span className="badge badge-secondary">{heightWidth}</span>
-          <object data={props.creative.assetUrl} />
+          {
+            props.creative.name.endsWith('mp4')
+              ? <video controls preload="none">
+                <source src={props.creative.assetUrl} type="video/mp4"/>
+                  Your browser does not support the video tag.
+              </video>
+              : <object data={props.creative.assetUrl} />
+          }
         </div>
         <div className="card-body">
           <h5>{(props.creative.name === null || props.creative.name === '') ? 'No Data' : props.creative.name}</h5>

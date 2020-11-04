@@ -152,9 +152,6 @@ const Navigation = () => {
             </div>
             <ul className="dropdown-menu profile-dropdown-menu">
               <li>
-                <Link to="/dashboard/login">Login</Link>
-              </li>
-              <li>
                 <Link to="/dashboard/profile">Profile</Link>
               </li>
               <li>
