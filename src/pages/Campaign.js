@@ -43,7 +43,7 @@ const Campaign = () => {
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-md-6">
-                  <PageTitleCampaignDropdown campaignId={activeCampaign.id} campaignList={window.$campaigns} />
+                  <PageTitleCampaignDropdown pageName="Campaign Detail Page" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
                 </div>
                 <div className="col-md-6 text-right">
                   <a href={reportUrl} download className="btn btn-link btn-download-report">Download Report</a>

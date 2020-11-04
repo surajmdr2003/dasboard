@@ -21,7 +21,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const settings = {
-  dots: true,
+  dots: false,
   infinite: false,
   speed: 500,
   slidesToShow: 4,
@@ -84,7 +84,7 @@ const TopCreatives = (props) => {
 
   useEffect(() => {
     loadCreativeData(campaignId || props.campaignId, dateFilter);
-  }, [props.campaignId, campaignId]);
+  }, [props.campaignId, campaignId, user.id]);
 
   return (
     <section className="top-creatives-content">

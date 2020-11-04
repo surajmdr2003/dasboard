@@ -82,7 +82,7 @@ const PageTitleCampaignDropdown = (props) => {
       {
         campaignList.length
           ? <div className="campaigns-link">
-              Landing Pages - <a href="#" className="btn-breadcrumb">{showCurrentCampaign(props.campaignId)}</a>
+            {props.pageName ? props.pageName + ' - ' : ''}<a href="#" className="btn-breadcrumb">{showCurrentCampaign(props.campaignId)}</a>
             <div className="campaign-dropdown-menu dropdown-menu">
               <div className="card-header">
                 <div className={(currentCampaignCat === 'ACTIVE' ? 'active' : '')} onClick={() => setCampaignNav('ACTIVE')}>Active campaigns</div>
@@ -106,6 +106,7 @@ PageTitleCampaignDropdown.propTypes = {
   pageSlug: PropTypes.string,
   campaignId: PropTypes.any,
   campaignList: PropTypes.array,
+  pageName: PropTypes.string,
 };
 
 export default PageTitleCampaignDropdown;

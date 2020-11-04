@@ -7,6 +7,7 @@ import DataTable from 'react-data-table-component';
 import GlobalContext from '../context/GlobalContext';
 
 /** Components */
+import ImageSizeRow from '../components/common/ImageSizeRow';
 import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
@@ -33,7 +34,14 @@ const Creatives = () => {
       selector: 'name',
       sortable: true,
       cell: row => (<div className="campaign-media media">
-        <object data={row.assetUrl} />
+        {
+          row.name.endsWith('mp4')
+            ? <video controls preload="none">
+              <source src={row.assetUrl} type="video/mp4"/>
+                Your browser does not support the video tag.
+            </video>
+            : <object data={row.assetUrl} />
+        }
         <div className="media-body">
           <p className="mt-0">{(row.name === null || row.name === '') ? 'No Data' : row.name}</p>
         </div>
@@ -43,7 +51,7 @@ const Creatives = () => {
       name: 'Size',
       selector: 'size',
       sortable: false,
-      cell: row => (<div row={row}>{row.size}</div>),
+      cell: row => (<ImageSizeRow row={row} />),
     },
     {
       name: 'Impressions',
@@ -171,7 +179,7 @@ const Creatives = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown campaignId={activeCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageName="Creatives Page" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">

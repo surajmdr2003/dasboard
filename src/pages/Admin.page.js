@@ -1,5 +1,6 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 import {Auth} from 'aws-amplify';
 
 // Global context
@@ -12,7 +13,7 @@ import AdvertiserService from '../services/advertiser.service';
 import HeaderMain from '../components/navigation/HeaderMain';
 import Footer from '../components/Footer';
 
-const AdminPages = ({ children }) => {
+const AdminPages = ({ history, children }) => {
   const {setUser} = React.useContext(GlobalContext);
   const [state, setState] = useState({ isLoading: true });
 
@@ -29,13 +30,14 @@ const AdminPages = ({ children }) => {
 
             // Set user in global context
             setUser(user);
+
             // Hide loader/spinner
             setState({ isLoading: false });
           });
       })
       .catch(() => {
         console.log('Not signed in yet!');
-        setState({ isLoading: false });
+        history.push('/login');
       });
   }, []);
 
@@ -48,9 +50,7 @@ const AdminPages = ({ children }) => {
           </div>
           : (<Fragment>
             <HeaderMain />
-            <div className="main-container">
-              {children}
-            </div>
+            <div className="main-container">{children}</div>
             <Footer />
           </Fragment>)
       }
@@ -60,6 +60,7 @@ const AdminPages = ({ children }) => {
 
 AdminPages.propTypes = {
   children: PropTypes.object,
+  history: PropTypes.object,
 };
 
-export default AdminPages;
+export default withRouter(AdminPages);

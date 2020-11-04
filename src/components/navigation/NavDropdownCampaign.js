@@ -153,7 +153,7 @@ const NavDropdownCampaign = (props) => {
                         <div className="title">Conv rate</div>
                       </li>
                     </ul>
-                    <Link onClick={() => setActiveCampaign({id: navCampaignSummary.id || activeCampaign.id})} to={'/dashboard/campaigns/' + navCampaignSummary.id || activeCampaign.id} className="btn-link">View Performance</Link>
+                    <Link onClick={() => setActiveCampaign({id: navCampaignSummary.id || activeCampaign.id})} to={'/dashboard/campaign'} className="btn-link">View Performance</Link>
                   </Fragment>
               }
             </div>

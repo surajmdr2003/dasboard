@@ -84,7 +84,7 @@ const Stats = () => {
       .then((response) => {
         setCampaignMonths(response.data);
         loadStatsData(response.data[0].id);
-        setDropdownLabel(response.data[0].id);
+        setDropdownLabel(response.data[0].name);
       })
       .catch(() => false)
       .finally();
@@ -96,7 +96,6 @@ const Stats = () => {
   const loadStatsData = (monthId) => {
     StatsService.getCampaignStatsOfMonth(monthId)
       .then((response) => {
-        // setData(response.data);
         reformatDataForGraph(response.data);
       })
       .catch(() => false)
@@ -179,7 +178,7 @@ const Stats = () => {
 
   const loadDataByMonth = (data) => {
     loadStatsData(data.id);
-    setDropdownLabel(data.id);
+    setDropdownLabel(data.name);
   };
 
   useEffect(() => {
@@ -193,7 +192,7 @@ const Stats = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown campaignId={activeCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageName="Stats Page" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">

@@ -11,7 +11,7 @@ const EditProfile = () => {
 
   return (
     <Fragment>
-      <PageTitleWithOutFilter/>
+      <PageTitleWithOutFilter title="Edit Profile"/>
       <section className="profile-content">
         <div className="container">
           <div className="row">
