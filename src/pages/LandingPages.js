@@ -63,7 +63,7 @@ const LandingPages = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown campaignId={activeCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageName="Landing Pages" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
