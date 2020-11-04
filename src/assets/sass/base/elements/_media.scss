@@ -5,6 +5,12 @@ object {
 	max-width: 100%;
 }
 
+video {
+	width: 2.5rem;
+	height: 50px; 
+	margin-right: 5px;
+}
+
 img {
 	height: auto; // Make sure images are scaled correctly.
 	max-width: 100%; // Adhere to container width.
