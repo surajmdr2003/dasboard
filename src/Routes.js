@@ -21,15 +21,15 @@ import EditProfile from './pages/EditProfile';
 import CreateCustomReport from './pages/CreateCustomReport';
 import Reports from './pages/Reports';
 import Billing from './pages/Billing';
-import NotFound from './pages/NotFound';
+import PageNotFound from './pages/NotFound';
 import CampaignList from './pages/CampaignList';
 
 const Routes = () => {
   return (
     <Switch>
       <Route path={'/'} component={Welcome} exact />
-      <Route path={'/login'} component={Login} />
-      <Route path={'/others'} component={Welcome} />
+      <Route exact path={'/login'} component={Login} />
+      <Route exact path={'/others'} component={Welcome} />
       <Route
         path={'/dashboard'}
         render={({ match: { path } }) => (
@@ -55,8 +55,8 @@ const Routes = () => {
           </AdminPages>
         )}
       />
-      <Route path="/not-found" component={NotFound} />
-      <Redirect exact from={'*'} to={'/not-found'} />
+      <Route path="/page-not-found" component={PageNotFound} />
+      <Redirect exact from={'*'} to={'/page-not-found'} />
     </Switch>
   );
 };
