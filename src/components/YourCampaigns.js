@@ -14,7 +14,7 @@ import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 
 const YourCampaigns = () => {
-  const { user, dateFilterRange } = React.useContext(GlobalContext);
+  const {user, setActiveCampaign, dateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(`Last ${dateFilterRange.days} Days`);
   const [campaginList, setCampaginList] = useState([]);
