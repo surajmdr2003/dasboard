@@ -2,6 +2,8 @@ import React, { useEffect, useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useHistory } from 'react-router-dom';
 
 // Context
 import GlobalContext from '../../context/GlobalContext';
@@ -22,6 +24,7 @@ const NavDropdownCampaign = (props) => {
   const [currentCampaignCat, setCurrentCampaignCat] = useState('ACTIVE');
   const [currentCampaign, setCurrentCampaign] = useState('');
   const [navCampaignSummary, setNavCampaignSummary] = useState(initSummary);
+  const history = useHistory();
 
   /**
    * Filter Campaign Nav items
@@ -91,6 +94,11 @@ const NavDropdownCampaign = (props) => {
       : <li className="nav-item"><Link to="#" className="nav-link">No Campaign</Link></li>;
   };
 
+  const loadCampaignPage = () => {
+    history.push('/dashboard/campaign');
+    setActiveCampaign({id: navCampaignSummary.id || activeCampaign.id});
+  };
+
   return (
     <div className="dropdown-full-width">
       <div className="container">
@@ -110,7 +118,7 @@ const NavDropdownCampaign = (props) => {
                 >Inactive</Link>
               </li>
               <li className="nav-item">
-                <Link to="/dashboard/campaigns" className="nav-link btn-link">See All Campaigns</Link>
+                <NavDropdown.Item className="nav-link btn-link" onClick={() => history.push('/dashboard/campaigns')}>See All Campaigns</NavDropdown.Item>
               </li>
             </ul>
           </div>
@@ -153,7 +161,7 @@ const NavDropdownCampaign = (props) => {
                         <div className="title">Conv rate</div>
                       </li>
                     </ul>
-                    <Link onClick={() => setActiveCampaign({id: navCampaignSummary.id || activeCampaign.id})} to={'/dashboard/campaign'} className="btn-link">View Performance</Link>
+                    <NavDropdown.Item className="btn-link" onClick={() => loadCampaignPage()}>View Performance</NavDropdown.Item>
                   </Fragment>
               }
             </div>

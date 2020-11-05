@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useHistory } from 'react-router-dom';
 
 // Services
 import CampaignService from '../../services/campaign.service';
@@ -10,6 +12,7 @@ const NavDropdownCreatives = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentCampaign, setcurrentCampaign] = useState('');
   const [topCreatives, setTopCreatives] = useState([]);
+  const history = useHistory();
 
   /**
    * For Initial startdate and enddate for 7 Days
@@ -26,7 +29,7 @@ const NavDropdownCreatives = (props) => {
     setIsLoading(true);
     CampaignService.getCampaignPerformanceAssets(campaignId, {startDate: start, endDate: end})
       .then((response) => {
-        setTopCreatives(response.data.summary.slice(0, 5));
+        setTopCreatives(response.data.summary.slice(0, 4));
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
@@ -59,7 +62,6 @@ const NavDropdownCreatives = (props) => {
     return (img.width + '*' + img.height);
   };
 
-
   useEffect(() => {
     (props.campaignNavItems.length)
       ? loadTopFiveCreativesData(props.campaignNavItems[0].id)
@@ -88,7 +90,7 @@ const NavDropdownCreatives = (props) => {
             <div className="pl-3 creatives-overview">
               <div className="overview-title">
                 <h5>Top 5 Creatives
-                  <Link to="/dashboard/creatives" className="btn-link">See All Creatives</Link>
+                  <NavDropdown.Item className="btn-link" onClick={() => history.push('/dashboard/creatives')}>See All Creatives</NavDropdown.Item>
                 </h5>
               </div>
               <ul className="row overview-detail">

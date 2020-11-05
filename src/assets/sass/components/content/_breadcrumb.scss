@@ -13,23 +13,24 @@ section.filter-bar {
             position: relative;
             font-size: size(14);
             text-transform: capitalize;
+            background: transparent !important;
+            border: 0 !important;
 
-            > a {
+            > span {
+                color: $primary;
                 font-weight: 600;
                 text-decoration: none;
+            }
+            &:hover,
+            &:focus,
+            &:active {
+                box-shadow: none !important;
+                background: transparent !important;
+                color: #404040 !important;
 
                 &:after {
-                    content: '\e90d';
-                    @extend .icon-font;
-                    font-size: size(8);
-                    vertical-align: middle;
-                    margin-left: size(5);
-                    display: inline-block;
+                    color: $primary;
                 }
-            }
-
-            &:hover a:after {
-                transform: scaleY(-1);
             }
         }
 
@@ -46,11 +47,22 @@ section.filter-bar {
     }
 }
 
-.campaigns-link:hover {
-    .campaign-dropdown-menu {
-        display: block;
-    }
+.page-campaign-dropdown  {
+    margin: 0;
+    padding: 0;
+    border: 1px solid #f5f5f5;
+}
 
+.breadcrumb-campaign-dropdown.show {
+
+    .campaigns-link {
+        color: #333;
+
+        &:after {
+            color: $primary;
+            transform: scaleY(-1);
+        }
+    }
     &:after {
         content: "";
         display: block;
