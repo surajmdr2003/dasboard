@@ -14,7 +14,7 @@ import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 
 const YourCampaigns = () => {
-  const { user, dateFilterRange } = React.useContext(GlobalContext);
+  const {user, setActiveCampaign, dateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(`Last ${dateFilterRange.days} Days`);
   const [campaginList, setCampaginList] = useState([]);
@@ -46,13 +46,13 @@ const YourCampaigns = () => {
       name: 'Impressions',
       selector: 'impressions',
       sortable: true,
-      cell: row => (<div row={row}>{row.impressions}</div>),
+      cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
       name: 'Clicks',
       selector: 'clicks',
       sortable: true,
-      cell: row => (<div row={row}>{row.clicks}</div>),
+      cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
       name: 'CTR',
@@ -62,7 +62,7 @@ const YourCampaigns = () => {
     {
       name: 'Conversion',
       sortable: false,
-      cell: row => (<div row={row}>{row.conversions.reduce((sum, next) => sum + next.count, 0)}</div>),
+      cell: row => (<div row={row}>{row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</div>),
     },
     {
       name: 'Conv rate',

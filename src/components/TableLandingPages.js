@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import DataTable from 'react-data-table-component';
 
+const pageNotFound = '../assets/images/404.png';
+
 const TableLandingPages = (props) => {
   const [pageUrl, setPageUrl] = useState((props.landingPages.length) ? props.landingPages[0].landingPageURL : '');
   const [activePageId, setActivePageId] = useState((props.landingPages.length) ? props.landingPages[0].id : '');
@@ -18,13 +20,13 @@ const TableLandingPages = (props) => {
       name: 'Impressions',
       selector: 'impressions',
       sortable: true,
-      cell: row => (<div row={row}>{row.impressions}</div>),
+      cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
       name: 'Clicks',
       selector: 'clicks',
       sortable: true,
-      cell: row => (<div row={row}>{row.clicks}</div>),
+      cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
       name: 'CTR',
@@ -36,7 +38,7 @@ const TableLandingPages = (props) => {
       name: 'Conversion',
       selector: 'id',
       sortable: false,
-      cell: row => (<div row={row}>{row.conversions.reduce((sum, next) => sum + next.count, 0)}</div>),
+      cell: row => (<div row={row}>{row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</div>),
     },
     {
       name: 'Conv rate',
@@ -82,7 +84,7 @@ const TableLandingPages = (props) => {
         <div className="col-md-4">
           <div className="card-image ">
             <div className="page-on-phone-preview">
-              <object data={(pageUrl === null || pageUrl === '') ? 'https://www.singlegrain.com/wp-content/uploads/2019/07/image1.png' : pageUrl} />
+              <object data={(pageUrl === null || pageUrl === '') ? pageNotFound : pageUrl} />
             </div>
           </div>
         </div>
