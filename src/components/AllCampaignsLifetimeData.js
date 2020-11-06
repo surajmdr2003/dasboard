@@ -32,7 +32,7 @@ const AllCampaignsLifetimeData = (props) => {
             <div className="media-body">
               <div className="data">
                 <h5>Impressions</h5>
-                <p>{props.summaryData.impressions}</p>
+                <p>{props.summaryData.impressions.toLocaleString()}</p>
               </div>
             </div>
           </li>
@@ -45,7 +45,7 @@ const AllCampaignsLifetimeData = (props) => {
                 <li className="nav-item">
                   <div className="data">
                     <h5>Clicks</h5>
-                    <p>{props.summaryData.clicks}</p>
+                    <p>{props.summaryData.clicks.toLocaleString()}</p>
                   </div>
                 </li>
                 <li className="nav-item">
@@ -66,7 +66,7 @@ const AllCampaignsLifetimeData = (props) => {
                 <li className="nav-item">
                   <div className="data">
                     <h5>Conversion</h5>
-                    <p>{props.summaryData.conversions.reduce((sum, next) => sum + next.count, 0)}</p>
+                    <p>{props.summaryData.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</p>
                   </div>
                 </li>
                 <li className="nav-item">

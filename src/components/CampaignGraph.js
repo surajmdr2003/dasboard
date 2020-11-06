@@ -350,7 +350,7 @@ const CampaignGraph = (props) => {
                     {campaignTabs.map((tab) => {
                       return (
                         <li key={tab.slug} className={'nav-item ' + ((activeAttr === tab.slug) ? 'active' : '')} onClick={() => updateGraph(tab.slug)}>
-                          <div className="number">{tabData(tab.slug)}</div>
+                          <div className="number">{tabData(tab.slug).toLocaleString()}</div>
                           <div className="title">{tab.label}</div>
                           { summaryData.change !== null && summaryData.change.length ? showChangeValue(summaryData.change, tab.slug) : ''}
                         </li>);

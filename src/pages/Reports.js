@@ -49,13 +49,13 @@ const Reports = () => {
       name: 'Impressions',
       selector: 'impressions',
       sortable: true,
-      cell: row => (<div row={row}>{row.impressions}</div>),
+      cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
       name: 'Clicks',
       selector: 'clicks',
       sortable: true,
-      cell: row => (<div row={row}>{row.clicks}</div>),
+      cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
       name: 'CTR',

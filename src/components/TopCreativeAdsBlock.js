@@ -46,10 +46,10 @@ const TopCreativeAdsBlock = (props) => {
         <div className="card-body">
           <h5>{(props.creative.name === null || props.creative.name === '') ? 'No Data' : props.creative.name}</h5>
           <ul>
-            <li><strong>Impressions</strong>{props.creative.impressions}</li>
-            <li><strong>Clicks</strong>{props.creative.clicks}</li>
+            <li><strong>Impressions</strong>{props.creative.impressions.toLocaleString()}</li>
+            <li><strong>Clicks</strong>{props.creative.clicks.toLocaleString()}</li>
             <li><strong>CTR</strong>{handleNanValueWithCalculation(props.creative.clicks, props.creative.impressions)}%</li>
-            <li><strong>Conversion</strong>{props.creative.conversions.reduce((sum, next) => sum + next.count, 0)}</li>
+            <li><strong>Conversion</strong>{props.creative.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</li>
             <li><strong>Conv rate</strong>{handleNanValueWithCalculation(props.creative.conversions.reduce((sum, next) => sum + next.count, 0), props.creative.clicks)}%</li>
           </ul>
         </div>

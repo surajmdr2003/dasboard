@@ -141,11 +141,11 @@ const NavDropdownCampaign = (props) => {
                     </div>
                     <ul className="nav nav-pills nav-fill overview-detail">
                       <li className="nav-item">
-                        <div className="number">{navCampaignSummary.impressions}</div>
+                        <div className="number">{navCampaignSummary.impressions.toLocaleString()}</div>
                         <div className="title">Impressions</div>
                       </li>
                       <li className="nav-item active">
-                        <div className="number">{navCampaignSummary.clicks}</div>
+                        <div className="number">{navCampaignSummary.clicks.toLocaleString()}</div>
                         <div className="title">Clicks</div>
                       </li>
                       <li className="nav-item">
@@ -153,7 +153,7 @@ const NavDropdownCampaign = (props) => {
                         <div className="title">CTR</div>
                       </li>
                       <li className="nav-item">
-                        <div className="number">{navCampaignSummary.conversions.reduce((sum, next) => sum + next.count, 0)}</div>
+                        <div className="number">{navCampaignSummary.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</div>
                         <div className="title">Conversion</div>
                       </li>
                       <li className="nav-item">
