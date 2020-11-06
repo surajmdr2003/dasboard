@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 import PubSub from 'pubsub-js';
 import _debounce from 'lodash/debounce';
@@ -144,7 +144,7 @@ const Navigation = () => {
               <Dropdown.Menu alignRight="right">
                 <div className="notification-dropdown-menu">
                   <div className="notification-header">
-                    Notifications <Link to="/dashboard/notifications" className="btn-link">See All</Link>
+                    Notifications <Dropdown.Item onClick={() => history.push('/dashboard/notifications')} className="btn-link">See All</Dropdown.Item>
                   </div>
                   <ul className="notifications list-unstyled">
                     <NotificationList displaySummary={true} />
