@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import DatePickerField from './form-fields/DatePickerField';
 
-const PageTitleWithFilter = (props) => {
+const PageTitleWithFilter = ({reportUrl}) => {
   const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
 
   const AllCampaignDateCallback = (startDate, endDate) => {
@@ -35,10 +35,9 @@ const PageTitleWithFilter = (props) => {
   </div>);
 
   /**
-     * Return Views with Conditions
-     * @param {String (URL)} reportUrl
-     */
-  const showFilterButtons = (reportUrl) => {
+   * Return Views with Conditions
+   */
+  const showFilterButtons = () => {
     return ((reportUrl === undefined ) ? FilterFeilds : ReportDownloadFeils);
   };
 
@@ -69,7 +68,7 @@ const PageTitleWithFilter = (props) => {
               </div>
             </div>
             <div className="col-md-6 text-right">
-              { showFilterButtons(props.reportUrl)}
+              { showFilterButtons(reportUrl)}
             </div>
           </div>
         </div>

@@ -4,9 +4,9 @@ import DataTable from 'react-data-table-component';
 
 const pageNotFound = '../assets/images/404.png';
 
-const TableLandingPages = (props) => {
-  const [pageUrl, setPageUrl] = useState((props.landingPages.length) ? props.landingPages[0].landingPageURL : '');
-  const [activePageId, setActivePageId] = useState((props.landingPages.length) ? props.landingPages[0].id : '');
+const TableLandingPages = ({landingPages}) => {
+  const [pageUrl, setPageUrl] = useState((landingPages.length) ? landingPages[0].landingPageURL : '');
+  const [activePageId, setActivePageId] = useState((landingPages.length) ? landingPages[0].id : '');
   const [columns] = useState([
     {
       name: 'Campaigns name',
@@ -75,9 +75,9 @@ const TableLandingPages = (props) => {
           <div className="table-responsive">
             <DataTable
               columns={columns}
-              data={props.landingPages}
+              data={landingPages}
               persistTableHead
-              pagination={props.landingPages.length > 10 ? true : false}
+              pagination={landingPages.length > 10 ? true : false}
             />
           </div>
         </div>
