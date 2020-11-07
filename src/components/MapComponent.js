@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Map, TileLayer, CircleMarker, Popup, Polygon, FeatureGroup } from 'react-leaflet';
+import { Map, TileLayer, Circle, Popup, Polygon, FeatureGroup } from 'react-leaflet';
 import Config from '../../app.config';
 
 const leafURL = `https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${Config.mapboxAccessToken}`;
@@ -27,16 +27,16 @@ const MapComponent = (props) => {
     response.target && response.target.data.forEach((data, index) => {
       if (data.type === 'circle') {
         drawings.push((
-          <CircleMarker key={data.center.lat + data.center.lng + index} center={[data.center.lat, data.center.lng]} color="blue" radius={data.radius}>
-            <Popup>{response.target.name}</Popup>
-          </CircleMarker>
+          <Circle key={data.center.lat + data.center.lng + index} center={[data.center.lat, data.center.lng]} color="blue" radius={data.radius}>
+            <Popup>Target: {response.target.name}</Popup>
+          </Circle>
         ));
       }
 
       if (data.type === 'poly') {
         drawings.push((
           <Polygon key={index} color="purple" positions={data.coordinates.map(({lat, lng}) => [lat, lng])} >
-            <Popup> {response.target.name}</Popup>
+            <Popup>Target: {response.target.name}</Popup>
           </Polygon>
         ));
       }
