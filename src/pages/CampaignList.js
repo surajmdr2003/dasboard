@@ -13,7 +13,7 @@ import AdvertiserService from '../services/advertiser.service';
 import DatePickerField from '../components/form-fields/DatePickerField';
 
 const CampaignList = () => {
-  const {user, setActiveCampaign, dateFilterRange} = React.useContext(GlobalContext);
+  const { user, setActiveCampaign, dateFilterRange } = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
   const [campaigns, setCampaigns] = useState([]);
