@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import 'c3/c3.css';
 
 // Custom Chart using C3 chart
-import C3Chart from './C3Chart';
+import C3Chart from '../common/C3Chart';
 
 /**
  * Attribute for graph starts
@@ -46,7 +46,7 @@ const ChartBlock = ({ chartDate, selectedGraph }) => {
 
     <div className="chart-block">
       <div className="date-range">{chartDate}</div>
-      <C3Chart columns={chartData} axis={axis} bar={{ width: 10 }} size={{ height: 280 }} legend={{ show: false }}/>
+      <C3Chart holder="campaignGraph" columns={chartData} axis={axis} bar={{ width: 10 }} size={{ height: 280 }} legend={{ show: false }}/>
     </div>
   );
 };

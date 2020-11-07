@@ -21,14 +21,36 @@ import AdvertiserService from '../../services/advertiser.service';
  * Attribute for graph starts
  */
 const initialData = {
-  x: 'x',
-  columns: [
-    ['x'],
-    ['Impression'],
-  ],
-  type: 'bar',
-  colors: {
-    impression: '#22a6de',
+  graph: {
+    x: 'x',
+    columns: [
+      ['x'],
+      ['Impression'],
+    ],
+    type: 'bar',
+    colors: {
+      impression: '#22a6de',
+    },
+  },
+  summaryData: {
+    clicks: 0,
+    impressions: 0,
+    conversions: [],
+    change: [],
+  },
+  campaignInfo: {
+    active: 0,
+    inactive: 0,
+    paused: 0,
+    total: 0,
+  },
+  graphData: {
+    date: [],
+    impressions: [],
+    clicks: [],
+    ctr: [],
+    conversion: [],
+    convrate: [],
   },
 };
 
@@ -62,51 +84,33 @@ const campaignTabs = [
 
 const CampaignGraph = (props) => {
   const currentCampaign = window.$campaigns.find(item => item.id === parseInt(props.campaignId, 10));
-  const { dateFilterRange } = React.useContext(GlobalContext);
-  const [userId, serUserId] = useState(null);
+  const { user, dateFilterRange } = React.useContext(GlobalContext);
   const [filterDateTitle, setFilterDateTitle] = useState(`Last ${dateFilterRange.days} Days`); // For datepicker label
   const [chartDate, setChartDate] = useState((moment(dateFilterRange.startDate).format('MMM DD YYYY') + ' - ' + moment(dateFilterRange.endDate).format('MMM DD YYYY')).toString()); // For datepicker label
   const [state, setState] = useState({
     isLoading: true,
     activeTab: 'impressions',
-    summaryData: {
-      clicks: 0,
-      impressions: 0,
-      conversions: [],
-      change: [],
-    },
-    campaignInfo: {
-      active: 0,
-      inactive: 0,
-      paused: 0,
-      total: 0,
-    },
-    graphData: {
-      date: [],
-      impressions: [],
-      clicks: [],
-      ctr: [],
-      conversion: [],
-      convrate: [],
-    },
+    summaryData: initialData.summaryData,
+    campaignInfo: initialData.campaignInfo,
+    graphData: initialData.graphData,
   });
 
   useEffect(() => {
     initialize();
-  }, [props.campaignId]);
+  }, [user.id, props.campaignId]);
 
   const initialize = async() => {
-    const userInfo = await AdvertiserService.getAdvertiser();
-    const response = await loadAdvertiserPerformanceData(userInfo.data.id, dateFilterRange.startDate, dateFilterRange.endDate);
+    setState({...state, isLoading: true});
+    const userInfo = await AdvertiserService.getAdvertiserProfile(user.id);
+    const response = await loadAdvertiserPerformanceData(user.id, dateFilterRange.startDate, dateFilterRange.endDate);
     const formatedGraphData = reformatDataForGraph(response.data.data);
 
-    serUserId(userInfo.data.id);
     setState({
       ...state,
       isLoading: false,
       graphData: formatedGraphData,
       campaignInfo: userInfo.data.campaigns,
-      summaryData: response.data.summary.length ? response.data.summary[0] : null,
+      summaryData: response.data.summary.length ? response.data.summary[0] : initialData.summaryData,
     });
   };
 
@@ -197,7 +201,7 @@ const CampaignGraph = (props) => {
    */
   const getSelectedGraph = (label) => {
     return {
-      ...initialData,
+      ...initialData.graph,
       columns: [
         ['x', ...state.graphData.date],
         [label, ...state.graphData[label]],
@@ -219,14 +223,19 @@ const CampaignGraph = (props) => {
     setFilterDateTitle(range);
     setChartDate((moment(startDate).format('MMM DD YYYY') + ' - ' + moment(endDate).format('MMM DD YYYY')).toString());
     setState({ ...state, isLoading: true });
-    const response = await loadAdvertiserPerformanceData(userId, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
+    const response = await loadAdvertiserPerformanceData(user.id, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
     const formatedGraphData = reformatDataForGraph(response.data.data);
 
     setState({
       ...state,
       isLoading: false,
       graphData: formatedGraphData,
-      summaryData: response.data.summary.length ? response.data.summary[0] : null,
+      summaryData: response.data.summary.length ? response.data.summary[0] : {
+        clicks: 0,
+        impressions: 0,
+        conversions: [],
+        change: [],
+      },
     });
   };
 
@@ -312,7 +321,7 @@ const CampaignGraph = (props) => {
                 </div>
               </div>
               <div className="col-md-4">
-                {props.campaignId ? <CampaignDetail /> : <LifeTimeSummary advertiserId={userId} />}
+                {props.campaignId ? <CampaignDetail /> : <LifeTimeSummary advertiserId={user.id} />}
               </div>
             </div>
           </div>

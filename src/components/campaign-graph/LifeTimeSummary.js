@@ -19,7 +19,11 @@ const LifeTimeSummary = ({advertiserId}) => {
   const loadLifeTimeSummary = (advertiserUserId) => {
     AdvertiserService.getAdvertiserPerformanceLifetime(advertiserUserId)
       .then((response) => {
-        setSummaryData(response.data.summary.length ? response.data.summary[0] : null);
+        setSummaryData(response.data.summary.length ? response.data.summary[0] : {
+          clicks: 0,
+          impressions: 0,
+          conversions: [],
+        });
       })
       .catch(() => false);
   };
