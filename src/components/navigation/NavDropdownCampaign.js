@@ -11,7 +11,7 @@ import GlobalContext from '../../context/GlobalContext';
 // Services
 import CampaignService from '../../services/campaign.service';
 
-const NavDropdownCampaign = (props) => {
+const NavDropdownCampaign = ({campaignNavItems}) => {
   const initSummary = {
     id: '',
     name: '',
@@ -80,7 +80,7 @@ const NavDropdownCampaign = (props) => {
   };
 
   const loadCampaignListForNav = (status) => {
-    const campaignsOfStatus = props.campaignNavItems.filter(item => item.status === status).slice(0, 5);
+    const campaignsOfStatus = campaignNavItems.filter(item => item.status === status).slice(0, 5);
 
     return campaignsOfStatus.length
       ? campaignsOfStatus.map((item) => {

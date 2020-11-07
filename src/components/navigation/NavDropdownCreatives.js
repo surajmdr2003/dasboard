@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 // Services
 import CampaignService from '../../services/campaign.service';
 
-const NavDropdownCreatives = (props) => {
+const NavDropdownCreatives = ({campaignNavItems}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentCampaign, setcurrentCampaign] = useState('');
   const [topCreatives, setTopCreatives] = useState([]);
@@ -70,9 +70,7 @@ const NavDropdownCreatives = (props) => {
   };
 
   useEffect(() => {
-    (props.campaignNavItems.length)
-      ? loadTopFiveCreativesData(props.campaignNavItems[0].id)
-      : '';
+    campaignNavItems.length && loadTopFiveCreativesData(campaignNavItems[0].id);
   }, []);
 
   return (
@@ -82,7 +80,7 @@ const NavDropdownCreatives = (props) => {
           <div className="col-md-2 br">
             <ul className="nav flex-column">
               {
-                props.campaignNavItems.slice(0, 5).map((item) => {
+                campaignNavItems.slice(0, 5).map((item) => {
                   return (<li className="nav-item" key={item.id}>
                     <Link to="#"
                       className={'nav-link ' + ((currentCampaign === item.id) ? 'text-primary' : '')}

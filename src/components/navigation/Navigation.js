@@ -75,7 +75,6 @@ const Navigation = () => {
           <path d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
         </svg>
       </button>
-
       <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`} id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto primary-navigation">
           <li><NavLink activeClassName={'active'} exact={true} to="/dashboard">Dashboard</NavLink></li>
@@ -103,7 +102,6 @@ const Navigation = () => {
                     </g>
                   </svg></i>
                 </Dropdown.Toggle>
-
                 <Dropdown.Menu alignRight="right">
                   <div className={'advertiser-dropdown-menu'}>
                     <ul className="list-group advertiser">
@@ -141,7 +139,6 @@ const Navigation = () => {
               <Dropdown.Toggle id="dropdown-notification">
                 <i className="icon icon-notification" />
               </Dropdown.Toggle>
-
               <Dropdown.Menu alignRight="right">
                 <div className="notification-dropdown-menu">
                   <div className="notification-header">
