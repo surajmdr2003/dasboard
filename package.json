@@ -90,5 +90,6 @@
   "precommit": "lint",
   "author": {
     "name": "Suraj Manandhar"
-  }
+  },
+  "maintainers": ["Suraj Manandhar", "Buddha Man Nepali"]
 }
