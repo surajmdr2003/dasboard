@@ -61,6 +61,7 @@
 
         img, object, iframe, video {
             height: size(135);
+            max-width: 100%;
             width: auto;
             margin: 0 auto;
             display: block;
@@ -75,6 +76,7 @@
             font-size: size(13);
             line-height: 1.5;
             margin-bottom: 0;
+            height: size(35);
         }
     }
     

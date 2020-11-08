@@ -44,7 +44,14 @@ const NavDropdownCreatives = (props) => {
           <div className="card card-menu-creative">
             <div className="card-creative-thumb">
               <span className="badge badge-secondary">{calculateAssetDimensional(creative.assetUrl)}</span>
-              <object data={creative.assetUrl} />
+              {
+                creative.name.endsWith('mp4')
+                  ? <video controls preload="none">
+                    <source src={creative.assetUrl} type="video/mp4"/>
+                      Your browser does not support the video tag.
+                  </video>
+                  : <object data={creative.assetUrl} />
+              }
             </div>
             <div className="card-body">
               <h5>{(creative.name === null || creative.name === '') ? 'No Data' : creative.name}</h5>
