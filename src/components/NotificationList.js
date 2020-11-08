@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import cogoToast from 'cogo-toast';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -38,7 +39,7 @@ const NavigationList = (props) => {
         }
 
         if (actionType === 'API_CALL') {
-          alert(response.data.value);
+          cogoToast.success(response.data.value, {position: 'bottom-center', hideAfter: 3});
         }
       })
       .catch(() => console.log('No Notifications available for user: ' + user.id));
