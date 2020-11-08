@@ -1,16 +1,17 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+import { NavLink, useHistory } from 'react-router-dom';
+
+// Third party
 import PubSub from 'pubsub-js';
-import _debounce from 'lodash/debounce';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Dropdown from 'react-bootstrap/Dropdown';
-import { useHistory } from 'react-router-dom';
+import debounce from 'lodash/debounce';
+import { Auth } from 'aws-amplify';
 
 // Context
 import GlobalContext from '../../context/GlobalContext';
 
 // Components
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Dropdown from 'react-bootstrap/Dropdown';
 import NavDropdownCampaign from './NavDropdownCampaign';
 import NavDropdownCreatives from './NavDropdownCreatives';
 import NotificationList from '../NotificationList';
@@ -46,7 +47,7 @@ const Navigation = () => {
   };
 
   // Debouncing the change event
-  const handleSearchAdvertisers = _debounce(query => searchAdvertisers(query), 500);
+  const handleSearchAdvertisers = debounce(query => searchAdvertisers(query), 500);
 
   /**
    * Searcning the Advertisers
