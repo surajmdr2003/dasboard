@@ -32,6 +32,12 @@ const Reports = () => {
     message: '',
     status: 'light',
   });
+  const [downloadNotification, setDownloadNotification] = useState({
+    isSending: false,
+    show: false,
+    message: '',
+    status: 'light',
+  });
   const [columns] = useState([
     {
       name: 'Months',
@@ -61,7 +67,7 @@ const Reports = () => {
       name: 'CTR',
       selector: 'ctr',
       sortable: true,
-      cell: row => (<div row={row}>{(row.clicks / row.impressions).toFixed(2)}</div>),
+      cell: row => (<div row={row}>{handleNanValueWithCalculation(row.clicks, row.impressions)}</div>),
     },
     {
       name: 'Conv rate',
@@ -76,6 +82,13 @@ const Reports = () => {
       cell: row => getActionBlock(row),
     },
   ]);
+
+  const handleNanValueWithCalculation = (fNum, sNum) => {
+    if (sNum === 0) {
+      return (fNum * 100).toFixed(2);
+    }
+    return ((fNum / sNum) * 100).toFixed(2);
+  };
 
   useEffect(() => {
     fetchCampaignReports(currentPage);
@@ -138,8 +151,8 @@ const Reports = () => {
 
     let reportWindow;
 
-    setEmailNotification({
-      ...setEmailNotification,
+    setDownloadNotification({
+      ...downloadNotification,
       isSending: true,
       show: true,
       message: 'Report is being downloaded...',
@@ -149,8 +162,8 @@ const Reports = () => {
     ReportService.downloadReport(reportId)
       .then((response) => {
         console.log(response);
-        setEmailNotification({
-          ...setEmailNotification,
+        setDownloadNotification({
+          ...downloadNotification,
           isSending: false,
           show: true,
           message: (response.data && response.data.value) ? 'Report is downloaded successfully!' : "Report can\'t be downloaded",
@@ -164,8 +177,8 @@ const Reports = () => {
         }
       })
       .catch((error) => {
-        setEmailNotification({
-          ...setEmailNotification,
+        setDownloadNotification({
+          ...downloadNotification,
           isSending: false,
           show: true,
           message: error.message,
@@ -224,12 +237,13 @@ const Reports = () => {
       </section>
       <section className="main-content-wrapper table-reports">
         <div className="container">
-          <AlertComponent message={emailNotification.message} alert={emailNotification.status} show={emailNotification.show} isLoading={emailNotification.isSending} />
+          <AlertComponent message={downloadNotification.message} alert={downloadNotification.status} show={downloadNotification.show} isLoading={downloadNotification.isSending} />
           <DataTable
             columns={columns}
             data={data.content}
             progressPending={loading}
             pagination
+            persistTableHead
             paginationServer
             paginationTotalRows={data.totalElements}
             onChangeRowsPerPage={handlePerRowsChange}
