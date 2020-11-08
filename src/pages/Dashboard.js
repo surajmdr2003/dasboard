@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 
 /** Components */
-import CampaignGraph from '../components/CampaignGraph';
+import CampaignGraph from '../components/campaign-graph/CampaignGraph';
 import YourCampaigns from '../components/YourCampaigns';
 import TopCreatives from '../components/TopCreatives';
 import TopLandingPages from '../components/TopLandingPages';

@@ -4,7 +4,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import GlobalContext from '../context/GlobalContext';
 
 /** Components */
-import CampaignGraph from '../components/CampaignGraph';
+import CampaignGraph from '../components/campaign-graph/CampaignGraph';
 import TopCreatives from '../components/TopCreatives';
 import TopLandingPages from '../components/TopLandingPages';
 import TopTargets from '../components/TopTargets';
