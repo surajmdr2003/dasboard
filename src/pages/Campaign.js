@@ -4,7 +4,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import GlobalContext from '../context/GlobalContext';
 
 /** Components */
-import CampaignGraph from '../components/CampaignGraph';
+import CampaignGraph from '../components/campaign-graph/CampaignGraph';
 import TopCreatives from '../components/TopCreatives';
 import TopLandingPages from '../components/TopLandingPages';
 import TopTargets from '../components/TopTargets';
@@ -14,7 +14,7 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import CampaignService from '../services/campaign.service';
 
 const Campaign = () => {
-  const {user, activeCampaign} = React.useContext(GlobalContext);
+  const { user, activeCampaign } = React.useContext(GlobalContext);
   const [reportUrl, setReportUrl] = useState('');
 
   /**
@@ -52,10 +52,18 @@ const Campaign = () => {
             </div>
           </div>
         </section>
-        { activeCampaign.id ? <CampaignGraph campaignId = {activeCampaign.id}/> : ''}
-        { activeCampaign.id ? <TopCreatives campaignId = {activeCampaign.id + ''}/> : ''}
-        { activeCampaign.id ? <TopLandingPages campaignId = {activeCampaign.id + ''}/> : ''}
-        { activeCampaign.id ? <TopTargets campaignId = {activeCampaign.id + ''}/> : ''}
+        {
+          activeCampaign.id
+            ? <Fragment>
+              <CampaignGraph campaignId={activeCampaign.id} />
+              <TopCreatives campaignId={activeCampaign.id + ''} />
+              <TopLandingPages campaignId={activeCampaign.id + ''} />
+              <TopTargets campaignId={activeCampaign.id + ''} />
+            </Fragment>
+            : <div className="text-center m-5">
+              <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+            </div>
+        }
       </div>
     </Fragment>
   );

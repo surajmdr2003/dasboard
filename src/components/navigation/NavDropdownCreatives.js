@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 // Services
 import CampaignService from '../../services/campaign.service';
 
-const NavDropdownCreatives = (props) => {
+const NavDropdownCreatives = ({campaignNavItems}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentCampaign, setcurrentCampaign] = useState('');
   const [topCreatives, setTopCreatives] = useState([]);
@@ -44,7 +44,14 @@ const NavDropdownCreatives = (props) => {
           <div className="card card-menu-creative">
             <div className="card-creative-thumb">
               <span className="badge badge-secondary">{calculateAssetDimensional(creative.assetUrl)}</span>
-              <object data={creative.assetUrl} />
+              {
+                creative.name.endsWith('mp4')
+                  ? <video controls preload="none">
+                    <source src={creative.assetUrl} type="video/mp4"/>
+                      Your browser does not support the video tag.
+                  </video>
+                  : <object data={creative.assetUrl} />
+              }
             </div>
             <div className="card-body">
               <h5>{(creative.name === null || creative.name === '') ? 'No Data' : creative.name}</h5>
@@ -63,9 +70,7 @@ const NavDropdownCreatives = (props) => {
   };
 
   useEffect(() => {
-    (props.campaignNavItems.length)
-      ? loadTopFiveCreativesData(props.campaignNavItems[0].id)
-      : '';
+    campaignNavItems.length && loadTopFiveCreativesData(campaignNavItems[0].id);
   }, []);
 
   return (
@@ -75,7 +80,7 @@ const NavDropdownCreatives = (props) => {
           <div className="col-md-2 br">
             <ul className="nav flex-column">
               {
-                props.campaignNavItems.slice(0, 5).map((item) => {
+                campaignNavItems.slice(0, 5).map((item) => {
                   return (<li className="nav-item" key={item.id}>
                     <Link to="#"
                       className={'nav-link ' + ((currentCampaign === item.id) ? 'text-primary' : '')}

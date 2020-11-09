@@ -1,9 +1,36 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 
-const AllCampaignsLifetimeData = (props) => {
-  const [showRecommendation, setRecommendation] = useState(false); // For recommendation message
+// Services
+import AdvertiserService from '../../services/advertiser.service';
+
+const LifeTimeSummary = ({advertiserId}) => {
+  const [showRecommendation, setRecommendation] = useState(false);
+  const [summaryData, setSummaryData] = useState({
+    clicks: 0,
+    impressions: 0,
+    conversions: [],
+  });
+
+  /**
+   * Call API for Advertiser's life time data
+   */
+  const loadLifeTimeSummary = (advertiserUserId) => {
+    AdvertiserService.getAdvertiserPerformanceLifetime(advertiserUserId)
+      .then((response) => {
+        setSummaryData(response.data.summary.length ? response.data.summary[0] : {
+          clicks: 0,
+          impressions: 0,
+          conversions: [],
+        });
+      })
+      .catch(() => false);
+  };
+
+  useEffect(() => {
+    advertiserId && loadLifeTimeSummary(advertiserId);
+  }, [advertiserId]);
 
   /**
    * Handle NAN and Infinity value
@@ -11,10 +38,7 @@ const AllCampaignsLifetimeData = (props) => {
    * @param {Int} sNum
    */
   const handleNanValueWithCalculation = (fNum, sNum) => {
-    if (sNum === 0) {
-      return (fNum * 100).toFixed(2);
-    }
-    return ((fNum / sNum) * 100).toFixed(2);
+    return (sNum === 0) ? (fNum * 100).toFixed(2) : ((fNum / sNum) * 100).toFixed(2);
   };
 
   return (
@@ -32,7 +56,7 @@ const AllCampaignsLifetimeData = (props) => {
             <div className="media-body">
               <div className="data">
                 <h5>Impressions</h5>
-                <p>{props.summaryData.impressions.toLocaleString()}</p>
+                <p>{summaryData.impressions.toLocaleString()}</p>
               </div>
             </div>
           </li>
@@ -45,13 +69,13 @@ const AllCampaignsLifetimeData = (props) => {
                 <li className="nav-item">
                   <div className="data">
                     <h5>Clicks</h5>
-                    <p>{props.summaryData.clicks.toLocaleString()}</p>
+                    <p>{summaryData.clicks.toLocaleString()}</p>
                   </div>
                 </li>
                 <li className="nav-item">
                   <div className="data">
                     <h5>CTR</h5>
-                    <p>{handleNanValueWithCalculation(props.summaryData.clicks, props.summaryData.impressions)}%</p>
+                    <p>{handleNanValueWithCalculation(summaryData.clicks, summaryData.impressions)}%</p>
                   </div>
                 </li>
               </ul>
@@ -66,13 +90,13 @@ const AllCampaignsLifetimeData = (props) => {
                 <li className="nav-item">
                   <div className="data">
                     <h5>Conversion</h5>
-                    <p>{props.summaryData.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</p>
+                    <p>{summaryData.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</p>
                   </div>
                 </li>
                 <li className="nav-item">
                   <div className="data">
                     <h5>Con rate</h5>
-                    <p>{handleNanValueWithCalculation(props.summaryData.conversions.reduce((sum, next) => sum + next.count, 0), props.summaryData.clicks)} %</p>
+                    <p>{handleNanValueWithCalculation(summaryData.conversions.reduce((sum, next) => sum + next.count, 0), summaryData.clicks)} %</p>
                   </div>
                 </li>
               </ul>
@@ -101,8 +125,9 @@ const AllCampaignsLifetimeData = (props) => {
 };
 
 // Props validation
-AllCampaignsLifetimeData.propTypes = {
+LifeTimeSummary.propTypes = {
   summaryData: PropTypes.any,
+  advertiserId: PropTypes.number,
 };
 
-export default AllCampaignsLifetimeData;
+export default LifeTimeSummary;

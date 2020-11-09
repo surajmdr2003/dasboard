@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-const TopCreativeAdsBlock = (props) => {
+const TopCreativeAdsBlock = ({creative}) => {
   const [heightWidth, setHeightWidth] = useState('0*0');
   /**
    * Handle NAN and Infinity value
@@ -26,8 +26,8 @@ const TopCreativeAdsBlock = (props) => {
   };
 
   useEffect(() => {
-    calculateAssetDimensional(props.creative.assetUrl);
-  }, [props.creative]);
+    calculateAssetDimensional(creative.assetUrl);
+  }, [creative]);
 
   return (
     <div className="p-2">
@@ -35,22 +35,22 @@ const TopCreativeAdsBlock = (props) => {
         <div className="card-creative-thumb">
           <span className="badge badge-secondary">{heightWidth}</span>
           {
-            props.creative.name.endsWith('mp4')
+            creative.name.endsWith('mp4')
               ? <video controls preload="none">
-                <source src={props.creative.assetUrl} type="video/mp4"/>
+                <source src={creative.assetUrl} type="video/mp4"/>
                   Your browser does not support the video tag.
               </video>
-              : <object data={props.creative.assetUrl} />
+              : <object data={creative.assetUrl} />
           }
         </div>
         <div className="card-body">
-          <h5>{(props.creative.name === null || props.creative.name === '') ? 'No Data' : props.creative.name}</h5>
+          <h5>{(creative.name === null || creative.name === '') ? 'No Data' : creative.name}</h5>
           <ul>
-            <li><strong>Impressions</strong>{props.creative.impressions.toLocaleString()}</li>
-            <li><strong>Clicks</strong>{props.creative.clicks.toLocaleString()}</li>
-            <li><strong>CTR</strong>{handleNanValueWithCalculation(props.creative.clicks, props.creative.impressions)}%</li>
-            <li><strong>Conversion</strong>{props.creative.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</li>
-            <li><strong>Conv rate</strong>{handleNanValueWithCalculation(props.creative.conversions.reduce((sum, next) => sum + next.count, 0), props.creative.clicks)}%</li>
+            <li><strong>Impressions</strong>{creative.impressions.toLocaleString()}</li>
+            <li><strong>Clicks</strong>{creative.clicks.toLocaleString()}</li>
+            <li><strong>CTR</strong>{handleNanValueWithCalculation(creative.clicks, creative.impressions)}%</li>
+            <li><strong>Conversion</strong>{creative.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</li>
+            <li><strong>Conv rate</strong>{handleNanValueWithCalculation(creative.conversions.reduce((sum, next) => sum + next.count, 0), creative.clicks)}%</li>
           </ul>
         </div>
       </div>

@@ -1,16 +1,17 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+import { NavLink, useHistory } from 'react-router-dom';
+
+// Third party
 import PubSub from 'pubsub-js';
-import _debounce from 'lodash/debounce';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Dropdown from 'react-bootstrap/Dropdown';
-import { useHistory } from 'react-router-dom';
+import debounce from 'lodash/debounce';
+import { Auth } from 'aws-amplify';
 
 // Context
 import GlobalContext from '../../context/GlobalContext';
 
 // Components
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Dropdown from 'react-bootstrap/Dropdown';
 import NavDropdownCampaign from './NavDropdownCampaign';
 import NavDropdownCreatives from './NavDropdownCreatives';
 import NotificationList from '../NotificationList';
@@ -46,7 +47,7 @@ const Navigation = () => {
   };
 
   // Debouncing the change event
-  const handleSearchAdvertisers = _debounce(query => searchAdvertisers(query), 500);
+  const handleSearchAdvertisers = debounce(query => searchAdvertisers(query), 500);
 
   /**
    * Searcning the Advertisers
@@ -74,7 +75,6 @@ const Navigation = () => {
           <path d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
         </svg>
       </button>
-
       <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`} id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto primary-navigation">
           <li><NavLink activeClassName={'active'} exact={true} to="/dashboard">Dashboard</NavLink></li>
@@ -102,7 +102,6 @@ const Navigation = () => {
                     </g>
                   </svg></i>
                 </Dropdown.Toggle>
-
                 <Dropdown.Menu alignRight="right">
                   <div className={'advertiser-dropdown-menu'}>
                     <ul className="list-group advertiser">
@@ -140,7 +139,6 @@ const Navigation = () => {
               <Dropdown.Toggle id="dropdown-notification">
                 <i className="icon icon-notification" />
               </Dropdown.Toggle>
-
               <Dropdown.Menu alignRight="right">
                 <div className="notification-dropdown-menu">
                   <div className="notification-header">

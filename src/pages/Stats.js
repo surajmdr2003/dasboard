@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import C3Chart from '@kaiouwang/react-c3js';
+import C3Chart from '../components/common/C3Chart';
 import 'c3/c3.css';
 
 /** Service */
@@ -31,20 +31,32 @@ const bar = {
 };
 
 const Stats = () => {
-  const {activeCampaign} = React.useContext(GlobalContext);
+  const { activeCampaign } = React.useContext(GlobalContext);
   const [dropdownLabel, setDropdownLabel] = useState('Filter By Month');
   const [months, setCampaignMonths] = useState([]);
-  const [affinityData, setAffinityData] = useState([]);
-  const [inMarketData, setInMarketData] = useState([]);
-  const [genderData, setGenderData] = useState({
-    columns: [
-      ['Male', 0],
-      ['Female', 0],
-    ],
-    type: 'donut',
-    colors: {
-      Male: primaryColor,
-      Female: secondaryColor,
+  const [state, setState] = useState({
+    isLoading: false,
+    affinity: [],
+    market: [],
+    gender: {
+      columns: [
+        ['Male', 0],
+        ['Female', 0],
+      ],
+      type: 'donut',
+      colors: {
+        Male: primaryColor,
+        Female: secondaryColor,
+      },
+    },
+    age: {
+      columns: [
+        ['Peoples'],
+      ],
+      type: 'bar',
+      colors: {
+        Impression: primaryColor,
+      },
     },
   });
 
@@ -61,17 +73,6 @@ const Stats = () => {
     },
   });
 
-  const [ageData, setAgeData] = useState({
-    columns: [
-      ['Peoples'],
-    ],
-    type: 'bar',
-    colors: {
-      Impression: primaryColor,
-    },
-  });
-
-
   /**
   * API call to load month
   */
@@ -79,102 +80,61 @@ const Stats = () => {
     if (activeCampaign && activeCampaign.id === null) {
       return console.log('No Active campaign selected!');
     }
-
+    setState({...state, isLoading: true});
     return StatsService.getCampaignMonths(activeCampaign.id)
       .then((response) => {
         setCampaignMonths(response.data);
-        loadStatsData(response.data[0].id);
-        setDropdownLabel(response.data[0].name);
+
+        if (response.data.length) {
+          loadStatsData(response.data[0].id);
+          setDropdownLabel(response.data[0].name);
+        } else {
+          setState({...state, isLoading: false});
+        }
       })
-      .catch(() => false)
-      .finally();
+      .catch(() => false);
   };
 
   /**
    * API call to load stats data
    */
   const loadStatsData = (monthId) => {
+    setState({ ...state, isLoading: true });
     StatsService.getCampaignStatsOfMonth(monthId)
       .then((response) => {
-        reformatDataForGraph(response.data);
+        const options = {};
+
+        response.data.forEach(data => {
+          if (data.type === 'Gender Data') {
+            options.gender = {
+              ...state.gender, columns: [
+                ['Male', data.stats.find(item => item.field === 'Male').value],
+                ['Female', data.stats.find(item => item.field === 'Female').value],
+              ],
+            };
+          } else if (data.type === 'Age Data') {
+            options.age = { ...state.age, columns: [['People', ...data.stats.map(item => item.value)]] };
+          } else if (data.type === 'Affinity Data') {
+            options.affinity = data.stats;
+          } else if (data.type === 'In Market Data') {
+            options.market = data.stats;
+          }
+        });
+
+        return options;
       })
-      .catch(() => false)
-      .finally();
-  };
-
-  const reformatDataForGraph = (graphData) => {
-    graphData.length
-      ? graphData.find(item => {
-        if (item.type === 'Gender Data') {
-          formateGenderData(item.stats);
-        } else if (item.type === 'Age Data') {
-          formateAgeData(item.stats);
-        } else if (item.type === 'Affinity Data') {
-          formateAffinityData(item.stats);
-        } else if (item.type === 'In Market Data') {
-          formateInMarketData(item.stats);
-        }
+      .then((options) => {
+        setState({
+          ...state,
+          isLoading: false,
+          ...options,
+        });
       })
-      : (formateAffinityData([]),
-      formateInMarketData([]),
-      formateGenderData([{ 'field': 'Male', 'value': 0 }, { 'field': 'Female', 'value': 0 }]),
-      formateAgeData([{
-        'field': '15-25',
-        'value': 0,
-      },
-      {
-        'field': '25-35',
-        'value': 0,
-      },
-      {
-        'field': '35-45',
-        'value': 0,
-      },
-      {
-        'field': '45-55',
-        'value': 0,
-      },
-      {
-        'field': '55+',
-        'value': 0,
-      },
-      ])
-      );
+      .catch(() => false);
   };
 
-  const formateGenderData = (statsData) => {
-    setGenderData(prevData => {
-      return ({
-        ...prevData,
-        columns: [
-          ['Male', statsData.find(item => item.field === 'Male').value],
-          ['Female', statsData.find(item => item.field === 'Female').value],
-        ],
-      });
-    });
-  };
-
-  const formateAgeData = (statsData) => {
-    setAgeData(prevData => {
-      return ({
-        ...prevData,
-        columns: [
-          ['People', ...statsData.map(item => item.value)],
-        ],
-      });
-    });
-  };
-
-  const formateAffinityData = (statsData) => {
-    setAffinityData(statsData);
-  };
-
-  const formateInMarketData = (statsData) => {
-    setInMarketData(statsData);
-  };
-
-  const affinityTotal = affinityData.length ? affinityData.map(item => item.value).reduce((prev, next) => prev + next) : 0;
-  const inMarketTotal = inMarketData.length ? inMarketData.map(item => item.value).reduce((prev, next) => prev + next) : 0;
+  const affinityTotal = state.affinity.length ? state.affinity.map(item => item.value).reduce((prev, next) => prev + next) : 0;
+  const inMarketTotal = state.market.length ? state.market.map(item => item.value).reduce((prev, next) => prev + next) : 0;
 
   const loadDataByMonth = (data) => {
     loadStatsData(data.id);
@@ -209,60 +169,68 @@ const Stats = () => {
       </section>
       <section className="campaigns-charts">
         <div className="container">
-          <div className="row bar-donut-charts mb-5">
-            <div className="col-sm-8">
-              <div className="card card-chart card-bar-chart">
-                <div className="card-body">
-                  <h4>Age data</h4>
-                  <div className="chart-block">
-                    <C3Chart size={size} data={ageData} bar={bar} axis={genderAxisData} legend={legend} />
+          {
+            state.isLoading
+              ? <div className="text-center m-5">
+                <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+              </div>
+              : <Fragment>
+                <div className="row bar-donut-charts mb-5">
+                  <div className="col-sm-8">
+                    <div className="card card-chart card-bar-chart">
+                      <div className="card-body">
+                        <h4>Age data</h4>
+                        <div className="chart-block">
+                          <C3Chart holder="ageGraph" columns={state.age} axis={genderAxisData} bar={bar} size={size} legend={legend} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-sm-4">
+                    <div className="card card-chart card-donut-chart">
+                      <div className="card-body">
+                        <h4>Gender data</h4>
+                        <div className="chart-block">
+                          <C3Chart holder="genderGraph" columns={state.gender} />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="col-sm-4">
-              <div className="card card-chart card-donut-chart">
-                <div className="card-body">
-                  <h4>Gender data</h4>
-                  <div className="chart-block">
-                    <C3Chart data={genderData} />
+                <div className="row progress-chart">
+                  <div className="col-sm-6">
+                    <div className="card card-chart card-progress-chart">
+                      <div className="card-body">
+                        <h4>Affinity data</h4>
+                        <ul className="progress-chart-block">
+                          {state.affinity.length && affinityTotal > 0
+                            ? state.affinity.map((progressbar, i) => {
+                              return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field} total={affinityTotal} />;
+                            })
+                            : 'No Data'
+                          }
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="card card-chart card-progress-chart">
+                      <div className="card-body">
+                        <h4>In market data</h4>
+                        <ul className="progress-chart-block">
+                          {state.market.length && inMarketTotal > 0
+                            ? state.market.map((progressbar, i) => {
+                              return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field} total={inMarketTotal} />;
+                            })
+                            : 'No Data'
+                          }
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div className="row progress-chart">
-            <div className="col-sm-6">
-              <div className="card card-chart card-progress-chart">
-                <div className="card-body">
-                  <h4>Affinity data</h4>
-                  <ul className="progress-chart-block">
-                    {affinityData.length && affinityTotal > 0
-                      ? affinityData.map((progressbar, i) => {
-                        return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field} total={affinityTotal}/>;
-                      })
-                      : 'No Data'
-                    }
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-6">
-              <div className="card card-chart card-progress-chart">
-                <div className="card-body">
-                  <h4>In market data</h4>
-                  <ul className="progress-chart-block">
-                    {inMarketData.length && inMarketTotal > 0
-                      ? inMarketData.map((progressbar, i) => {
-                        return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field} total={inMarketTotal}/>;
-                      })
-                      : 'No Data'
-                    }
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+              </Fragment>
+          }
         </div>
       </section>
     </Fragment>
