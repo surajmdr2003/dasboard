@@ -259,6 +259,8 @@ const CampaignGraph = (props) => {
     const clickChange = changeVal.find(value => value.metricType === 'CLICK').change.toFixed(10);
     const conversionChange = changeVal.find(value => value.metricType === 'CONVERSION').change.toFixed(10);
     const impressionChange = changeVal.find(value => value.metricType === 'IMPRESSION').change.toFixed(10);
+    const ctrChange = changeVal.find(value => value.metricType === 'CTR').change.toFixed(10);
+    const conversionRateChange = changeVal.find(value => value.metricType === 'CONVERSION_RATE').change.toFixed(10);
 
     if (activeTab === 'impressions') {
       return showViewOf(impressionChange);
@@ -267,16 +269,16 @@ const CampaignGraph = (props) => {
     } else if (activeTab === 'conversions') {
       return showViewOf(conversionChange);
     } else if (activeTab === 'convrate') {
-      return showViewOf(handleNanValueWithCalculation(state.summaryData.conversions.reduce((sum, next) => sum + next.count, 0), state.summaryData.clicks));
+      return showViewOf(conversionRateChange);
     } else if (activeTab === 'ctr') {
-      return showViewOf(handleNanValueWithCalculation(state.summaryData.clicks, state.summaryData.impressions));
+      return showViewOf(ctrChange);
     }
 
     return '-';
   };
 
   const showViewOf = (val) => {
-    return <div className={'percent ' + ((val >= 0) ? 'up-percent' : 'down-percent')}>{Math.abs(val).toFixed(2)}</div>;
+    return <div className={'percent ' + ((val >= 0) ? 'up-percent' : 'down-percent')}>{Math.abs(val)}%</div>;
   };
 
   return (
