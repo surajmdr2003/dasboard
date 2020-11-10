@@ -84,9 +84,9 @@ const campaignTabs = [
 
 const CampaignGraph = (props) => {
   const currentCampaign = window.$campaigns.find(item => item.id === parseInt(props.campaignId, 10));
-  const { user, dateFilterRange } = React.useContext(GlobalContext);
-  const [filterDateTitle, setFilterDateTitle] = useState(`Last ${dateFilterRange.days} Days`); // For datepicker label
-  const [chartDate, setChartDate] = useState((moment(dateFilterRange.startDate).format('MMM DD YYYY') + ' - ' + moment(dateFilterRange.endDate).format('MMM DD YYYY')).toString()); // For datepicker label
+  const { user, campaignDateFilterRange, setCampaignDateFilterRange} = React.useContext(GlobalContext);
+  const [filterDateTitle, setFilterDateTitle] = useState(campaignDateFilterRange.label);
+  const [chartDate, setChartDate] = useState((moment(campaignDateFilterRange.startDate).format('MMM DD YYYY') + ' - ' + moment(campaignDateFilterRange.endDate).format('MMM DD YYYY')).toString()); // For datepicker label
   const [state, setState] = useState({
     isLoading: true,
     activeTab: 'impressions',
@@ -102,7 +102,7 @@ const CampaignGraph = (props) => {
   const initialize = async() => {
     setState({...state, isLoading: true});
     const userInfo = await AdvertiserService.getAdvertiserProfile(user.id);
-    const response = await loadAdvertiserPerformanceData(user.id, dateFilterRange.startDate, dateFilterRange.endDate);
+    const response = await loadAdvertiserPerformanceData(user.id, campaignDateFilterRange.startDate, campaignDateFilterRange.endDate);
     const formatedGraphData = reformatDataForGraph(response.data.data);
 
     setState({
@@ -173,10 +173,10 @@ const CampaignGraph = (props) => {
         graphData.impressions.push(element.impressions);
         graphData.clicks.push(element.clicks);
         graphData.ctr.push(handleNanValueWithCalculation(element.clicks, element.impressions));
-        graphData.conversions.push(element.conversions.length);
-        graphData.convrate.push(handleNanValueWithCalculation(element.conversions.length, element.clicks));
+        graphData.conversions.push(element.conversions.reduce((sum, next) => sum + next.count, 0));
+        graphData.convrate.push(handleNanValueWithCalculation(element.conversions.reduce((sum, next) => sum + next.count, 0), element.clicks));
       })
-      : graphData.date.push(dateFilterRange.endDate);
+      : graphData.date.push(campaignDateFilterRange.endDate);
     graphData.impressions.push(0);
     graphData.clicks.push(0);
     graphData.ctr.push(0);
@@ -219,8 +219,12 @@ const CampaignGraph = (props) => {
    */
   const datepickerCallback = async(startDate, endDate) => {
     const range = (moment(startDate).format('DD MMM YY') + ' - ' + moment(endDate).format('DD MMM YY')).toString();
-
     setFilterDateTitle(range);
+    setCampaignDateFilterRange({
+      label: range,
+      startDate: moment(startDate).format('YYYY-MM-DD'),
+      endDate: moment(endDate).format('YYYY-MM-DD'),
+    });
     setChartDate((moment(startDate).format('MMM DD YYYY') + ' - ' + moment(endDate).format('MMM DD YYYY')).toString());
     setState({ ...state, isLoading: true });
     const response = await loadAdvertiserPerformanceData(user.id, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
