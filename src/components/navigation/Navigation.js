@@ -9,6 +9,9 @@ import { Auth } from 'aws-amplify';
 // Context
 import GlobalContext from '../../context/GlobalContext';
 
+// Utilities
+import Storage from '../../utilities/Storage';
+
 // Components
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -60,6 +63,24 @@ const Navigation = () => {
         setAvailableUsers(response.data.content);
         setIsSearcing(false);
       });
+  };
+
+  /**
+   * Update current User in Global Context and localStorage
+   * @param {*} switchedUser
+   */
+  const updateUser = (switchedUser) => {
+    Storage.setItem('current:user', btoa(JSON.stringify({...user, ...switchedUser})));
+    setUser({...user, ...switchedUser});
+  };
+
+  /**
+   * Signout Current Logged In User
+   */
+  const signOut = () => {
+    Storage.removeItem('current:user');
+    Storage.clear();
+    Auth.signOut();
   };
 
   useEffect(() => {
@@ -125,7 +146,7 @@ const Navigation = () => {
                         (<Dropdown.Item key={advertiser.id}
                           className={'list-group-item' + (user.id === advertiser.id ? ' active' : '')}
                           onClick={() => showDropdown()} style={{ 'cursor': 'pointer' }}
-                          onClick={() => setUser({ permissions: user.permissions, ...advertiser })}>
+                          onClick={() => updateUser(advertiser)}>
                           {advertiser.name}
                         </Dropdown.Item>))}
                     </ul>
@@ -167,7 +188,7 @@ const Navigation = () => {
                 <Dropdown.Item onClick={() => history.push('#')}>Payment setting</Dropdown.Item>
                 <Dropdown.Item onClick={() => history.push('/dashboard/billing')}>Billing history</Dropdown.Item>
                 <Dropdown.Item onClick={() => history.push('#')}>Contact us</Dropdown.Item>
-                <Dropdown.Item onClick={() => Auth.signOut()}>Logout</Dropdown.Item>
+                <Dropdown.Item onClick={() => signOut()}>Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </li>
