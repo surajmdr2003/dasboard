@@ -30,34 +30,38 @@ const bar = {
   },
 };
 
+const intialData = {
+  affinity: [],
+  market: [],
+  gender: {
+    columns: [
+      ['Male', 0],
+      ['Female', 0],
+    ],
+    type: 'donut',
+    colors: {
+      Male: primaryColor,
+      Female: secondaryColor,
+    },
+  },
+  age: {
+    columns: [
+      ['Peoples'],
+    ],
+    type: 'bar',
+    colors: {
+      Impression: primaryColor,
+    },
+  },
+};
+
 const Stats = () => {
   const { activeCampaign } = React.useContext(GlobalContext);
   const [dropdownLabel, setDropdownLabel] = useState('Filter By Month');
   const [months, setCampaignMonths] = useState([]);
   const [state, setState] = useState({
     isLoading: false,
-    affinity: [],
-    market: [],
-    gender: {
-      columns: [
-        ['Male', 0],
-        ['Female', 0],
-      ],
-      type: 'donut',
-      colors: {
-        Male: primaryColor,
-        Female: secondaryColor,
-      },
-    },
-    age: {
-      columns: [
-        ['Peoples'],
-      ],
-      type: 'bar',
-      colors: {
-        Impression: primaryColor,
-      },
-    },
+    ...intialData,
   });
 
   const [genderAxisData] = useState({
@@ -80,16 +84,15 @@ const Stats = () => {
     if (activeCampaign && activeCampaign.id === null) {
       return console.log('No Active campaign selected!');
     }
-    setState({...state, isLoading: true});
+    setState({ ...state, isLoading: true });
     return StatsService.getCampaignMonths(activeCampaign.id)
       .then((response) => {
         setCampaignMonths(response.data);
-
         if (response.data.length) {
           loadStatsData(response.data[0].id);
           setDropdownLabel(response.data[0].name);
         } else {
-          setState({...state, isLoading: false});
+          setState({ ...state, isLoading: false });
         }
       })
       .catch(() => false);
@@ -102,24 +105,26 @@ const Stats = () => {
     setState({ ...state, isLoading: true });
     StatsService.getCampaignStatsOfMonth(monthId)
       .then((response) => {
-        const options = {};
+        let options = {};
 
-        response.data.forEach(data => {
-          if (data.type === 'Gender Data') {
-            options.gender = {
-              ...state.gender, columns: [
-                ['Male', data.stats.find(item => item.field === 'Male').value],
-                ['Female', data.stats.find(item => item.field === 'Female').value],
-              ],
-            };
-          } else if (data.type === 'Age Data') {
-            options.age = { ...state.age, columns: [['People', ...data.stats.map(item => item.value)]] };
-          } else if (data.type === 'Affinity Data') {
-            options.affinity = data.stats;
-          } else if (data.type === 'In Market Data') {
-            options.market = data.stats;
-          }
-        });
+        response.data.length
+          ? response.data.forEach(data => {
+            if (data.type === 'Gender Data') {
+              options.gender = {
+                ...state.gender, columns: [
+                  ['Male', data.stats.find(item => item.field.toLowerCase() === 'male').value],
+                  ['Female', data.stats.find(item => item.field.toLowerCase() === 'female').value],
+                ],
+              };
+            } else if (data.type === 'Age Data') {
+              options.age = { ...state.age, columns: [['People', ...data.stats.map(item => item.value)]] };
+            } else if (data.type === 'Affinity Data') {
+              options.affinity = data.stats;
+            } else if (data.type === 'In Market Data') {
+              options.market = data.stats;
+            }
+          })
+          : options = {...intialData};
 
         return options;
       })
