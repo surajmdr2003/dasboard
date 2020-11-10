@@ -16,16 +16,16 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import CampaignService from '../services/campaign.service';
 
 const Creatives = () => {
-  const { activeCampaign, dateFilterRange } = React.useContext(GlobalContext);
+  const { activeCampaign, creativesDateFilterRange, setCreativesDateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
+  const [filterDateTitle, setFilterDateTitle] = useState(creativesDateFilterRange.label);
   const [groupedCreatives, setGroupedCreatives] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [filterLabel, setFilterLabel] = useState('Filter By Size');
   const [sizeFilters, setSizeFilters] = useState(['All Size']);
   const [dateFilter, setDateFilter] = useState({
-    endDate: dateFilterRange.endDate,
-    startDate: dateFilterRange.startDate,
+    endDate: creativesDateFilterRange.endDate,
+    startDate: creativesDateFilterRange.startDate,
   });
 
   const [columns] = useState([
@@ -112,8 +112,15 @@ const Creatives = () => {
    * @param {End Date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
-    setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
+    const label = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+
+    setFilterDateTitle(label);
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
+    setCreativesDateFilterRange({
+      label: label,
+      startDate: moment(startDate).format('YYYY-MM-DD'),
+      endDate: moment(endDate).format('YYYY-MM-DD'),
+    });
     loadCreativesData({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
 

@@ -14,15 +14,15 @@ import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 
 const YourCampaigns = () => {
-  const {user, setActiveCampaign, dateFilterRange} = React.useContext(GlobalContext);
+  const { user, setActiveCampaign, CLDateFilterRange, setCLDateFilterRange } = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterDateTitle, setFilterDateTitle] = useState(`Last ${dateFilterRange.days} Days`);
+  const [filterDateTitle, setFilterDateTitle] = useState(CLDateFilterRange.label);
   const [campaginList, setCampaginList] = useState([]);
   const [filteredCampaginList, setFilteredCampaginList] = useState([]);
   const dropDownStatus = [{ id: 1, name: 'ACTIVE' }, { id: 2, name: 'INACTIVE' }, { id: 3, name: 'PAUSED' }];
   const [dateFilter, setDateFilter] = useState({
-    endDate: dateFilterRange.endDate,
-    startDate: dateFilterRange.startDate,
+    endDate: CLDateFilterRange.endDate,
+    startDate: CLDateFilterRange.startDate,
   });
 
   const [columns] = useState([
@@ -81,9 +81,9 @@ const YourCampaigns = () => {
    * @param {start date} sDate
    * @param {end date} eDate
    */
-  const campaignsData = () => {
+  const campaignsData = (campaignDateFilter) => {
     setIsLoading(true);
-    AdvertiserService.getAdvertiserPerformanceCampaigns(user.id, dateFilter)
+    AdvertiserService.getAdvertiserPerformanceCampaigns(user.id, campaignDateFilter)
       .then((response) => {
         setCampaginList(response.data.summary);
         setFilteredCampaginList(response.data.summary);
@@ -100,7 +100,13 @@ const YourCampaigns = () => {
   const datepickerCallback = (startDate, endDate) => {
     const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
     setFilterDateTitle(range);
+    setCLDateFilterRange({
+      label: range,
+      startDate: moment(startDate).format('YYYY-MM-DD'),
+      endDate: moment(endDate).format('YYYY-MM-DD'),
+    });
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
+    campaignsData({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
 
   /**
@@ -121,7 +127,7 @@ const YourCampaigns = () => {
   };
 
   useEffect(() => {
-    campaignsData();
+    campaignsData(dateFilter);
   }, [user.id]);
 
   return (
@@ -145,8 +151,7 @@ const YourCampaigns = () => {
         <div className="table-responsive table-CampaignList">
           {
             isLoading
-              ?
-              <div className="text-center m-5">
+              ? <div className="text-center m-5">
                 <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
               </div>
               : <DataTable
