@@ -52,7 +52,19 @@ class CampaignService {
     return await API.post('canpaignGroup', `/${campaignId}/performance/landingpage`, this.apiRequest);
   }
 
-  async getCampaignPerformanceAssets(campaignId, dateRangeFilter, campaignFilter = null) {
+  // async getCampaignPerformanceAssets(campaignId, dateRangeFilter, campaignFilter = null) {
+  //   const userInfo = await AuthService.getSessionInfo();
+  //   const accessToken = userInfo.getAccessToken().getJwtToken();
+
+  //   // Setting up header info
+  //   this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+  //   Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
+  //   campaignFilter && Object.assign(this.apiRequest.queryStringParameters, {filter: campaignFilter});
+
+  //   return await API.post('canpaignGroup', `/${campaignId}/performance/asset`, this.apiRequest);
+  // }
+
+  async getCampaignPerformanceAssets(campaignId, dateRangeFilter, campaignFilter = null, limit = null) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
 
@@ -60,6 +72,7 @@ class CampaignService {
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
     Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
     campaignFilter && Object.assign(this.apiRequest.queryStringParameters, {filter: campaignFilter});
+    limit && Object.assign(this.apiRequest.queryStringParameters, {top: limit});
 
     return await API.post('canpaignGroup', `/${campaignId}/performance/asset`, this.apiRequest);
   }
