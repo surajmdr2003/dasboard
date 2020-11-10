@@ -1,13 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useContext} from 'react';
 import PropTypes from 'prop-types';
+
+// Context
+import GlobalContext from '../context/GlobalContext';
+
+// Components
 import DatePickerField from './form-fields/DatePickerField';
 
 const PageTitleWithFilter = ({reportUrl}) => {
-  const [filterDateTitle, setFilterDateTitle] = useState('Last 7 Days');
+  const [pageDateFilterRange, setPageDateFilterRange] = useContext(GlobalContext);
+  const [filterDateTitle, setFilterDateTitle] = useState(pageDateFilterRange.label);
 
-  const AllCampaignDateCallback = (startDate, endDate) => {
-    const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
-    setFilterDateTitle(range);
+  /**
+   * Handles the change in date filter range.
+   * @param {*} startDate
+   * @param {*} endDate
+   */
+  const handleFilterDateChange = (startDate, endDate) => {
+    const label = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+
+    setFilterDateTitle(label);
+    setPageDateFilterRange({
+      label: label,
+      startDate: moment(startDate).format('YYYY-MM-DD'),
+      endDate: moment(endDate).format('YYYY-MM-DD'),
+    });
   };
 
   /**
@@ -16,7 +33,7 @@ const PageTitleWithFilter = ({reportUrl}) => {
   const FilterFeilds = (<div className="block-filter">
     <div className="dropdown dropdown-filter">
       <button className="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Filter by status
+        Filter by status
       </button>
       <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a className="dropdown-item" href="#">Action</a>
@@ -24,7 +41,7 @@ const PageTitleWithFilter = ({reportUrl}) => {
         <a className="dropdown-item" href="#">Something else here</a>
       </div>
     </div>
-    <DatePickerField applyCallback={AllCampaignDateCallback} label={filterDateTitle}/>
+    <DatePickerField applyCallback={handleFilterDateChange} label={filterDateTitle}/>
   </div>);
 
   /**
@@ -48,7 +65,7 @@ const PageTitleWithFilter = ({reportUrl}) => {
           <div className="row align-items-center">
             <div className="col-md-6">
               <div className="campaigns-link">
-                                Creatives - <a href="#" className="btn-breadcrumb">Go! checking OU</a>
+                Creatives - <a href="#" className="btn-breadcrumb">Go! checking OU</a>
                 <div className="campaign-dropdown-menu dropdown-menu">
                   <div className="card-header">
                     <div className="active">Active campaigns</div>

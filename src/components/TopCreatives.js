@@ -29,14 +29,14 @@ const settings = {
 };
 
 const TopCreatives = (props) => {
-  const { user, dateFilterRange } = React.useContext(GlobalContext);
+  const { user, creativesDateFilterRange, setCreativesDateFilterRange } = React.useContext(GlobalContext);
   const [campaignId, setCampaignId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
+  const [filterDateTitle, setFilterDateTitle] = useState(creativesDateFilterRange.label);
   const [creatives, setTopCreativeList] = useState([]);
   const [dateFilter, setDateFilter] = useState({
-    endDate: dateFilterRange.endDate,
-    startDate: dateFilterRange.startDate,
+    endDate: creativesDateFilterRange.endDate,
+    startDate: creativesDateFilterRange.startDate,
   });
 
   /**
@@ -65,8 +65,15 @@ const TopCreatives = (props) => {
    * @param {End Date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
-    setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
+    const label = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+
+    setFilterDateTitle(label);
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
+    setCreativesDateFilterRange({
+      label: label,
+      startDate: moment(startDate).format('YYYY-MM-DD'),
+      endDate: moment(endDate).format('YYYY-MM-DD'),
+    });
     loadCreativeData(campaignId || props.campaignId, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
 

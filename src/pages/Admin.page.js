@@ -6,6 +6,9 @@ import {Auth} from 'aws-amplify';
 // Global context
 import GlobalContext from '../context/GlobalContext';
 
+// Utilities
+import Storage from '../utilities/Storage';
+
 // Services
 import AdvertiserService from '../services/advertiser.service';
 
@@ -21,19 +24,28 @@ const AdminPages = ({ history, children }) => {
     setState({isLoading: true});
     Auth.currentAuthenticatedUser()
       .then(session => {
-        AdvertiserService.getAdvertiser()
-          .then((response) => {
-            const user = {...response.data};
+        if (Storage.getItem('current:user')) {
+          const storedUser = JSON.parse(atob(Storage.getItem('current:user')));
+          setUser(storedUser);
 
-            user.username = session.getSignInUserSession().getIdToken().payload['cognito:username'];
-            user.permissions = session.getSignInUserSession().getAccessToken().payload['cognito:groups'];
+          // Hide loader/spinner
+          setState({ isLoading: false });
+        } else {
+          AdvertiserService.getAdvertiser()
+            .then((response) => {
+              const user = {...response.data};
 
-            // Set user in global context
-            setUser(user);
+              user.username = session.getSignInUserSession().getIdToken().payload['cognito:username'];
+              user.permissions = session.getSignInUserSession().getAccessToken().payload['cognito:groups'];
 
-            // Hide loader/spinner
-            setState({ isLoading: false });
-          });
+              // Set user in global context
+              Storage.setItem('current:user', btoa(JSON.stringify(user)));
+              setUser(user);
+
+              // Hide loader/spinner
+              setState({ isLoading: false });
+            });
+        }
       })
       .catch(() => {
         console.log('Not signed in yet!');

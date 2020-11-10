@@ -13,13 +13,13 @@ import AdvertiserService from '../services/advertiser.service';
 import DatePickerField from '../components/form-fields/DatePickerField';
 
 const CampaignList = () => {
-  const { user, setActiveCampaign, dateFilterRange } = React.useContext(GlobalContext);
+  const { user, setActiveCampaign, CLDateFilterRange, setCLDateFilterRange} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [filterDateTitle, setFilterDateTitle] = useState(`Last  ${dateFilterRange.days} Days`);
+  const [filterDateTitle, setFilterDateTitle] = useState(CLDateFilterRange.label);
   const [campaigns, setCampaigns] = useState([]);
   const [dateFilter, setDateFilter] = useState({
-    endDate: dateFilterRange.endDate,
-    startDate: dateFilterRange.startDate,
+    endDate: CLDateFilterRange.endDate,
+    startDate: CLDateFilterRange.startDate,
   });
 
   const [columns] = useState([
@@ -94,8 +94,14 @@ const CampaignList = () => {
    * @param {Start Date} startDate
    * @param {End Date} endDate
    */
-  const datepickerCallback = (startDate, endDate) => {
-    setFilterDateTitle((moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString());
+  const datePickerCallback = (startDate, endDate) => {
+    const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+    setFilterDateTitle(range);
+    setCLDateFilterRange({
+      label: range,
+      startDate: moment(startDate).format('YYYY-MM-DD'),
+      endDate: moment(endDate).format('YYYY-MM-DD'),
+    });
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
     loadCampaignListData({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
   };
@@ -127,7 +133,7 @@ const CampaignList = () => {
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
-                  <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
+                  <DatePickerField applyCallback={datePickerCallback} label={filterDateTitle} />
                 </div>
               </div>
             </div>
