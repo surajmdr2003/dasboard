@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 
 // Contexts
 import GlobalContext from '../context/GlobalContext';
@@ -14,26 +14,30 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import CampaignService from '../services/campaign.service';
 
 const Campaign = () => {
-  const { user, activeCampaign } = React.useContext(GlobalContext);
-  const [reportUrl, setReportUrl] = useState('');
+  const { activeCampaign } = React.useContext(GlobalContext);
+  const [isLoading, setIsloading] = useState(false);
 
   /**
    * Call API and generate graphs correspond to data
    * Campaign ID
    * @param {Int} campId
    */
-  const loadCampaignReport = (campId) => {
+  const loadCampaignReport = (event, campId) => {
+    event.preventDefault();
+
+    let reportWindow;
+
+    setIsloading(true);
     CampaignService.getCampaignReports(campId)
       .then((response) => {
-        setReportUrl(response.data.value);
+        setIsloading(false);
+        if (response.data && response.data.value) {
+          reportWindow = window.open('', '_blank');
+          reportWindow.location = response.data.value;
+        }
       })
-      .catch(() => false)
-      .finally();
+      .catch(() => false);
   };
-
-  useEffect(() => {
-    activeCampaign.id && loadCampaignReport(activeCampaign.id);
-  }, [user.id, activeCampaign.id]);
 
   return (
     <Fragment>
@@ -46,7 +50,9 @@ const Campaign = () => {
                   <PageTitleCampaignDropdown pageName="Campaign Detail Page" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
                 </div>
                 <div className="col-md-6 text-right">
-                  <a href={reportUrl} download className="btn btn-link btn-download-report" target="_blank">Download Report</a>
+                  <a href="#" onClick={(e) => loadCampaignReport(e, activeCampaign.id)} className="btn btn-link btn-download-report" target="_blank">
+                    {isLoading ? <span className="spinner-grow spinner-grow-sm" role="status"> <span className="sr-only">Loading...</span></span> : ''}
+                    {' '} Download Report</a>
                 </div>
               </div>
             </div>
