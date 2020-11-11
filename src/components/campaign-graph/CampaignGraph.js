@@ -256,11 +256,11 @@ const CampaignGraph = (props) => {
   };
 
   const showChangeValue = (changeVal, activeTab) => {
-    const clickChange = changeVal.find(value => value.metricType === 'CLICK').change.toFixed(10);
-    const conversionChange = changeVal.find(value => value.metricType === 'CONVERSION').change.toFixed(10);
-    const impressionChange = changeVal.find(value => value.metricType === 'IMPRESSION').change.toFixed(10);
-    const ctrChange = changeVal.find(value => value.metricType === 'CTR').change.toFixed(10);
-    const conversionRateChange = changeVal.find(value => value.metricType === 'CONVERSION_RATE').change.toFixed(10);
+    const clickChange = changeVal.find(value => value.metricType === 'CLICK').change;
+    const conversionChange = changeVal.find(value => value.metricType === 'CONVERSION').change;
+    const impressionChange = changeVal.find(value => value.metricType === 'IMPRESSION').change;
+    const ctrChange = changeVal.find(value => value.metricType === 'CTR').change;
+    const conversionRateChange = changeVal.find(value => value.metricType === 'CONVERSION_RATE').change;
 
     if (activeTab === 'impressions') {
       return showViewOf(impressionChange);

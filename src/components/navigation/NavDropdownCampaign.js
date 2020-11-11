@@ -22,7 +22,7 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
   const {activeCampaign, setActiveCampaign} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [currentCampaignCat, setCurrentCampaignCat] = useState('ACTIVE');
-  const [currentCampaign, setCurrentCampaign] = useState(campaignNavItems.length ? campaignNavItems[0].id : '');
+  const [currentCampaign, setCurrentCampaign] = useState('');
   const [navCampaignSummary, setNavCampaignSummary] = useState(initSummary);
   const history = useHistory();
 
@@ -61,7 +61,6 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
 
   useEffect(() => {
     setCampaignNav(currentCampaignCat);
-    campaignNavItems.length ? loadCampaignSummaryData(campaignNavItems[0].id) : '';
   }, [activeCampaign.id]);
 
   /**

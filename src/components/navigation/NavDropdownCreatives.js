@@ -27,7 +27,7 @@ const NavDropdownCreatives = ({campaignNavItems}) => {
    */
   const loadTopFiveCreativesData = (campaignId) => {
     setIsLoading(true);
-    CampaignService.getCampaignPerformanceAssets(campaignId, {startDate: start, endDate: end}, null, 4)
+    CampaignService.getCampaignPerformanceAssets(campaignId, {startDate: start, endDate: end})
       .then((response) => {
         setTopCreatives(response.data.summary);
       })
