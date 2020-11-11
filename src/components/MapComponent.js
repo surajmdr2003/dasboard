@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Map, TileLayer, Circle, Popup, Polygon, FeatureGroup } from 'react-leaflet';
+import { Map, TileLayer, Circle, Popup, Polygon, FeatureGroup, ScaleControl } from 'react-leaflet';
 import Config from '../../app.config';
 
 const leafURL = `https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${Config.mapboxAccessToken}`;
@@ -28,7 +28,10 @@ const MapComponent = (props) => {
       if (data.type === 'circle') {
         drawings.push((
           <Circle key={data.center.lat + data.center.lng + index} center={[data.center.lat, data.center.lng]} color="blue" radius={data.radius}>
-            <Popup>Target: {response.target.name}</Popup>
+            <Popup>
+              <div>Target: {response.target.name}</div>
+              <div>Radius: <strong>{data.radius.toFixed(2)} m</strong></div>
+            </Popup>
           </Circle>
         ));
       }
@@ -75,6 +78,7 @@ const MapComponent = (props) => {
         <FeatureGroup ref={groupRef}>
           {state.drawings}
         </FeatureGroup>
+        <ScaleControl imperial={false} metric={true}/>
       </Map>
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
     </div>

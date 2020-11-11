@@ -6,7 +6,6 @@ import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from './components/common/PrivateRoute.component';
 
 // Required Components
-import Welcome from './pages/Welcome';
 import Login from './pages/Login';
 import AdminPages from './pages/Admin.page';
 import Dashboard from './pages/Dashboard';
@@ -27,9 +26,8 @@ import CampaignList from './pages/CampaignList';
 const Routes = () => {
   return (
     <Switch>
-      <Route path={'/'} component={Welcome} exact />
+      <Route path={'/'} component={Login} exact />
       <Route exact path={'/login'} component={Login} />
-      <Route exact path={'/others'} component={Welcome} />
       <Route
         path={'/dashboard'}
         render={({ match: { path } }) => (

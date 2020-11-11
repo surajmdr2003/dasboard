@@ -70,16 +70,16 @@ const Navigation = () => {
    * @param {*} switchedUser
    */
   const updateUser = (switchedUser) => {
-    Storage.setItem('current:user', btoa(JSON.stringify({...user, ...switchedUser})));
-    setUser({...user, ...switchedUser});
+    Storage.setItem('current:user', btoa(JSON.stringify({ ...user, ...switchedUser })));
+    setUser({ ...user, ...switchedUser });
   };
 
   /**
    * Signout Current Logged In User
    */
-  const signOut = () => {
+  const signOut = (event) => {
+    event.preventDefault();
     Storage.removeItem('current:user');
-    Storage.clear();
     Auth.signOut();
   };
 
@@ -176,8 +176,10 @@ const Navigation = () => {
             <Dropdown>
               <Dropdown.Toggle id="dropdown-basic">
                 <div className="menu-profile media">
-                  <img src="/assets/images/avatar.png" className="profile-icon align-self-center mr-3"
-                    alt="Midfirst Bank's profile picture" />
+                  <img src="/assets/images/avatar.png"
+                    className="profile-icon align-self-center mr-3"
+                    alt="Midfirst Bank's profile picture"
+                  />
                   <div className="media-body  align-self-center">
                     <h6 className="mt-0">{user ? user.name : 'Guest'}</h6>
                   </div>
@@ -188,7 +190,7 @@ const Navigation = () => {
                 <Dropdown.Item onClick={() => history.push('#')}>Payment setting</Dropdown.Item>
                 <Dropdown.Item onClick={() => history.push('/dashboard/billing')}>Billing history</Dropdown.Item>
                 <Dropdown.Item onClick={() => history.push('#')}>Contact us</Dropdown.Item>
-                <Dropdown.Item onClick={() => signOut()}>Logout</Dropdown.Item>
+                <Dropdown.Item onClick={(e) => signOut(e)}>Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </li>

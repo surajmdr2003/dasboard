@@ -70,7 +70,7 @@ const PageTitleCampaignDropdown = (props) => {
    */
   const showCurrentCampaign = (campaignId) => {
     const currentCampaign = campaignList.find(item => item.id === parseInt(campaignId, 10));
-    return currentCampaign ? currentCampaign.name : '';
+    return currentCampaign ? currentCampaign.name : 'No Campaign Selected!';
   };
 
   useEffect(() => {
@@ -79,31 +79,25 @@ const PageTitleCampaignDropdown = (props) => {
 
   return (
     <Fragment>
-      {
-        campaignList.length
-          ? <Dropdown className="breadcrumb-campaign-dropdown">
-            <Dropdown.Toggle className="campaigns-link">
-              {props.pageName ? props.pageName + ' - ' : ''}<span className="btn-breadcrumb">{showCurrentCampaign(props.campaignId)}</span>
-            </Dropdown.Toggle>
-            <Dropdown.Menu className="page-campaign-dropdown">
-              <div className="campaign-dropdown-menu">
-                <div className="card-header">
-                  <div className={(currentCampaignCat === 'ACTIVE' ? 'active' : '')} onClick={() => setCampaignNav('ACTIVE')}>Active campaigns</div>
-                  <div className={(currentCampaignCat === 'INACTIVE' ? 'active' : '')} onClick={() => setCampaignNav('INACTIVE')}>Inactive campaigns</div>
-                </div>
-                <div className="card-body p-0">
-                  <ul className="campaign-list">
-                    {loadCampaignListForPageFilter(currentCampaignCat)}
-                  </ul>
-                </div>
-              </div>
-            </Dropdown.Menu>
-          </Dropdown>
-          : ''
-      }
-
+      <Dropdown className="breadcrumb-campaign-dropdown">
+        <Dropdown.Toggle className="campaigns-link">
+          {props.pageName ? props.pageName + ' - ' : ''} <span className="btn-breadcrumb">{showCurrentCampaign(props.campaignId)}</span>
+        </Dropdown.Toggle>
+        <Dropdown.Menu className="page-campaign-dropdown">
+          <div className="campaign-dropdown-menu">
+            <div className="card-header">
+              <div className={(currentCampaignCat === 'ACTIVE' ? 'active' : '')} onClick={() => setCampaignNav('ACTIVE')}>Active campaigns</div>
+              <div className={(currentCampaignCat === 'INACTIVE' ? 'active' : '')} onClick={() => setCampaignNav('INACTIVE')}>Inactive campaigns</div>
+            </div>
+            <div className="card-body p-0">
+              <ul className="campaign-list">
+                {loadCampaignListForPageFilter(currentCampaignCat)}
+              </ul>
+            </div>
+          </div>
+        </Dropdown.Menu>
+      </Dropdown>
     </Fragment>
-
   );
 };
 
