@@ -48,7 +48,7 @@ class AdvertiserService {
     return await API.get('advertiser', `/${advertiserId}/asset`, this.apiRequest);
   }
 
-  async getAdvertiserPerformance(advertiserId, options) {
+  async getAdvertiserPerformance(advertiserId, options = null) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
 
@@ -56,18 +56,18 @@ class AdvertiserService {
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
     // Setting up Query Strings
-    Object.assign(this.apiRequest.queryStringParameters, options);
+    options && Object.assign(this.apiRequest.queryStringParameters, options);
 
     return await API.post('advertiser', `/${advertiserId}/performance`, this.apiRequest);
   }
 
-  async getAdvertiserCampaignGroups(advertiserId, dateRangeFilter) {
+  async getAdvertiserCampaignGroups(advertiserId, options = null) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
-    Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
+    options && Object.assign(this.apiRequest.queryStringParameters, options);
 
     return await API.get('advertiser', `/${advertiserId}/campaigngroup`, this.apiRequest);
   }
@@ -93,13 +93,13 @@ class AdvertiserService {
     return await API.post('advertiser', `/${advertiserId}/performance/campaigns`, this.apiRequest);
   }
 
-  async getAdvertiserPerformanceLandingPages(advertiserId, dateRangeFilter, campaignFilter = null) {
+  async getAdvertiserPerformanceLandingPages(advertiserId, dateRangeFilter = null, campaignFilter = null) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
-    Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
+    dateRangeFilter && Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
     campaignFilter && Object.assign(this.apiRequest.queryStringParameters, {filter: campaignFilter});
 
     return await API.post('advertiser', `/${advertiserId}/performance/landingpage`, this.apiRequest);
@@ -126,9 +126,7 @@ class AdvertiserService {
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
     // Setting up Query Strings
-    Object.assign(this.apiRequest.queryStringParameters, {
-      nameOrId: searchQuery,
-    });
+    Object.assign(this.apiRequest.queryStringParameters, { nameOrId: searchQuery });
 
     return await API.get('advertiser', '/search', this.apiRequest);
   }
