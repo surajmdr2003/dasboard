@@ -61,7 +61,8 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
 
   useEffect(() => {
     setCampaignNav(currentCampaignCat);
-  }, [activeCampaign.id]);
+    campaignNavItems.length ? loadCampaignSummaryData(campaignNavItems[0].id) : setNavCampaignSummary(initSummary);
+  }, [activeCampaign.id, campaignNavItems.length]);
 
   /**
    * Canclates CTR Properly
