@@ -27,7 +27,7 @@ const YourCampaigns = () => {
 
   const [columns] = useState([
     {
-      name: 'Campaigns name',
+      name: 'Campaign name',
       selector: 'name',
       sortable: true,
       cell: row => (<div className="campaign">

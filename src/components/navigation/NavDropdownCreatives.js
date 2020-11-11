@@ -29,7 +29,7 @@ const NavDropdownCreatives = ({campaignNavItems}) => {
     setIsLoading(true);
     CampaignService.getCampaignPerformanceAssets(campaignId, {startDate: start, endDate: end})
       .then((response) => {
-        setTopCreatives(response.data.summary.slice(0, 4));
+        setTopCreatives(response.data.summary.splice(0, 4));
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
@@ -45,7 +45,7 @@ const NavDropdownCreatives = ({campaignNavItems}) => {
             <div className="card-creative-thumb">
               <span className="badge badge-secondary">{calculateAssetDimensional(creative.assetUrl)}</span>
               {
-                creative.name.endsWith('mp4')
+                (creative.name !== null && creative.name.endsWith('mp4'))
                   ? <video controls preload="none">
                     <source src={creative.assetUrl} type="video/mp4"/>
                       Your browser does not support the video tag.
