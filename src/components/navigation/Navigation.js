@@ -103,7 +103,7 @@ const Navigation = () => {
             <NavDropdownCampaign campaignNavItems={campaignList} />
           </NavDropdown>
           <NavDropdown title="Creatives" className="fullwidth-nav">
-            <NavDropdownCreatives campaignNavItems={campaignList} />
+            <NavDropdownCreatives campaignNavItems={[...campaignList]}/>
           </NavDropdown>
           <li><NavLink to="/dashboard/landing-pages">Landing pages</NavLink></li>
           <li><NavLink to="/dashboard/targeting">Targeting</NavLink></li>

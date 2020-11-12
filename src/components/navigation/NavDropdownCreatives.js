@@ -71,7 +71,7 @@ const NavDropdownCreatives = ({campaignNavItems}) => {
 
   useEffect(() => {
     campaignNavItems.length && loadTopFiveCreativesData(campaignNavItems[0].id);
-  }, []);
+  }, [campaignNavItems]);
 
   return (
     <div className="dropdown-full-width">

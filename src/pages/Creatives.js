@@ -67,21 +67,21 @@ const Creatives = () => {
     },
     {
       name: 'CTR',
-      selector: 'id',
-      sortable: false,
-      cell: row => (<div row={row}>{handleNanValueWithCalculation(row.clicks, row.impressions)}%</div>),
+      selector: 'ctr',
+      sortable: true,
+      cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
       name: 'Conversion',
-      selector: 'id',
-      sortable: false,
-      cell: row => (<div row={row}>{row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</div>),
+      selector: 'conversion',
+      sortable: true,
+      cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
       name: 'Conv rate',
-      selector: 'id',
-      sortable: false,
-      cell: row => (<div row={row}>{handleNanValueWithCalculation(row.conversions.reduce((sum, next) => sum + next.count, 0), row.clicks)}%</div>),
+      selector: 'conv-rate',
+      sortable: true,
+      cell: row => (<div row={row}>{row.convRate}%</div>),
     },
   ]);
 
@@ -104,6 +104,18 @@ const Creatives = () => {
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
+  };
+
+  /**
+   * Preoare row data for table
+   * @param {*} row
+   */
+  const prepareTableRow = (row) => {
+    row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
+    row.conversions = row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString();
+    row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
+
+    return row;
   };
 
   /**
@@ -163,7 +175,7 @@ const Creatives = () => {
     return creatives && creatives.length
       ? <DataTable
         columns={columns}
-        data={creatives}
+        data={creatives.map(prepareTableRow)}
         persistTableHead
         pagination={creatives.length > 10 ? true : false}
       />
