@@ -327,7 +327,7 @@ const CampaignGraph = (props) => {
                 </div>
               </div>
               <div className="col-md-4">
-                {props.campaignId ? <CampaignDetail /> : <LifeTimeSummary advertiserId={user.id} />}
+                {props.campaignId ? <CampaignDetail campaignDesp={currentCampaign} /> : <LifeTimeSummary advertiserId={user.id} />}
               </div>
             </div>
           </div>
