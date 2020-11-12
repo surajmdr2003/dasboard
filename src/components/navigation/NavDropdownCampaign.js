@@ -21,7 +21,7 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
   };
   const {activeCampaign, setActiveCampaign} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentCampaignCat, setCurrentCampaignCat] = useState('ACTIVE');
+  const [currentCampaignCat, setCurrentCampaignCat] = useState('');
   const [currentCampaign, setCurrentCampaign] = useState('');
   const [navCampaignSummary, setNavCampaignSummary] = useState(initSummary);
   const history = useHistory();
@@ -60,8 +60,17 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
   };
 
   useEffect(() => {
-    setCampaignNav(currentCampaignCat);
-    campaignNavItems.length ? loadCampaignSummaryData(campaignNavItems[0].id) : setNavCampaignSummary(initSummary);
+    if (campaignNavItems.length) {
+      if (campaignNavItems.some(item => item.status === 'ACTIVE')) {
+        setCampaignNav('ACTIVE');
+      } else if (campaignNavItems.some(item => item.status === 'INACTIVE')) {
+        setCampaignNav('INACTIVE');
+      }
+
+      loadCampaignSummaryData(campaignNavItems[0].id);
+    } else {
+      setNavCampaignSummary(initSummary);
+    }
   }, [activeCampaign.id, campaignNavItems.length]);
 
   /**
