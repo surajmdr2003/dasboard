@@ -14,6 +14,7 @@ class CampaignService {
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    this.apiRequest.queryStringParameters = {};
     dateRangeFilter && Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
 
     return await API.post('canpaignGroup', `/${campaignId}/performance`, this.apiRequest);
@@ -35,6 +36,7 @@ class CampaignService {
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    this.apiRequest.queryStringParameters = {};
     Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
 
     return await API.post('canpaignGroup', `/${campaignId}/performance/asset`, this.apiRequest);
@@ -46,6 +48,7 @@ class CampaignService {
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    this.apiRequest.queryStringParameters = {};
     Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
     campaignFilter && Object.assign(this.apiRequest.queryStringParameters, {filter: campaignFilter});
 
@@ -58,6 +61,7 @@ class CampaignService {
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    this.apiRequest.queryStringParameters = {};
     Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
     campaignFilter && Object.assign(this.apiRequest.queryStringParameters, {filter: campaignFilter});
 
