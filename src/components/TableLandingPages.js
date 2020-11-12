@@ -30,21 +30,21 @@ const TableLandingPages = ({landingPages}) => {
     },
     {
       name: 'CTR',
-      selector: 'id',
-      sortable: false,
-      cell: row => (<div row={row}>{handleNanValueWithCalculation(row.clicks, row.impressions)}%</div>),
+      selector: 'ctr',
+      sortable: true,
+      cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
       name: 'Conversion',
-      selector: 'id',
-      sortable: false,
-      cell: row => (<div row={row}>{row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</div>),
+      selector: 'conversion',
+      sortable: true,
+      cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
       name: 'Conv rate',
-      selector: 'id',
-      sortable: false,
-      cell: row => (<div row={row}>{handleNanValueWithCalculation(row.conversions.reduce((sum, next) => sum + next.count, 0), row.clicks)}%</div>),
+      selector: 'conv-rate',
+      sortable: true,
+      cell: row => (<div row={row}>{row.convRate}%</div>),
     },
   ]);
   /**
@@ -57,6 +57,18 @@ const TableLandingPages = ({landingPages}) => {
       return (fNum * 100).toFixed(2);
     }
     return ((fNum / sNum) * 100).toFixed(2);
+  };
+
+  /**
+   * Preoare row data for table
+   * @param {*} row
+   */
+  const prepareTableRow = (row) => {
+    row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
+    row.conversions = row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString();
+    row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
+
+    return row;
   };
 
   /**
@@ -75,7 +87,7 @@ const TableLandingPages = ({landingPages}) => {
           <div className="table-responsive">
             <DataTable
               columns={columns}
-              data={landingPages}
+              data={landingPages.map(prepareTableRow)}
               persistTableHead
               pagination={landingPages.length > 10 ? true : false}
             />
