@@ -14,9 +14,13 @@ const TopTargets = (props) => {
     allTargets: [],
   });
 
-  useEffect(() => {
+  /**
+   * Loads Targets for given Campaign
+   * @param {*} campaignId
+   */
+  const getCampaignTargets = (campaignId) => {
     setIsLoading(true);
-    TargetService.getCampaignTargets(props.campaignId)
+    TargetService.getCampaignTargets(campaignId)
       .then((response) => {
         setTargetInfo({
           selectedTarget: (response.data && response.data.length ? response.data[0] : null),
@@ -25,6 +29,17 @@ const TopTargets = (props) => {
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    if (props.campaignId) {
+      getCampaignTargets(props.campaignId);
+    } else {
+      setTargetInfo({
+        selectedTarget: null,
+        allTargets: [],
+      });
+    }
   }, [props.campaignId]);
 
   return (
@@ -44,33 +59,37 @@ const TopTargets = (props) => {
                 ? <div className="col text-center m-5">
                   <center><div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div></center>
                 </div>
-                : <Fragment>
-                  <div className="locations col-sm-3 pr-0">
-                    <div className="card border-0">
-                      <div className="card-header">
-                        Target Locations
+                : props.campaignId
+                  ? <Fragment>
+                    <div className="locations col-sm-3 pr-0">
+                      <div className="card border-0">
+                        <div className="card-header">
+                          Target Locations
+                        </div>
+                        <ul className="list-group list-group-flush">
+                          {
+                            targetInfo.allTargets.length
+                              ? targetInfo.allTargets.map(target => {
+                                return (
+                                  <li key={target.id} style={{ cursor: 'pointer' }}
+                                    className={'list-group-item ' + (targetInfo.selectedTarget && targetInfo.selectedTarget.id === target.id ? 'active' : '')}
+                                    onClick={(e) => { e.preventDefault(); setTargetInfo({ ...targetInfo, selectedTarget: target }); }}>
+                                    {target.name}
+                                  </li>
+                                );
+                              })
+                              : <li className="list-group-item">No Location</li>
+                          }
+                        </ul>
                       </div>
-                      <ul className="list-group list-group-flush">
-                        {
-                          targetInfo.allTargets.length
-                            ? targetInfo.allTargets.map(target => {
-                              return (
-                                <li key={target.id} style={{ cursor: 'pointer' }}
-                                  className={'list-group-item ' + (targetInfo.selectedTarget && targetInfo.selectedTarget.id === target.id ? 'active' : '' )}
-                                  onClick={(e) => { e.preventDefault(); setTargetInfo({...targetInfo, selectedTarget: target}); }}>
-                                  {target.name}
-                                </li>
-                              );
-                            })
-                            : <li className="list-group-item">No Location</li>
-                        }
-                      </ul>
                     </div>
+                    <div className="col-sm-9 pl-0">
+                      <MapComponent target={targetInfo.selectedTarget} />
+                    </div>
+                  </Fragment>
+                  : <div className="col m-5 text-center">
+                    <p className="text-md">No Available Targets!</p>
                   </div>
-                  <div className="col-sm-9 pl-0">
-                    <MapComponent target={targetInfo.selectedTarget} />
-                  </div>
-                </Fragment>
             }
           </div>
         </div>
