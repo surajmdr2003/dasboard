@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 // Services
 import AdvertiserService from '../../services/advertiser.service';
 
-const LifeTimeSummary = ({advertiserId}) => {
+const LifeTimeSummary = ({ advertiserId }) => {
   const [showRecommendation, setRecommendation] = useState(false);
+  const [recommendationData, setRecommendationData] = useState({});
   const [summaryData, setSummaryData] = useState({
     clicks: 0,
     impressions: 0,
@@ -30,6 +31,7 @@ const LifeTimeSummary = ({advertiserId}) => {
 
   useEffect(() => {
     advertiserId && loadLifeTimeSummary(advertiserId);
+    loadRecommendation(advertiserId);
   }, [advertiserId]);
 
   /**
@@ -39,6 +41,14 @@ const LifeTimeSummary = ({advertiserId}) => {
    */
   const handleNanValueWithCalculation = (fNum, sNum) => {
     return (sNum === 0) ? (fNum * 100).toFixed(2) : ((fNum / sNum) * 100).toFixed(2);
+  };
+
+  const loadRecommendation = (advertiserUserId) => {
+    AdvertiserService.getAdvertiserRecommendation(advertiserUserId)
+      .then((response) => {
+        setRecommendationData(response.data.length ? response.data[0] : {});
+      })
+      .catch(() => false);
   };
 
   return (
@@ -113,8 +123,8 @@ const LifeTimeSummary = ({advertiserId}) => {
           <p>Based on your campaign performance</p>
         </div>
         <div className="campiagns-info-data">
-          <h5>Add responsive display ads</h5>
-          <p>Get more conversion at a similar CPA with responsive display ads, which automatically adapt to fit all devices</p>
+          <h5>{recommendationData.title}</h5>
+          <p>{recommendationData.description}</p>
         </div>
         <div className="text-left">
           <Link to="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>Notify Sales</Link>

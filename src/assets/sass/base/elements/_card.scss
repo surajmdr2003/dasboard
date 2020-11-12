@@ -88,6 +88,7 @@
     .card-body {
         h5 {
             font-size: size(14);
+            margin-bottom: size(10);
         }
         ul {
             list-style: none;
@@ -117,6 +118,10 @@
             border-top: 0;
         }
     }
+}
+
+.creatives-overview .card-menu-creative { 
+    max-width: 200px;
 }
 
 .location-container {

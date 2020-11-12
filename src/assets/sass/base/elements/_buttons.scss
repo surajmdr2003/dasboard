@@ -86,7 +86,7 @@
 	}
 
 	&:hover {
-		text-decoration: none;
+		text-decoration: underline;
 	}
 
 	&.btn-download-report {
@@ -123,13 +123,17 @@
 }
 
 .dropdown-filter {
+	.dropdown-toggle {
+		text-transform: capitalize;
+	}
 	.dropdown-menu {
 		font-size: size(13);
 		width: size(220);
 		max-height: size(215);
 		overflow-y: auto;
 
-		.dropdown-item {
+		.dropdown-item {	
+			text-transform: capitalize;
 			border-bottom: 1px solid #eaeaea;
 			padding: .5rem 1rem;
 			white-space: normal;
