@@ -14,6 +14,13 @@ import AlertComponent from '../components/AlertComponent';
 import ErrorMessage from '../components/common/ErrorMessage.component';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 
+const notificationInit = {
+  isSending: false,
+  show: false,
+  message: '',
+  status: 'light',
+};
+
 const Reports = () => {
   const {activeCampaign} = React.useContext(GlobalContext);
   const [isModalOpen, toggleModal] = useState(false);
@@ -26,18 +33,8 @@ const Reports = () => {
     startDate: '',
     endDate: '',
   });
-  const [emailNotification, setEmailNotification] = useState({
-    isSending: false,
-    show: false,
-    message: '',
-    status: 'light',
-  });
-  const [downloadNotification, setDownloadNotification] = useState({
-    isSending: false,
-    show: false,
-    message: '',
-    status: 'light',
-  });
+  const [emailNotification, setEmailNotification] = useState(notificationInit);
+  const [downloadNotification, setDownloadNotification] = useState(notificationInit);
   const [columns] = useState([
     {
       name: 'Months',
@@ -67,13 +64,13 @@ const Reports = () => {
       name: 'CTR',
       selector: 'ctr',
       sortable: true,
-      cell: row => (<div row={row}>{handleNanValueWithCalculation(row.clicks, row.impressions)}</div>),
+      cell: row => (<div row={row}>{row.ctr}</div>),
     },
     {
       name: 'Conv rate',
       selector: 'conv-rate',
       sortable: true,
-      cell: row => (<div row={row}>{(row.conversions / row.clicks).toFixed(2)}%</div>),
+      cell: row => (<div row={row}>{row.convRate}%</div>),
     },
     {
       name: '',
@@ -82,6 +79,17 @@ const Reports = () => {
       cell: row => getActionBlock(row),
     },
   ]);
+
+  /**
+   * Preoare row data for table
+   * @param {*} row
+   */
+  const prepareTableRow = (row) => {
+    row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
+    row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
+
+    return row;
+  };
 
   const handleNanValueWithCalculation = (fNum, sNum) => {
     if (sNum === 0) {
@@ -240,7 +248,7 @@ const Reports = () => {
           <AlertComponent message={downloadNotification.message} alert={downloadNotification.status} show={downloadNotification.show} isLoading={downloadNotification.isSending} />
           <DataTable
             columns={columns}
-            data={data.content}
+            data={data.content ? data.content.map(prepareTableRow) : []}
             progressPending={loading}
             pagination
             persistTableHead

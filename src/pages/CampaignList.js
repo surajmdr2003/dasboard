@@ -53,18 +53,21 @@ const CampaignList = () => {
     },
     {
       name: 'CTR',
-      sortable: false,
-      cell: row => (<div row={row}>{handleNanValueWithCalculation(row.clicks, row.impressions)}%</div>),
+      selector: 'ctr',
+      sortable: true,
+      cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
       name: 'Conversion',
-      sortable: false,
-      cell: row => (<div row={row}>{row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</div>),
+      selector: 'conversion',
+      sortable: true,
+      cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
       name: 'Conv rate',
-      sortable: false,
-      cell: row => (<div row={row}>{handleNanValueWithCalculation(row.conversions.reduce((sum, next) => sum + next.count, 0), row.clicks)}%</div>),
+      selector: 'conv-rate',
+      sortable: true,
+      cell: row => (<div row={row}>{row.convRate}%</div>),
     },
     {
       name: '',
@@ -73,6 +76,17 @@ const CampaignList = () => {
     },
   ]);
 
+  /**
+   * Preoare row data for table
+   * @param {*} row
+   */
+  const prepareTableRow = (row) => {
+    row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
+    row.conversions = row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString();
+    row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
+
+    return row;
+  };
 
   /**
    * Call API and generate graphs correspond to data
@@ -151,7 +165,7 @@ const CampaignList = () => {
                 </div>
                 : <DataTable
                   columns={columns}
-                  data={campaigns}
+                  data={campaigns.map(prepareTableRow)}
                   persistTableHead
                   pagination={campaigns.length > 10 ? true : false}
                 />
