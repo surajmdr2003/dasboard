@@ -9,7 +9,7 @@ const TableLandingPages = ({landingPages}) => {
   const [activePageId, setActivePageId] = useState((landingPages.length) ? landingPages[0].id : '');
   const [columns] = useState([
     {
-      name: 'Campaign name',
+      name: 'Page name',
       selector: 'name',
       sortable: true,
       cell: row => (<div className={`page-name ${(activePageId === row.id) ? 'active' : ''}` } onClick={() => loadPageOnMobile(row)}>
