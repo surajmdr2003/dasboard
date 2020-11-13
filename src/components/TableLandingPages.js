@@ -13,7 +13,7 @@ const TableLandingPages = ({landingPages}) => {
       selector: 'name',
       sortable: true,
       cell: row => (<div className={`page-name ${(activePageId === row.id) ? 'active' : ''}` } onClick={() => loadPageOnMobile(row)}>
-        {(row.params.name === null || row.params.name === '') ? 'No Data' : row.params.name}
+        {(row.params.name) ?  row.params.name : 'No Data'  }
       </div>),
     },
     {

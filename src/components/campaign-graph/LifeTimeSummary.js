@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 // Services
 import AdvertiserService from '../../services/advertiser.service';
 
+
 const LifeTimeSummary = ({ advertiserId }) => {
   const [showRecommendation, setRecommendation] = useState(false);
   const [recommendationData, setRecommendationData] = useState({});
@@ -46,7 +47,10 @@ const LifeTimeSummary = ({ advertiserId }) => {
   const loadRecommendation = (advertiserUserId) => {
     AdvertiserService.getAdvertiserRecommendation(advertiserUserId)
       .then((response) => {
-        setRecommendationData(response.data.length ? response.data[0] : {});
+        setRecommendationData(response.data.length ? response.data[0] : {
+          title: '',
+          description: '',
+        });
       })
       .catch(() => false);
   };

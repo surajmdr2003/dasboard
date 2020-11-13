@@ -44,7 +44,7 @@ const TopCreativeAdsBlock = ({creative}) => {
           }
         </div>
         <div className="card-body">
-          <h5>{(creative.params.name === null || creative.params.name === '') ? 'No Data' : creative.params.name}</h5>
+          <h5>{(creative.params.name) ? creative.params.name : 'No Data' }</h5>
           <ul>
             <li><strong>Impressions</strong>{creative.impressions.toLocaleString()}</li>
             <li><strong>Clicks</strong>{creative.clicks.toLocaleString()}</li>

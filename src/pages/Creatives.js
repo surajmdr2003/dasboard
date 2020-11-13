@@ -43,7 +43,7 @@ const Creatives = () => {
             : <object data={row.params.url} />
         }
         <div className="media-body">
-          <p className="mt-0">{(row.params.name === null || row.params.name === '') ? 'No Data' : row.params.name}</p>
+          <p className="mt-0">{(row.params.name) ? row.params.name : 'No Data'}</p>
         </div>
       </div>),
     },
