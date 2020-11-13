@@ -18,7 +18,7 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
     clicks: 0,
     conversions: [],
     impressions: 0,
-    params: {}
+    params: {},
   };
   const {activeCampaign, setActiveCampaign} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);

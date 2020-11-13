@@ -28,16 +28,16 @@ const CampaignList = () => {
       selector: 'name',
       sortable: true,
       cell: row => (<div className="campaign">
-        <div className="c-name">{(row.name === null || row.name === '') ? 'No Data' : row.name}</div>
+        <div className="c-name">{(row.params.name === null || row.params.name === '') ? 'No Data' : row.params.name}</div>
         <div className="c-date">
-          {row.startDate + ' - ' + row.endDate}</div>
+          {row.params.startDate + ' - ' + row.params.endDate}</div>
       </div>),
     },
     {
       name: 'Status',
       selector: 'status',
       sortable: false,
-      cell: row => (<div className={`status ${row.status.toLowerCase()}-campaign`}>{row.status.toLowerCase()}</div>),
+      cell: row => (<div className={`status ${row.params.status.toLowerCase()}-campaign`}>{row.params.status.toLowerCase()}</div>),
     },
     {
       name: 'Impressions',
