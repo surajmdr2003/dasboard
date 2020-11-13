@@ -49,7 +49,7 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
    */
   const loadCampaignSummaryData = (campaignId) => {
     setIsLoading(true);
-    CampaignService.getCampaignPerformance(campaignId, {startDate: start, endDate: end})
+    CampaignService.getCampaignPerformance(campaignId, {startDate: start, endDate: end, top: 5})
       .then((response) => {
         setNavCampaignSummary(response.data.summary.length ? response.data.summary[0] : {...initSummary, id: campaignId});
       })
