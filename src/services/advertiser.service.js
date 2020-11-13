@@ -56,6 +56,7 @@ class AdvertiserService {
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
     // Setting up Query Strings
+    this.apiRequest.queryStringParameters = {};
     options && Object.assign(this.apiRequest.queryStringParameters, options);
 
     return await API.post('advertiser', `/${advertiserId}/performance`, this.apiRequest);
@@ -67,6 +68,9 @@ class AdvertiserService {
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+    // Setting up Query Strings
+    this.apiRequest.queryStringParameters = {};
     options && Object.assign(this.apiRequest.queryStringParameters, options);
 
     return await API.get('advertiser', `/${advertiserId}/campaigngroup`, this.apiRequest);
@@ -88,6 +92,9 @@ class AdvertiserService {
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+    // Setting up Query Strings
+    this.apiRequest.queryStringParameters = {};
     Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
 
     return await API.post('advertiser', `/${advertiserId}/performance/campaigns`, this.apiRequest);
@@ -99,6 +106,9 @@ class AdvertiserService {
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+    // Setting up Query Strings
+    this.apiRequest.queryStringParameters = {};
     dateRangeFilter && Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
     campaignFilter && Object.assign(this.apiRequest.queryStringParameters, {filter: campaignFilter});
 
@@ -111,6 +121,9 @@ class AdvertiserService {
 
     // Setting up header info
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+    // Setting up Query Strings
+    this.apiRequest.queryStringParameters = {};
     Object.assign(this.apiRequest.queryStringParameters, dateRangeFilter);
     campaignFilter && Object.assign(this.apiRequest.queryStringParameters, {filter: campaignFilter});
 
@@ -126,6 +139,7 @@ class AdvertiserService {
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
 
     // Setting up Query Strings
+    this.apiRequest.queryStringParameters = {};
     Object.assign(this.apiRequest.queryStringParameters, { nameOrId: searchQuery });
 
     return await API.get('advertiser', '/search', this.apiRequest);

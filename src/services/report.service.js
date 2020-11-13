@@ -14,6 +14,9 @@ class ReportService {
 
       // Setting up header info
       this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+      // Setting up Query Strings
+      this.apiRequest.queryStringParameters = {};
       this.apiRequest.queryStringParameters.perPage = perPage;
       this.apiRequest.queryStringParameters.pageNumber = page;
 
@@ -26,6 +29,8 @@ class ReportService {
 
       // Setting up header info
       this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+      // Setting up Query Strings
       this.apiRequest.queryStringParameters = {};
       this.apiRequest.queryStringParameters.email = info.emailAddress;
       this.apiRequest.queryStringParameters.message = info.message;
