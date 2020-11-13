@@ -167,11 +167,7 @@ const Stats = () => {
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
-                  {
-                    months.length
-                      ? <DropdownFilter itemList={[...months]} label={dropdownLabel} dropwDownCallBack={loadDataByMonth} />
-                      : 'No Month'
-                  }
+                  {months.length ? <DropdownFilter itemList={[...months]} label={dropdownLabel} dropwDownCallBack={loadDataByMonth} /> : ''}
                 </div>
               </div>
             </div>
@@ -191,9 +187,13 @@ const Stats = () => {
                     <div className="col-sm-8">
                       <div className="card card-chart card-bar-chart">
                         <div className="card-body">
-                          <h4>Age data</h4>
+                          <h4 className={(state.age.columns[0].length === 1) ? 'mb-2' : ''}>Age data</h4>
                           <div className="chart-block">
-                            <C3Chart holder="ageGraph" columns={state.age} axis={genderAxisData} bar={bar} size={size} legend={legend} />
+                            {
+                              (state.age.columns[0].length === 1)
+                                ? <div className="text-muted"><i className="icon-bulb" /> No data for Age Graph.</div>
+                                : <C3Chart holder="ageGraph" columns={state.age} axis={genderAxisData} bar={bar} size={size} legend={legend} />
+                            }
                           </div>
                         </div>
                       </div>
@@ -201,9 +201,13 @@ const Stats = () => {
                     <div className="col-sm-4">
                       <div className="card card-chart card-donut-chart">
                         <div className="card-body">
-                          <h4>Gender data</h4>
+                          <h4 className={(state.gender.columns[0][1] === 0 && state.gender.columns[1][1] === 0) ? 'mb-2' : ''}>Gender data</h4>
                           <div className="chart-block">
-                            <C3Chart holder="genderGraph" columns={state.gender} />
+                            {
+                              (state.gender.columns[0][1] === 0 && state.gender.columns[1][1] === 0)
+                                ? <div className="text-muted"><i className="icon-bulb" /> No data for Gender Graph</div>
+                                : <C3Chart holder="genderGraph" columns={state.gender} />
+                            }
                           </div>
                         </div>
                       </div>
@@ -213,13 +217,13 @@ const Stats = () => {
                     <div className="col-sm-6">
                       <div className="card card-chart card-progress-chart">
                         <div className="card-body">
-                          <h4>Affinity data</h4>
+                          <h4 className={(state.affinity.length && affinityTotal > 0) ? '' : 'mb-2'}>Affinity data</h4>
                           <ul className="progress-chart-block">
                             {state.affinity.length && affinityTotal > 0
                               ? state.affinity.map((progressbar, i) => {
                                 return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field} total={affinityTotal} />;
                               })
-                              : 'No Data'
+                              : <div className="text-muted"><i className="icon-bulb" /> No Affinity data available.</div>
                             }
                           </ul>
                         </div>
@@ -228,13 +232,13 @@ const Stats = () => {
                     <div className="col-sm-6">
                       <div className="card card-chart card-progress-chart">
                         <div className="card-body">
-                          <h4>In market data</h4>
+                          <h4 className={(state.market.length && inMarketTotal > 0) ? '' : 'mb-2'}>In market data</h4>
                           <ul className="progress-chart-block">
                             {state.market.length && inMarketTotal > 0
                               ? state.market.map((progressbar, i) => {
                                 return <ProgressBarBlock key={i} data={progressbar.value} label={progressbar.field} total={inMarketTotal} />;
                               })
-                              : 'No Data'
+                              : <div className="text-muted"><i className="icon-bulb" /> No Market data available.</div>
                             }
                           </ul>
                         </div>

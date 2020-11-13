@@ -18,6 +18,13 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
     clicks: 0,
     conversions: [],
     impressions: 0,
+    params: {
+      endDate: '',
+      name: '',
+      startDate: '',
+      status: '',
+      url: null,
+    },
   };
   const {activeCampaign, setActiveCampaign} = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -146,7 +153,7 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
                   </div>
                   : <Fragment>
                     <div className="overview-title">
-                      <h5>Overview of {(navCampaignSummary && navCampaignSummary.name) ? navCampaignSummary.name : 'N/A'}</h5>
+                      <h5>Overview of {(navCampaignSummary && navCampaignSummary.params.name) ? navCampaignSummary.params.name : 'N/A'}</h5>
                       <p>Last 7 days</p>
                     </div>
                     <ul className="nav nav-pills nav-fill overview-detail">
