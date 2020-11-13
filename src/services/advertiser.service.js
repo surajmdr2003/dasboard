@@ -86,6 +86,16 @@ class AdvertiserService {
     return await API.post('advertiser', `/${advertiserId}/performance/lifetime`, this.apiRequest);
   }
 
+  async getAdvertiserRecommendation(advertiserId) {
+    const userInfo = await AuthService.getSessionInfo();
+    const accessToken = userInfo.getAccessToken().getJwtToken();
+
+    // Setting up header info
+    this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+    return await API.get('advertiser', `/${advertiserId}/recommendations`, this.apiRequest);
+  }
+
   async getAdvertiserPerformanceCampaigns(advertiserId, dateRangeFilter) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();

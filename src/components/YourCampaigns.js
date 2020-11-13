@@ -19,7 +19,8 @@ const YourCampaigns = () => {
   const [filterDateTitle, setFilterDateTitle] = useState(CLDateFilterRange.label);
   const [campaginList, setCampaginList] = useState([]);
   const [filteredCampaginList, setFilteredCampaginList] = useState([]);
-  const dropDownStatus = [{ id: 1, name: 'ACTIVE' }, { id: 2, name: 'INACTIVE' }, { id: 3, name: 'PAUSED' }];
+  const [activeStatusFilter, setActiveStatusFilter] = useState('Filter By Status');
+  const dropDownStatus = [{ id: 1, name: 'active' }, { id: 2, name: 'inactive' }, { id: 3, name: 'paused' }];
   const [dateFilter, setDateFilter] = useState({
     endDate: CLDateFilterRange.endDate,
     startDate: CLDateFilterRange.startDate,
@@ -31,16 +32,16 @@ const YourCampaigns = () => {
       selector: 'name',
       sortable: true,
       cell: row => (<div className="campaign">
-        <div className="c-name">{(row.name === null || row.name === '') ? 'No Data' : row.name}</div>
+        <div className="c-name">{(row.params.name) ? row.params.name : 'No Data'}</div>
         <div className="c-date">
-          {row.startDate + ' - ' + row.endDate}</div>
+          {row.params.startDate + ' - ' + row.params.endDate}</div>
       </div>),
     },
     {
       name: 'Status',
       selector: 'status',
       sortable: false,
-      cell: row => (<div className={`status ${row.status.toLowerCase()}-campaign`}>{row.status.toLowerCase()}</div>),
+      cell: row => (<div className={`status ${row.params.status.toLowerCase()}-campaign`}>{row.params.status.toLowerCase()}</div>),
     },
     {
       name: 'Impressions',
@@ -133,8 +134,9 @@ const YourCampaigns = () => {
   };
 
   const loadCampaignDataFilterByStatus = (status) => {
-    const filteredCampagins = campaginList.filter(item => item.status === status.name);
-    setFilteredCampaginList(filteredCampagins.map(prepareTableRow));
+    const filteredCampagins = campaginList.filter(item => item.status.toLowerCase() === status.name);
+    setFilteredCampaginList(filteredCampagins);
+    setActiveStatusFilter(status.name);
   };
 
   useEffect(() => {
@@ -153,7 +155,7 @@ const YourCampaigns = () => {
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              <DropdownFilter itemList={dropDownStatus} label="Filter By Status" dropwDownCallBack={loadCampaignDataFilterByStatus} />
+              <DropdownFilter itemList={dropDownStatus} label={activeStatusFilter} dropwDownCallBack={loadCampaignDataFilterByStatus} />
               <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
             </div>
           </div>

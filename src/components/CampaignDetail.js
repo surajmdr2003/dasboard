@@ -1,9 +1,30 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
+import { PropTypes } from 'prop-types';
+import { Link } from 'react-router-dom';
 
-const CampaignDetail = () => {
+// Services
+import CampaignService from '../services/campaign.service';
+
+
+const CampaignDetail = ({campaignDesp}) => {
+  const [showRecommendation, setRecommendation] = useState(false);
+  const [recommendationData, setRecommendationData] = useState({});
+
+  const loadCampaignRecommendation = (campaignId) => {
+    CampaignService.getCampaignRecommendation(campaignId)
+      .then((response) => {
+        setRecommendationData(response.data.length ? response.data[0] : {});
+      })
+      .catch(() => false);
+  };
+
+  useEffect(() => {
+    loadCampaignRecommendation(campaignDesp.id);
+  }, [campaignDesp]);
+
   return (
     <Fragment>
-      <div className="campiagns-info">
+      <div className={'campiagns-info ' + ((!showRecommendation) ? '' : 'd-none')}>
         <div className="campiagns-info-title bb">
           <h4>CAMPAIGN DETAILS</h4>
           <p>Based on campaigns performance</p>
@@ -16,7 +37,7 @@ const CampaignDetail = () => {
             <div className="media-body">
               <div className="data">
                 <h5>Objective</h5>
-                <p>To increase online checking online account opening.</p>
+                <p>{campaignDesp.objective}</p>
               </div>
             </div>
           </li>
@@ -27,7 +48,7 @@ const CampaignDetail = () => {
             <div className="media-body">
               <div className="data">
                 <h5>Impression goal</h5>
-                <p>200,000 per month</p>
+                <p>{campaignDesp.impressionGoal}</p>
               </div>
             </div>
           </li>
@@ -38,17 +59,36 @@ const CampaignDetail = () => {
             <div className="media-body">
               <div className="data">
                 <h5>KPI</h5>
-                <p>Clicks, CTR, Conversion, Account opens</p>
+                <p>{campaignDesp.kpi}</p>
               </div>
             </div>
           </li>
         </ul>
         <div className="text-right">
-          <a href="#" className="btn-link">See Recommendation</a>
+          <a href="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>See Recommendation</a>
+        </div>
+      </div>
+      <div className={'campiagns-info recommendation ' + ((showRecommendation) ? '' : 'd-none')} >
+        <div className="campiagns-info-title bb">
+          <h4>RECOMMENDATIONS</h4>
+          <p>Based on your campaign performance</p>
+        </div>
+        <div className="campiagns-info-data">
+          <h5>{recommendationData.title}</h5>
+          <p>{recommendationData.description}</p>
+        </div>
+        <div className="text-left">
+          <Link to="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>Notify Sales</Link>
         </div>
       </div>
     </Fragment>
   );
 };
+
+// Props validation
+CampaignDetail.propTypes = {
+  campaignDesp: PropTypes.object,
+};
+
 
 export default CampaignDetail;
