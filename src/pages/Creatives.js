@@ -35,15 +35,15 @@ const Creatives = () => {
       sortable: true,
       cell: row => (<div className="campaign-media media">
         {
-          row.name.endsWith('mp4')
+          row.params.name.endsWith('mp4')
             ? <video controls preload="none">
-              <source src={row.assetUrl} type="video/mp4"/>
+              <source src={row.params.url} type="video/mp4"/>
                 Your browser does not support the video tag.
             </video>
-            : <object data={row.assetUrl} />
+            : <object data={row.params.url} />
         }
         <div className="media-body">
-          <p className="mt-0">{(row.name === null || row.name === '') ? 'No Data' : row.name}</p>
+          <p className="mt-0">{(row.params.name === null || row.params.name === '') ? 'No Data' : row.params.name}</p>
         </div>
       </div>),
     },

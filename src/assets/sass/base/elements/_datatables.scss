@@ -9,6 +9,7 @@ table {
 	font-size: size(13);
 	color: $color__table-maintext;
 	margin-bottom: 0;
+	text-transform: capitalize;
 	
 	.rdt_TableHead .rdt_TableCol {
 		@extend th ;
@@ -65,7 +66,9 @@ table {
 
 	.campaign, .page-name {
 		font-weight: normal;
-	
+		.c-name {
+			margin-bottom: 5px;
+		}
 		.c-date {
 			font-size: size(11);
 			color: $color__table-sectext;
