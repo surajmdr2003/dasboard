@@ -26,7 +26,7 @@ const TopCreativeAdsBlock = ({creative}) => {
   };
 
   useEffect(() => {
-    calculateAssetDimensional(creative.assetUrl);
+    calculateAssetDimensional(creative.params.url);
   }, [creative]);
 
   return (
@@ -35,16 +35,16 @@ const TopCreativeAdsBlock = ({creative}) => {
         <div className="card-creative-thumb">
           <span className="badge badge-secondary">{heightWidth}</span>
           {
-            creative.name && creative.name.endsWith('mp4')
+            creative.params.name && creative.params.name.endsWith('mp4')
               ? <video controls preload="none">
-                <source src={creative.assetUrl} type="video/mp4"/>
+                <source src={creative.params.url} type="video/mp4"/>
                   Your browser does not support the video tag.
               </video>
-              : <object data={creative.assetUrl} />
+              : <object data={creative.params.url} />
           }
         </div>
         <div className="card-body">
-          <h5>{(creative.name === null || creative.name === '') ? 'No Data' : creative.name}</h5>
+          <h5>{(creative.params.name === null || creative.params.name === '') ? 'No Data' : creative.params.name}</h5>
           <ul>
             <li><strong>Impressions</strong>{creative.impressions.toLocaleString()}</li>
             <li><strong>Clicks</strong>{creative.clicks.toLocaleString()}</li>

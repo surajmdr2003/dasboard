@@ -13,7 +13,7 @@ const TableLandingPages = ({landingPages}) => {
       selector: 'name',
       sortable: true,
       cell: row => (<div className={`page-name ${(activePageId === row.id) ? 'active' : ''}` } onClick={() => loadPageOnMobile(row)}>
-        {(row.name === null || row.name === '') ? 'No Data' : row.name}
+        {(row.params.name === null || row.params.name === '') ? 'No Data' : row.params.name}
       </div>),
     },
     {
@@ -64,7 +64,7 @@ const TableLandingPages = ({landingPages}) => {
    * @param {Object} pageObj
    */
   const loadPageOnMobile = (pageObj) => {
-    setPageUrl(pageObj.landingPageURL);
+    setPageUrl(pageObj.params.url);
     setActivePageId(pageObj.id);
   };
 
