@@ -1,19 +1,43 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
+import cogoToast from 'cogo-toast';
 
 // Services
 import AdvertiserService from '../../services/advertiser.service';
-
+import NotificationService from '../../services/notification.service';
 
 const LifeTimeSummary = ({ advertiserId }) => {
   const [showRecommendation, setRecommendation] = useState(false);
-  const [recommendationData, setRecommendationData] = useState({});
+  const [recommendationData, setRecommendationData] = useState([]);
   const [summaryData, setSummaryData] = useState({
     clicks: 0,
     impressions: 0,
     conversions: [],
   });
+
+  const makeApiCall = (event, notificationId, actionType) => {
+    event.preventDefault();
+    let linkWindow;
+
+    NotificationService.getNotificationAction(notificationId)
+      .then((response) => {
+        if (actionType === 'STATIC_URL') {
+          // Redirect to the report url
+          linkWindow = window.open('', '_blank');
+          linkWindow.location = response.data.value;
+        }
+
+        if (actionType === 'API_CALL') {
+          cogoToast.success(response.data.value, {position: 'bottom-center', hideAfter: 3});
+        }
+      })
+      .catch(() => console.log('No recommendation available'));
+  };
+
+  const getActionTypeLabel = (notificationId, actionType, action) => {
+    return actionType !== 'NO_ACTION' ? <a href="#" onClick={(e) => makeApiCall(e, notificationId, actionType)} className="btn-link">{action}</a> : '';
+  };
 
   /**
    * Call API for Advertiser's life time data
@@ -47,10 +71,7 @@ const LifeTimeSummary = ({ advertiserId }) => {
   const loadRecommendation = (advertiserUserId) => {
     AdvertiserService.getAdvertiserRecommendation(advertiserUserId)
       .then((response) => {
-        setRecommendationData(response.data.length ? response.data[0] : {
-          title: '',
-          description: '',
-        });
+        setRecommendationData(response.data.length ? response.data : []);
       })
       .catch(() => false);
   };
@@ -126,12 +147,25 @@ const LifeTimeSummary = ({ advertiserId }) => {
           <h4>RECOMMENDATIONS</h4>
           <p>Based on your campaign performance</p>
         </div>
-        <div className="campiagns-info-data">
-          <h5>{recommendationData.title}</h5>
-          <p>{recommendationData.description}</p>
+        <div className="media-body">
+          <ul className="list-unstyled ">
+            {
+              recommendationData.map((rec) => {
+                return (<li key={rec.id} className="media bb">
+                  <div className="campiagns-info-data">
+                    <h5>{rec.title}</h5>
+                    <p>{rec.description}</p>
+                  </div>
+                  <div className="text-left">
+                    {getActionTypeLabel(rec.id, rec.actionType, rec.actionName)}
+                  </div>
+                </li>);
+              })
+            }
+          </ul>
         </div>
-        <div className="text-left">
-          <Link to="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>Notify Sales</Link>
+        <div className="text-right">
+          <Link to="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>Hide Recommendation</Link>
         </div>
       </div>
     </Fragment>

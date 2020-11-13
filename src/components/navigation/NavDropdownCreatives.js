@@ -27,7 +27,7 @@ const NavDropdownCreatives = ({campaignNavItems}) => {
    */
   const loadTopFiveCreativesData = (campaignId) => {
     setIsLoading(true);
-    CampaignService.getCampaignPerformanceAssets(campaignId, {startDate: start, endDate: end, top: 5})
+    CampaignService.getCampaignPerformanceAssets(campaignId, {startDate: start, endDate: end, top: 4})
       .then((response) => {
         setTopCreatives(response.data.summary);
       })
@@ -71,7 +71,7 @@ const NavDropdownCreatives = ({campaignNavItems}) => {
 
   useEffect(() => {
     campaignNavItems.length && loadTopFiveCreativesData(campaignNavItems[0].id);
-  }, [campaignNavItems]);
+  }, [campaignNavItems.length]);
 
   return (
     <div className="dropdown-full-width">
