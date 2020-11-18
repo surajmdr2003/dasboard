@@ -1,21 +1,46 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
+import cogoToast from 'cogo-toast';
 
 // Services
 import CampaignService from '../services/campaign.service';
+import NotificationService from '../services/notification.service';
 
 
 const CampaignDetail = ({campaignDesp}) => {
   const [showRecommendation, setRecommendation] = useState(false);
-  const [recommendationData, setRecommendationData] = useState({});
+  const [recommendationData, setRecommendationData] = useState([]);
 
   const loadCampaignRecommendation = (campaignId) => {
     CampaignService.getCampaignRecommendation(campaignId)
       .then((response) => {
-        setRecommendationData(response.data.length ? response.data[0] : {});
+        setRecommendationData(response.data.length ? response.data : []);
       })
       .catch(() => false);
+  };
+
+  const makeApiCall = (event, notificationId, actionType) => {
+    event.preventDefault();
+    let linkWindow;
+
+    NotificationService.getNotificationAction(notificationId)
+      .then((response) => {
+        if (actionType === 'STATIC_URL') {
+          // Redirect to the report url
+          linkWindow = window.open('', '_blank');
+          linkWindow.location = response.data.value;
+        }
+
+        if (actionType === 'API_CALL') {
+          cogoToast.success(response.data.value, {position: 'bottom-center', hideAfter: 3});
+        }
+      })
+      .catch(() => console.log('No recommendation available'));
+  };
+
+  const getActionTypeLabel = (notificationId, actionType, action) => {
+    return actionType !== 'NO_ACTION' ? <a href="#" onClick={(e) => makeApiCall(e, notificationId, actionType)} className="btn-link">{action}</a> : '';
   };
 
   useEffect(() => {
@@ -73,12 +98,25 @@ const CampaignDetail = ({campaignDesp}) => {
           <h4>RECOMMENDATIONS</h4>
           <p>Based on your campaign performance</p>
         </div>
-        <div className="campiagns-info-data">
-          <h5>{recommendationData.title}</h5>
-          <p>{recommendationData.description}</p>
+        <div className="media-body">
+          <ul className="list-unstyled ">
+            {
+              recommendationData.map((rec) => {
+                return (<li key={rec.id} className="bb">
+                  <div className="campiagns-info-data">
+                    <h5>{rec.title}</h5>
+                    <p>{rec.description}</p>
+                  </div>
+                  <div className="text-left mb-3">
+                    {getActionTypeLabel(rec.id, rec.actionType, rec.actionName)}
+                  </div>
+                </li>);
+              })
+            }
+          </ul>
         </div>
-        <div className="text-left">
-          <Link to="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>Notify Sales</Link>
+        <div className="text-right">
+          <Link to="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>Hide Recommendation</Link>
         </div>
       </div>
     </Fragment>
