@@ -27,10 +27,10 @@ const MapComponent = (props) => {
     response.target && response.target.data.forEach((data, index) => {
       if (data.type === 'circle') {
         drawings.push((
-          <Circle key={data.center.lat + data.center.lng + index} center={[data.center.lat, data.center.lng]} color="blue" radius={data.radius}>
+          <Circle key={data.center.lat + data.center.lng + index} center={[data.center.lat, data.center.lng]} color="blue" radius={(data.radius * 1000)}>
             <Popup>
               <div>Target: {response.target.name}</div>
-              <div>Radius: <strong>{data.radius.toFixed(2)} m</strong></div>
+              <div>Radius: <strong>{(data.radius * 1000).toFixed(2)} m</strong></div>
             </Popup>
           </Circle>
         ));
