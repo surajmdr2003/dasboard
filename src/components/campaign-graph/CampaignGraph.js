@@ -37,6 +37,7 @@ const initialData = {
     impressions: 0,
     conversions: [],
     change: [],
+    params: null,
   },
   campaignInfo: {
     active: 0,
@@ -225,8 +226,9 @@ const CampaignGraph = (props) => {
       startDate: moment(startDate).format('YYYY-MM-DD'),
       endDate: moment(endDate).format('YYYY-MM-DD'),
     });
-    setChartDate((moment(startDate).format('MMM DD YYYY') + ' - ' + moment(endDate).format('MMM DD YYYY')).toString());
+    setChartDate(range);
     setState({ ...state, isLoading: true });
+
     const response = await loadAdvertiserPerformanceData(user.id, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
     const formatedGraphData = reformatDataForGraph(response.data.data);
 
@@ -239,6 +241,7 @@ const CampaignGraph = (props) => {
         impressions: 0,
         conversions: [],
         change: [],
+        params: null,
       },
     });
   };
@@ -290,7 +293,7 @@ const CampaignGraph = (props) => {
               <div className="col-md-6">
                 {
                   (props.campaignId)
-                    ? <SingleCampaignInfo campaignDetail={currentCampaign} chartDate={chartDate} />
+                    ? <SingleCampaignInfo campaignDetail={currentCampaign} chartDate={state.summaryData.params ? (state.summaryData.startDate + ' - ' + state.summaryData.endDate) : (state.isLoading ? ' xxxx-xx-xx - xxxx-xx-xx' : chartDate)} />
                     : <AllCampaignInfo campaigns={state.campaignInfo} />
                 }
               </div>

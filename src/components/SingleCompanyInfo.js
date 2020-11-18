@@ -10,7 +10,7 @@ const SingleCampaignInfo = ({campaignDetail, chartDate}) => {
       ? <Fragment>
         <h4>{campaignDetail.name}</h4>
         <ul className="campaigns-datas nav">
-          <li>From {chartDate }</li>
+          <li>From {chartDate}</li>
           <li className={`${campaignDetail.status.toLowerCase()}-campaign`}>{campaignDetail.status}</li>
         </ul>
       </Fragment>
