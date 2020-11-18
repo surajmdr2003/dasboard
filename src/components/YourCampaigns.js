@@ -82,7 +82,7 @@ const YourCampaigns = () => {
 
   const prepareTableRow = (row) => {
     row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
-    row.conversions = row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString();
+    row.conversions = Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString() : row.conversions.toLocaleString();
     row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
 
     return row;

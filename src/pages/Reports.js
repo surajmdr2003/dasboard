@@ -297,6 +297,7 @@ const Reports = () => {
                       type="text"
                       className="form-control"
                       placeholder="Type your message here"
+                      ref={register()}
                     />
                   </div>
                   <div className="form-group mb-0">
