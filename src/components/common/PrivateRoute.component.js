@@ -12,8 +12,7 @@ const PrivateRoute = ({ component: Component, ...args }) => {
   useEffect(() => {
     setState({...state, isLoading: true});
     Auth.currentAuthenticatedUser()
-      .then(session => {
-        console.log(session);
+      .then(() => {
         setState({
           isLoading: false,
           isLoggedIn: true,

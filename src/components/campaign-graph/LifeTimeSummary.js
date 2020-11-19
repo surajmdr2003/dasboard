@@ -151,12 +151,12 @@ const LifeTimeSummary = ({ advertiserId }) => {
           <ul className="list-unstyled ">
             {
               recommendationData.map((rec) => {
-                return (<li key={rec.id} className="media bb">
+                return (<li key={rec.id} className="bb">
                   <div className="campiagns-info-data">
                     <h5>{rec.title}</h5>
                     <p>{rec.description}</p>
                   </div>
-                  <div className="text-left">
+                  <div className="text-left mb-3">
                     {getActionTypeLabel(rec.id, rec.actionType, rec.actionName)}
                   </div>
                 </li>);
