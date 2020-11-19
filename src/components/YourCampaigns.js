@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ProtoTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import DataTable from 'react-data-table-component';
@@ -13,7 +14,7 @@ import AdvertiserService from '../services/advertiser.service';
 import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 
-const YourCampaigns = () => {
+const YourCampaigns = ({top}) => {
   const { user, setActiveCampaign, CLDateFilterRange, setCLDateFilterRange } = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(CLDateFilterRange.label);
@@ -24,6 +25,7 @@ const YourCampaigns = () => {
   const [dateFilter, setDateFilter] = useState({
     endDate: CLDateFilterRange.endDate,
     startDate: CLDateFilterRange.startDate,
+    top: top,
   });
 
   const [columns] = useState([
@@ -149,7 +151,7 @@ const YourCampaigns = () => {
         <div className="row align-items-center filter-block">
           <div className="col-md-5">
             <div className="block-title">
-              Your Campaigns
+              Your Campaigns :
               <Link to="/dashboard/campaigns" className="btn-link">See All</Link>
             </div>
           </div>
@@ -178,6 +180,10 @@ const YourCampaigns = () => {
       </div>
     </section>
   );
+};
+
+YourCampaigns.propTypes = {
+  top: ProtoTypes.string,
 };
 
 export default YourCampaigns;

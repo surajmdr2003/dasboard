@@ -12,7 +12,7 @@ const Dashboard = () => {
     <Fragment>
       <PageTitleWithOutFilter title="Account Overview" />
       <CampaignGraph />
-      <YourCampaigns />
+      <YourCampaigns top="5"/>
       <TopCreatives />
       <TopLandingPages />
     </Fragment>
