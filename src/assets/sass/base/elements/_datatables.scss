@@ -115,6 +115,18 @@ table {
     }
 }
 
+.table-landingpage {
+    .rdt_TableRow {
+        > div:first-child {
+            padding-left: 0;
+            min-width: 160px;
+        }
+    }
+    .rdt_TableHeadRow > div:first-child {
+        min-width: 180px;
+    }
+}
+
 .rdt_TableHeader {
     display: none !important;
 }
