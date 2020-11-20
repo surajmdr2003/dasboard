@@ -12,7 +12,7 @@ const TableLandingPages = ({landingPages}) => {
       name: 'Page name',
       selector: 'name',
       sortable: true,
-      cell: row => (<div className={`page-name ${(activePageId === row.id) ? 'active' : ''}` } onClick={() => loadPageOnMobile(row)}>
+      cell: row => (<div data-tag="allowRowEvents" className={`page-name`} onClick={() => loadPageOnMobile(row)}>
         {(row.params.name) ?  row.params.name : 'No Data'  }
       </div>),
     },
@@ -80,15 +80,26 @@ const TableLandingPages = ({landingPages}) => {
     setActivePageId(pageObj.id);
   };
 
+  const conditionalRowStyles = [
+    {
+      when: row => row.id === activePageId,
+      style: {
+        color: '#22a6de',
+        fontWeight: 'bold',
+      },
+    },
+  ];
+
   return (
     <div className="card card-table">
       <div className="row">
         <div className="col-md-8">
-          <div className="table-responsive">
+          <div className="table-responsive table-landingpage">
             <DataTable
               columns={columns}
               data={landingPages.map(prepareTableRow)}
               persistTableHead
+              conditionalRowStyles={conditionalRowStyles}
               pagination={landingPages.length > 10 ? true : false}
             />
           </div>
