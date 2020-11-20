@@ -35,8 +35,8 @@ const TopCreativeAdsBlock = ({creative}) => {
         <div className="card-creative-thumb">
           <span className="badge badge-secondary">{heightWidth}</span>
           {
-            creative.params.name && creative.params.name.endsWith('mp4')
-              ? <video controls preload="none" autostart="false">
+            creative.params.url && creative.params.url.endsWith('mp4')
+              ? <video controls preload="none">
                 <source src={creative.params.url} type="video/mp4"/>
                   Your browser does not support the video tag.
               </video>
