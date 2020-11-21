@@ -172,7 +172,7 @@ const YourCampaigns = ({top}) => {
               </div>
               : <DataTable
                 columns={columns}
-                data={filteredCampaginList.splice(0, 5)}
+                data={filteredCampaginList}
                 persistTableHead
               />
           }
