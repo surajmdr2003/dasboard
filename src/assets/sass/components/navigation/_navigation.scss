@@ -160,22 +160,29 @@ li.menu-item-has-children {
         border: solid 1px #eaeaea;
     }
 
-    h6 { 
+    .user-name,
+    .user-name:hover {
+        display: inline-block;
+        color: #4c4c4c;
         font-size: size(13);
+        font-weight: 700;
         margin-bottom: 0;
         max-width: size(140);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
 
-        &:after {
+    span {
+        &.dropdown-icon:after {
             content: '';
             border-top: 5px solid $color__icon-carpet;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             display: inline-block;
             vertical-align: middle;
-            margin-left: 5px;
+            margin: 0 0 12px 5px;
+            color: #4c4c4c;
         }
     }
 }
