@@ -12,7 +12,7 @@ const TableLandingPages = ({landingPages}) => {
       name: 'Page name',
       selector: 'name',
       sortable: true,
-      cell: row => (<div data-tag="allowRowEvents" className={'page-name'} onClick={() => loadPageOnMobile(row)}>
+      cell: row => (<div className={'page-name'} onClick={() => loadPageOnMobile(row)}>
         {(row.params.name) ?  row.params.name : 'No Data'  }
       </div>),
     },
