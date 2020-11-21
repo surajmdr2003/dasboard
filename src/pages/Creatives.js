@@ -36,7 +36,7 @@ const Creatives = () => {
       sortable: true,
       cell: row => (<div className="campaign-media media">
         {
-          row.params.name.endsWith('mp4')
+          row.params.url.endsWith('mp4')
             ? <video controls preload="none">
               <source src={row.params.url} type="video/mp4"/>
                 Your browser does not support the video tag.

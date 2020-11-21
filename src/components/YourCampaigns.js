@@ -119,8 +119,9 @@ const YourCampaigns = ({top}) => {
       startDate: moment(startDate).format('YYYY-MM-DD'),
       endDate: moment(endDate).format('YYYY-MM-DD'),
     });
-    setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
-    campaignsData({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
+    const fiterParams = { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD'), top: top };
+    setDateFilter(fiterParams);
+    campaignsData(fiterParams);
   };
 
   /**
@@ -171,9 +172,8 @@ const YourCampaigns = ({top}) => {
               </div>
               : <DataTable
                 columns={columns}
-                data={filteredCampaginList}
+                data={filteredCampaginList.splice(0, 5)}
                 persistTableHead
-                pagination={filteredCampaginList.length > 10 ? true : false}
               />
           }
         </div>

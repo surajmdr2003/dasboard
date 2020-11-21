@@ -8,7 +8,7 @@ import CampaignService from '../services/campaign.service';
 import NotificationService from '../services/notification.service';
 
 
-const CampaignDetail = ({campaignDesp}) => {
+const CampaignDetail = ({ campaignDesp }) => {
   const [showRecommendation, setRecommendation] = useState(false);
   const [recommendationData, setRecommendationData] = useState([]);
 
@@ -33,7 +33,7 @@ const CampaignDetail = ({campaignDesp}) => {
         }
 
         if (actionType === 'API_CALL') {
-          cogoToast.success(response.data.value, {position: 'bottom-center', hideAfter: 3});
+          cogoToast.success(response.data.value, { position: 'bottom-center', hideAfter: 3 });
         }
       })
       .catch(() => cogoToast.error('No recommendation available', {position: 'bottom-left'}));
@@ -100,8 +100,8 @@ const CampaignDetail = ({campaignDesp}) => {
         </div>
         <div className="media-body">
           <ul className="list-unstyled ">
-            {
-              recommendationData.map((rec) => {
+            {recommendationData.length
+              ? recommendationData.map((rec) => {
                 return (<li key={rec.id} className="bb">
                   <div className="campiagns-info-data">
                     <h5>{rec.title}</h5>
@@ -112,6 +112,11 @@ const CampaignDetail = ({campaignDesp}) => {
                   </div>
                 </li>);
               })
+              : <li className="bb">
+                <div className="campiagns-info-data">
+                  <p>There are no recommendation available for the campaign</p>
+                </div>
+              </li>
             }
           </ul>
         </div>

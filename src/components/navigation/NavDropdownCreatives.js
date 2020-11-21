@@ -45,7 +45,7 @@ const NavDropdownCreatives = ({campaignNavItems}) => {
             <div className="card-creative-thumb">
               <span className="badge badge-secondary">{calculateAssetDimensional(creative.params.url)}</span>
               {
-                creative.params.name && creative.params.name.endsWith('mp4')
+                creative.params.url && creative.params.url.endsWith('mp4')
                   ? <video controls preload="none">
                     <source src={creative.params.url} type="video/mp4"/>
                       Your browser does not support the video tag.
