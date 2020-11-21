@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import moment from 'moment';
+import cogoToast from 'cogo-toast';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -28,7 +29,7 @@ const LandingPages = () => {
    */
   const loadLandingPagesData = (dateRangeFilter) => {
     if (activeCampaign && activeCampaign.id === null) {
-      return console.log('No Active campaign selected!');
+      return cogoToast.warn('No Active campaign selected!', {position: 'bottom-left'});
     }
 
     setIsLoading(true);

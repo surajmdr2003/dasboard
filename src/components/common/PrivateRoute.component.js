@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { Auth } from 'aws-amplify';
+import cogoToast from 'cogo-toast';
 
 const PrivateRoute = ({ component: Component, ...args }) => {
   const [state, setState] = useState({
@@ -19,7 +20,7 @@ const PrivateRoute = ({ component: Component, ...args }) => {
         });
       })
       .catch(() => {
-        console.log('Not signed in yet!');
+        cogoToast.warn('User Not Signed In!', {position: 'bottom-left'});
         setState({
           isLoading: false,
           isLoggedIn: false,

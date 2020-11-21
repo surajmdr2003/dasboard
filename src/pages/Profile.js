@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import cogoToast from 'cogo-toast';
 
 /** Components */
 import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
@@ -20,6 +21,7 @@ const Profile = () => {
       address: '',
       city: '',
       state: '',
+      icon: '',
       zipCode: '91790',
       website: null,
       campaigns: {
@@ -37,7 +39,7 @@ const Profile = () => {
     setState({...state, isLoading: true});
     AdvertiserService.getAdvertiserProfile(user.id)
       .then(response => setState({...state, isLoading: false, profile: response.data}))
-      .catch((error) => console.log(error));
+      .catch(() => cogoToast.error('Unable to load user profile.', {position: 'bottom-left'}));
   }, [user.id]);
 
   return (
@@ -61,11 +63,11 @@ const Profile = () => {
                         <li>
                           <div className="media">
                             <span className="icon-box md-box icon-profile">
-                              <img src="/assets/images/avatar.png" alt="company logo"/>
+                              <img src={(state.profile.icon ? state.profile.icon : '/assets/images/avatar.png')} alt={user.name}/>
                             </span>
                             <div className="media-body">
                               <h5>{state.profile.name}</h5>
-                              <p>{state.profile.email} | +1 (213) 393-3010 <br/> {state.profile.address}, {state.profile.city} {state.profile.state}</p>
+                              <p>{state.profile.email} | +1 (213) 393-3010 <br/> {state.profile.address} {(state.profile.city || state.profile.state) ? ', ' : ''} {state.profile.city} {state.profile.state}</p>
                               <a href="#" className="btn-link">Edit Info</a>
                             </div>
                           </div>

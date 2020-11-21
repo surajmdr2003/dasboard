@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import DataTable from 'react-data-table-component';
+import cogoToast from 'cogo-toast';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -35,7 +36,7 @@ const Creatives = () => {
       sortable: true,
       cell: row => (<div className="campaign-media media">
         {
-          row.params.name.endsWith('mp4')
+          row.params.url.endsWith('mp4')
             ? <video controls preload="none">
               <source src={row.params.url} type="video/mp4"/>
                 Your browser does not support the video tag.
@@ -91,7 +92,7 @@ const Creatives = () => {
    */
   const loadCreativesData = (dateRangeFilter) => {
     if (activeCampaign && activeCampaign.id === null) {
-      return console.log('No Active campaign selected!');
+      return cogoToast.warn('No Active campaign selected!', {position: 'bottom-left'});
     }
 
     setIsLoading(true);

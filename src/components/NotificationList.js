@@ -23,7 +23,7 @@ const NavigationList = (props) => {
       .then((response) => {
         setNotifications((props.displaySummary ? response.data.slice(0, 3) : response.data) || []);
       })
-      .catch(() => console.log('No Notifications available for user: ' + user.id));
+      .catch(() => cogoToast.error('No Notifications available for user: ' + user.id, {position: 'bottom-left'}));
   };
 
   const makeApiCall = (event, notificationId, actionType) => {
@@ -42,7 +42,7 @@ const NavigationList = (props) => {
           cogoToast.success(response.data.value, {position: 'bottom-center', hideAfter: 3});
         }
       })
-      .catch(() => console.log('No Notifications available for user: ' + user.id));
+      .catch(() => ('No Notifications available for user: ' + user.id));
   };
 
   const getActionTypeLabel = (notificationId, actionType, action) => {
