@@ -293,7 +293,7 @@ const CampaignGraph = (props) => {
               <div className="col-md-6">
                 {
                   (props.campaignId)
-                    ? <SingleCampaignInfo campaignDetail={currentCampaign} chartDate={state.summaryData.params ? (state.summaryData.startDate + ' - ' + state.summaryData.endDate) : (state.isLoading ? ' xxxx-xx-xx - xxxx-xx-xx' : chartDate)} />
+                    ? <SingleCampaignInfo campaignDetail={currentCampaign} chartDate={state.summaryData.params ? (state.summaryData.params.startDate + ' - ' + state.summaryData.params.endDate) : (state.isLoading ? ' xxxx-xx-xx - xxxx-xx-xx' : chartDate)} />
                     : <AllCampaignInfo campaigns={state.campaignInfo} />
                 }
               </div>
