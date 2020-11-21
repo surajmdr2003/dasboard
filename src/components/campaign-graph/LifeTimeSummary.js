@@ -167,6 +167,7 @@ const LifeTimeSummary = ({ advertiserId }) => {
                 </div>
               </li>
             }
+
           </ul>
         </div>
         <div className="text-right">
