@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import C3Chart from '../components/common/C3Chart';
 import 'c3/c3.css';
+import cogoToast from 'cogo-toast';
 
 /** Service */
 import StatsService from '../services/stats.service';
@@ -82,7 +83,7 @@ const Stats = () => {
   */
   const getCampaignMonths = () => {
     if (activeCampaign && activeCampaign.id === null) {
-      console.log('No Active campaign selected!');
+      cogoToast.error('No Active campaign selected!', {position: 'bottom-left'});
       setCampaignMonths([]);
       setState({
         isLoading: false,
@@ -100,7 +101,7 @@ const Stats = () => {
             setState({ ...state, isLoading: false });
           }
         })
-        .catch(() => false);
+        .catch((error) => cogoToast.error(error.message, {position: 'bottom-left'}));
     }
   };
 
@@ -141,7 +142,7 @@ const Stats = () => {
           ...options,
         });
       })
-      .catch(() => false);
+      .catch((error) => cogoToast.error(error.message, {position: 'bottom-left'}));
   };
 
   const affinityTotal = state.affinity.length ? state.affinity.map(item => item.value).reduce((prev, next) => prev + next) : 0;

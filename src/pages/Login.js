@@ -1,6 +1,7 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import cogoToast from 'cogo-toast';
 
 // AWS Amplify Related
 import { Auth } from 'aws-amplify';
@@ -25,7 +26,7 @@ const Login = (props) => {
         props.history.push('/dashboard');
       })
       .catch(() => {
-        console.log('Not signed in yet!');
+        cogoToast.warn('User Not Signed In!', {position: 'bottom-left'});
         setIsLoading(false);
       });
   }, []);

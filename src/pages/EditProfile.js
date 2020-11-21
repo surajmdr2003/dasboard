@@ -7,7 +7,9 @@ import PageTitleWithOutFilter from '../components/PageTitleWithOutFilter';
 
 const EditProfile = () => {
   const { register, handleSubmit, errors, isSubmitting } = useForm();
-  const onSubmit = data => console.log(data);
+  const onSubmit = (/* data */) => {
+    // TODO DO something with the submitte data
+  };
 
   return (
     <Fragment>

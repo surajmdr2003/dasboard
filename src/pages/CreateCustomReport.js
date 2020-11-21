@@ -5,9 +5,9 @@ import {Link} from 'react-router-dom';
 import DatePickerField from '../components/form-fields/DatePickerField';
 
 const CreateCustomReport = () => {
-  const DateCallback = (startDate, endDate) => {
-    const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
-    console.log(range);
+  const handleDateChange = (/* startDate, endDate */) => {
+    // TODO use these params as required
+    // const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
   };
 
   return (
@@ -52,7 +52,7 @@ const CreateCustomReport = () => {
                       </div>
                       <div className="form-group form-report">
                         <label><i className="icon-calendar" />Select date range</label>
-                        <DatePickerField applyCallback={DateCallback} label={'Life Time'}/>
+                        <DatePickerField applyCallback={handleDateChange} label={'Life Time'}/>
                       </div>
                       <button className="btn btn-primary">Create Report</button>
                     </form>

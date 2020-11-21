@@ -2,6 +2,7 @@ import React, {Fragment, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import {Auth} from 'aws-amplify';
+import cogoToast from 'cogo-toast';
 
 // Global context
 import GlobalContext from '../context/GlobalContext';
@@ -48,7 +49,7 @@ const AdminPages = ({ history, children }) => {
         }
       })
       .catch(() => {
-        console.log('Not signed in yet!');
+        cogoToast.warn('User Not Signed In!', {position: 'bottom-left'});
         history.push('/login');
       });
   }, []);

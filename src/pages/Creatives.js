@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import DataTable from 'react-data-table-component';
+import cogoToast from 'cogo-toast';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -91,7 +92,7 @@ const Creatives = () => {
    */
   const loadCreativesData = (dateRangeFilter) => {
     if (activeCampaign && activeCampaign.id === null) {
-      return console.log('No Active campaign selected!');
+      return cogoToast.warn('No Active campaign selected!', {position: 'bottom-left'});
     }
 
     setIsLoading(true);
