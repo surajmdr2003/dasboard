@@ -36,7 +36,7 @@ const CampaignDetail = ({campaignDesp}) => {
           cogoToast.success(response.data.value, {position: 'bottom-center', hideAfter: 3});
         }
       })
-      .catch(() => console.log('No recommendation available'));
+      .catch(() => cogoToast.error('No recommendation available', {position: 'bottom-left'}));
   };
 
   const getActionTypeLabel = (notificationId, actionType, action) => {
