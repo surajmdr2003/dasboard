@@ -32,7 +32,7 @@ const LifeTimeSummary = ({ advertiserId }) => {
           cogoToast.success(response.data.value, {position: 'bottom-center', hideAfter: 3});
         }
       })
-      .catch(() => console.log('No recommendation available'));
+      .catch(() => cogoToast.error('No Recommendations Available', {position: 'bottom-left'}));
   };
 
   const getActionTypeLabel = (notificationId, actionType, action) => {
@@ -51,7 +51,7 @@ const LifeTimeSummary = ({ advertiserId }) => {
           conversions: [],
         });
       })
-      .catch(() => false);
+      .catch(() => cogoToast.error('No Summary Data Available', {position: 'bottom-left'}));
   };
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const LifeTimeSummary = ({ advertiserId }) => {
       .then((response) => {
         setRecommendationData(response.data.length ? response.data : []);
       })
-      .catch(() => false);
+      .catch(() => cogoToast.error('No Recommendations Available', {position: 'bottom-left'}));
   };
 
   return (

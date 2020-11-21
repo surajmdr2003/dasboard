@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
+import cogoToast from 'cogo-toast';
 
 // Third party
 import PubSub from 'pubsub-js';
@@ -39,7 +40,7 @@ const Navigation = () => {
         setActiveCampaign(response.data.length ? response.data[0] : initCampaigns);
         setCampaignList(response.data);
       })
-      .catch(() => console.log('No campaigns available for user: ' + user.id));
+      .catch(() => cogoToast.error('No campaigns available for user: ' + user.id, {position: 'bottom-left'}));
   };
 
   /**
@@ -69,9 +70,10 @@ const Navigation = () => {
    * Update current User in Global Context and localStorage
    * @param {*} switchedUser
    */
-  const updateUser = (switchedUser) => {
-    Storage.setItem('current:user', btoa(JSON.stringify({ ...user, ...switchedUser })));
-    setUser({ ...user, ...switchedUser });
+  const updateUser = async(switchedUser) => {
+    const userInfo = await AdvertiserService.getAdvertiserProfile(switchedUser.id);
+    Storage.setItem('current:user', btoa(JSON.stringify({ ...user, ...userInfo.data })));
+    setUser({ ...user, ...userInfo.data });
   };
 
   /**
@@ -80,6 +82,7 @@ const Navigation = () => {
   const signOut = (event) => {
     event.preventDefault();
     Storage.removeItem('current:user');
+    cogoToast.success('You are signed out successsfully!', {position: 'bottom-center'});
     Auth.signOut();
   };
 
@@ -182,8 +185,9 @@ const Navigation = () => {
                     className="profile-icon align-self-center mr-3"
                     alt={user.name}
                   />
-                  <div className="media-body  align-self-center">
-                    <h6 className="mt-0">{user ? user.name : 'Guest'}</h6>
+                  <div className="media-body align-self-center">
+                    <span style={{'maxWidth': '120px'}} className="user-name mt-0">{user ? user.name : 'Guest'}</span>
+                    <span className="mt-0 dropdown-icon">&nbsp;</span>
                   </div>
                 </div>
               </Dropdown.Toggle>

@@ -19,7 +19,7 @@ const TopCreativeAdsBlock = ({creative}) => {
     const img = new Image();
     img.src = asset;
     // Important to use function decleration for "this" scope
-    img.onload = function() {
+    img.onload = function calculateSize() {
       setHeightWidth(this.width + '*' + this.height);
     };
     return (img.width + '*' + img.height);
