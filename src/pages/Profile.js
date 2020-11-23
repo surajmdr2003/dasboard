@@ -116,7 +116,7 @@ const Profile = () => {
                             </div>
                           </div>
                         </li>
-                        <li>
+                        {/* <li>
                           <div className="media">
                             <span className="icon-box md-box icon-billing">
                               <i className="icon-report" />
@@ -124,10 +124,10 @@ const Profile = () => {
                             <div className="media-body">
                               <h5>Billing History</h5>
                               <p>12 bills raised <br/>Last billed on 14th Aug 2020 | Next bill on 14th Sep 2020</p>
-                              {/* <a href="#" className="btn-link">View Receipts</a> */}
+                              <a href="#" className="btn-link">View Receipts</a>
                             </div>
                           </div>
-                        </li>
+                        </li> */}
                       </ul>
                   }
                 </div>
