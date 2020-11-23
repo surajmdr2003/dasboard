@@ -47,8 +47,8 @@ const DatePickerField = (props) => {
   return (
     <DateTimeRangeContainer
       ranges={ranges}
-      start={start}
-      end={end}
+      start={moment(start).subtract(1, 'months')}
+      end={moment(end)}
       local={local}
       style={datePickerStyle}
       noMobileMode={true}
