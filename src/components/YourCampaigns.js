@@ -152,7 +152,7 @@ const YourCampaigns = ({top}) => {
         <div className="row align-items-center filter-block">
           <div className="col-md-5">
             <div className="block-title">
-              Your Campaigns :
+              Your Campaigns
               <Link to="/dashboard/campaigns" className="btn-link">See All</Link>
             </div>
           </div>

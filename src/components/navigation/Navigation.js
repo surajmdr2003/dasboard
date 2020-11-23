@@ -193,9 +193,9 @@ const Navigation = () => {
               </Dropdown.Toggle>
               <Dropdown.Menu alignRight="right" className="profile-dropdown-menu">
                 <Dropdown.Item onClick={() => history.push('/dashboard/profile')}>Profile</Dropdown.Item>
-                <Dropdown.Item onClick={() => history.push('#')}>Payment setting</Dropdown.Item>
-                <Dropdown.Item onClick={() => history.push('/dashboard/billing')}>Billing history</Dropdown.Item>
-                <Dropdown.Item onClick={() => history.push('#')}>Contact us</Dropdown.Item>
+                {/* <Dropdown.Item onClick={() => history.push('#')}>Payment setting</Dropdown.Item> */}
+                {/* <Dropdown.Item onClick={() => history.push('/dashboard/billing')}>Billing history</Dropdown.Item> */}
+                {/* <Dropdown.Item onClick={() => history.push('#')}>Contact us</Dropdown.Item> */}
                 <Dropdown.Item onClick={(e) => signOut(e)}>Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
