@@ -50,7 +50,7 @@ const Campaign = () => {
                   <PageTitleCampaignDropdown pageName="Campaign Detail Page" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
                 </div>
                 <div className="col-md-6 text-right">
-                  <a href="#" onClick={(e) => loadCampaignReport(e, activeCampaign.id)} className="btn btn-link btn-download-report" target="_blank">
+                  <a href="#" onClick={(e) => loadCampaignReport(e, activeCampaign.id)} className="btn" target="_blank">
                     {isLoading ? <span className="spinner-grow spinner-grow-sm" role="status"> <span className="sr-only">Loading...</span></span> : ''}
                     {/* {' '} Download Report */}</a>
                 </div>
