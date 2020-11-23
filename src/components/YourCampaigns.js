@@ -137,7 +137,7 @@ const YourCampaigns = ({top}) => {
   };
 
   const loadCampaignDataFilterByStatus = (status) => {
-    const filteredCampagins = campaginList.filter(item => item.status.toLowerCase() === status.name);
+    const filteredCampagins = campaginList.filter(item => item.params.status.toLowerCase() === status.name);
     setFilteredCampaginList(filteredCampagins);
     setActiveStatusFilter(status.name);
   };
