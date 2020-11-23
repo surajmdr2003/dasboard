@@ -110,7 +110,7 @@ const Navigation = () => {
           </NavDropdown>
           <li><NavLink to="/dashboard/landing-pages">Landing pages</NavLink></li>
           <li><NavLink to="/dashboard/targeting">Targeting</NavLink></li>
-          <li><NavLink to="/dashboard/stats">Stats</NavLink></li>
+          {/* <li><NavLink to="/dashboard/stats">Stats</NavLink></li> */}
           <li><NavLink to="/dashboard/reports">Report</NavLink></li>
         </ul>
         <ul className="navbar-nav align-items-center secondary-menu">
