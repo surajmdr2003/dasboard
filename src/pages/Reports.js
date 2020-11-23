@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import DataTable from 'react-data-table-component';
-import cogoToast from 'cogo-toast';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -135,7 +134,7 @@ const Reports = () => {
 
   const fetchCampaignReports = async(page) => {
     if (activeCampaign && activeCampaign.id === null) {
-      return cogoToast.warn('No Active campaign selected!', { position: 'bottom-left' });
+      return console.log('No Active campaign selected!');
     }
 
     setLoading(true);
@@ -143,7 +142,7 @@ const Reports = () => {
       .then((response) => {
         setData(response.data);
       })
-      .catch(() => cogoToast.error('Unable to fetch Reports for Campaign', { position: 'bottom-left' }))
+      .catch(() => console.log('Unable to fetch Reports for Campaign'))
       .finally(() => setLoading(false));
   };
 

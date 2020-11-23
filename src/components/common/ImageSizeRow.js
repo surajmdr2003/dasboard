@@ -5,7 +5,7 @@ const ImageSizeRow = ({row}) => {
   const [size, setSize] = useState('0*0');
   const img = new Image();
 
-  img.src = row.assetUrl;
+  img.src = row.params.url;
   // Important to use function decleration for "this" scope
   img.onload = function calculateSize() {
     setSize(this.width + '*' + this.height);

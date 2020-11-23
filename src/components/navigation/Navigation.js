@@ -33,6 +33,10 @@ const Navigation = () => {
   const history = useHistory();
 
   const loadCampaignsData = () => {
+    if (user && user.id === null) {
+      return console.log('No Active user selected!');
+    }
+
     return AdvertiserService.getAdvertiserCampaignGroups(user.id)
       .then((response) => {
         window.$campaigns = response.data.length ? response.data : [];
@@ -40,7 +44,7 @@ const Navigation = () => {
         setActiveCampaign(response.data.length ? response.data[0] : initCampaigns);
         setCampaignList(response.data);
       })
-      .catch(() => cogoToast.error('No campaigns available for user: ' + user.id, {position: 'bottom-left'}));
+      .catch(() => console.log('No campaigns available for user: '));
   };
 
   /**
