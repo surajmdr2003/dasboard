@@ -52,7 +52,7 @@ const Campaign = () => {
                 <div className="col-md-6 text-right">
                   <a href="#" onClick={(e) => loadCampaignReport(e, activeCampaign.id)} className="btn btn-link btn-download-report" target="_blank">
                     {isLoading ? <span className="spinner-grow spinner-grow-sm" role="status"> <span className="sr-only">Loading...</span></span> : ''}
-                    {' '} Download Report</a>
+                    {/* {' '} Download Report */}</a>
                 </div>
               </div>
             </div>
