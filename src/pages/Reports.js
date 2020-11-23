@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import DataTable from 'react-data-table-component';
 import cogoToast from 'cogo-toast';
@@ -236,7 +236,7 @@ const Reports = () => {
                 <PageTitleCampaignDropdown pageName="Reports Page" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
-                <Link to="/dashboard/create-report" className="btn btn-primary btn-default">Create Custom Report</Link>
+                {/* <Link to="/dashboard/create-report" className="btn btn-primary btn-default">Create Custom Report</Link> */}
               </div>
             </div>
           </div>
