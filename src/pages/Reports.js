@@ -1,8 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import DataTable from 'react-data-table-component';
-import cogoToast from 'cogo-toast';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -23,7 +22,7 @@ const notificationInit = {
 };
 
 const Reports = () => {
-  const {activeCampaign} = React.useContext(GlobalContext);
+  const { activeCampaign } = React.useContext(GlobalContext);
   const [isModalOpen, toggleModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
@@ -119,10 +118,12 @@ const Reports = () => {
   );
 
   const getActionBlock = (row) => (
-    <ul>
-      <li><a href="#" onClick={(e) => sendEmail(e, row)}>Email</a></li>
-      <li><a href="#" onClick={(e) => downloadReport(e, row.id)}>Download</a></li>
-    </ul>
+    (row.reportAvailable)
+      ? <ul>
+        <li><a href="#" onClick={(e) => sendEmail(e, row)}>Email</a></li>
+        <li><a href="#" onClick={(e) => downloadReport(e, row.id)}>Download</a></li>
+      </ul>
+      : <div className="no-report">Report is not available for this month</div>
   );
 
   const sendEmail = async(event, report) => {
@@ -133,7 +134,7 @@ const Reports = () => {
 
   const fetchCampaignReports = async(page) => {
     if (activeCampaign && activeCampaign.id === null) {
-      return cogoToast.warn('No Active campaign selected!', {position: 'bottom-left'});
+      return console.log('No Active campaign selected!');
     }
 
     setLoading(true);
@@ -141,7 +142,7 @@ const Reports = () => {
       .then((response) => {
         setData(response.data);
       })
-      .catch(() => cogoToast.error('Unable to fetch Reports for Campaign', {position: 'bottom-left'}))
+      .catch(() => console.log('Unable to fetch Reports for Campaign'))
       .finally(() => setLoading(false));
   };
 
@@ -236,7 +237,7 @@ const Reports = () => {
                 <PageTitleCampaignDropdown pageName="Reports Page" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
-                <Link to="/dashboard/create-report" className="btn btn-primary btn-default">Create Custom Report</Link>
+                {/* <Link to="/dashboard/create-report" className="btn btn-primary btn-default">Create Custom Report</Link> */}
               </div>
             </div>
           </div>

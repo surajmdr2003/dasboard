@@ -18,7 +18,6 @@ const YourCampaigns = ({top}) => {
   const { user, setActiveCampaign, CLDateFilterRange, setCLDateFilterRange } = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(CLDateFilterRange.label);
-  const [campaginList, setCampaginList] = useState([]);
   const [filteredCampaginList, setFilteredCampaginList] = useState([]);
   const [activeStatusFilter, setActiveStatusFilter] = useState('Filter By Status');
   const dropDownStatus = [{ id: 1, name: 'active' }, { id: 2, name: 'inactive' }, { id: 3, name: 'paused' }];
@@ -99,7 +98,6 @@ const YourCampaigns = ({top}) => {
     setIsLoading(true);
     AdvertiserService.getAdvertiserPerformanceCampaigns(user.id, campaignDateFilter)
       .then((response) => {
-        setCampaginList(response.data.summary);
         setFilteredCampaginList(response.data.summary.map(prepareTableRow));
       })
       .catch(() => false)
@@ -119,7 +117,10 @@ const YourCampaigns = ({top}) => {
       startDate: moment(startDate).format('YYYY-MM-DD'),
       endDate: moment(endDate).format('YYYY-MM-DD'),
     });
+
     const fiterParams = { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD'), top: top };
+    (activeStatusFilter !== 'Filter By Status') ? fiterParams.status = activeStatusFilter.toUpperCase() : '';
+
     setDateFilter(fiterParams);
     campaignsData(fiterParams);
   };
@@ -137,8 +138,8 @@ const YourCampaigns = ({top}) => {
   };
 
   const loadCampaignDataFilterByStatus = (status) => {
-    const filteredCampagins = campaginList.filter(item => item.params.status.toLowerCase() === status.name);
-    setFilteredCampaginList(filteredCampagins);
+    dateFilter.status = status.name.toUpperCase();
+    campaignsData(dateFilter);
     setActiveStatusFilter(status.name);
   };
 

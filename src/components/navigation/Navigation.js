@@ -14,10 +14,10 @@ import GlobalContext from '../../context/GlobalContext';
 import Storage from '../../utilities/Storage';
 
 // Components
-import NavDropdown from 'react-bootstrap/NavDropdown';
+// import NavDropdown from 'react-bootstrap/NavDropdown';
 import Dropdown from 'react-bootstrap/Dropdown';
-import NavDropdownCampaign from './NavDropdownCampaign';
-import NavDropdownCreatives from './NavDropdownCreatives';
+// import NavDropdownCampaign from './NavDropdownCampaign';
+// import NavDropdownCreatives from './NavDropdownCreatives';
 import NotificationList from '../NotificationList';
 
 // Services
@@ -25,7 +25,7 @@ import AdvertiserService from '../../services/advertiser.service';
 
 const Navigation = () => {
   const { user, setUser, setActiveCampaign } = React.useContext(GlobalContext);
-  const [campaignList, setCampaignList] = useState(window.$campaigns);
+  // const [campaignList, setCampaignList] = useState(window.$campaigns);
   const [avaliableUsers, setAvailableUsers] = useState([]);
   const [isSearching, setIsSearcing] = useState(false);
   const [isOpen, toggleNavDropdown] = useState(false);
@@ -33,6 +33,10 @@ const Navigation = () => {
   const history = useHistory();
 
   const loadCampaignsData = () => {
+    if (user && user.id === null) {
+      return console.log('No Active user selected!');
+    }
+
     return AdvertiserService.getAdvertiserCampaignGroups(user.id)
       .then((response) => {
         window.$campaigns = response.data.length ? response.data : [];
@@ -40,7 +44,7 @@ const Navigation = () => {
         setActiveCampaign(response.data.length ? response.data[0] : initCampaigns);
         setCampaignList(response.data);
       })
-      .catch(() => cogoToast.error('No campaigns available for user: ' + user.id, {position: 'bottom-left'}));
+      .catch(() => console.log('No campaigns available for user: '));
   };
 
   /**
@@ -102,15 +106,17 @@ const Navigation = () => {
       <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`} id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto primary-navigation">
           <li><NavLink activeClassName={'active'} exact={true} to="/dashboard">Dashboard</NavLink></li>
-          <NavDropdown title="Campaigns" className="fullwidth-nav">
+          {/* <NavDropdown title="Campaigns" className="fullwidth-nav">
             <NavDropdownCampaign campaignNavItems={campaignList} />
           </NavDropdown>
           <NavDropdown title="Creatives" className="fullwidth-nav">
             <NavDropdownCreatives campaignNavItems={[...campaignList]}/>
-          </NavDropdown>
+          </NavDropdown> */}
+          <li><NavLink to="/dashboard/campaigns">Campaigns</NavLink></li>
+          <li><NavLink to="/dashboard/creatives">Creatives</NavLink></li>
           <li><NavLink to="/dashboard/landing-pages">Landing pages</NavLink></li>
           <li><NavLink to="/dashboard/targeting">Targeting</NavLink></li>
-          <li><NavLink to="/dashboard/stats">Stats</NavLink></li>
+          {/* <li><NavLink to="/dashboard/stats">Stats</NavLink></li> */}
           <li><NavLink to="/dashboard/reports">Report</NavLink></li>
         </ul>
         <ul className="navbar-nav align-items-center secondary-menu">
