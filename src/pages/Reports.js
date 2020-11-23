@@ -23,7 +23,7 @@ const notificationInit = {
 };
 
 const Reports = () => {
-  const {activeCampaign} = React.useContext(GlobalContext);
+  const { activeCampaign } = React.useContext(GlobalContext);
   const [isModalOpen, toggleModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
@@ -119,10 +119,12 @@ const Reports = () => {
   );
 
   const getActionBlock = (row) => (
-    <ul>
-      <li><a href="#" onClick={(e) => sendEmail(e, row)}>Email</a></li>
-      <li><a href="#" onClick={(e) => downloadReport(e, row.id)}>Download</a></li>
-    </ul>
+    (row.reportAvailable)
+      ? <ul>
+        <li><a href="#" onClick={(e) => sendEmail(e, row)}>Email</a></li>
+        <li><a href="#" onClick={(e) => downloadReport(e, row.id)}>Download</a></li>
+      </ul>
+      : <div className="no-report">Report is not available for this month</div>
   );
 
   const sendEmail = async(event, report) => {
@@ -133,7 +135,7 @@ const Reports = () => {
 
   const fetchCampaignReports = async(page) => {
     if (activeCampaign && activeCampaign.id === null) {
-      return cogoToast.warn('No Active campaign selected!', {position: 'bottom-left'});
+      return cogoToast.warn('No Active campaign selected!', { position: 'bottom-left' });
     }
 
     setLoading(true);
@@ -141,7 +143,7 @@ const Reports = () => {
       .then((response) => {
         setData(response.data);
       })
-      .catch(() => cogoToast.error('Unable to fetch Reports for Campaign', {position: 'bottom-left'}))
+      .catch(() => cogoToast.error('Unable to fetch Reports for Campaign', { position: 'bottom-left' }))
       .finally(() => setLoading(false));
   };
 
