@@ -90,7 +90,7 @@ const CampaignDetail = ({ campaignDesp }) => {
           </li>
         </ul>
         <div className="text-right">
-          <a href="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>See Recommendation</a>
+          {/* <a href="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>See Recommendation</a> */}
         </div>
       </div>
       <div className={'campiagns-info recommendation ' + ((showRecommendation) ? '' : 'd-none')} >

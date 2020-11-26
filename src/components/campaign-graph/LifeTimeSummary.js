@@ -139,7 +139,7 @@ const LifeTimeSummary = ({ advertiserId }) => {
           </li>
         </ul>
         <div className="text-right">
-          <Link to="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>See Recommendation</Link>
+          {/* <Link to="#" className="btn-link" onClick={() => setRecommendation(!showRecommendation)}>See Recommendation</Link> */}
         </div>
       </div>
       <div className={'campiagns-info recommendation ' + ((showRecommendation) ? '' : 'd-none')} >
