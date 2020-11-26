@@ -48,7 +48,7 @@ const Login = (props) => {
                   {
                     isLoading
                       ? <div className="spinner-grow spinner-grow-sm" role="status"> <span className="sr-only">Loading...</span></div>
-                      : 'Sign Now!'
+                      : 'Sign IN!'
                   }
                 </button>
               </div>
