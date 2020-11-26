@@ -101,6 +101,8 @@ const CampaignGraph = (props) => {
   }, [user.id, props.campaignId]);
 
   const initialize = async() => {
+    campaignDateFilterRange;
+
     setState({...state, isLoading: true});
     const userInfo = await AdvertiserService.getAdvertiserProfile(user.id);
     const response = await loadAdvertiserPerformanceData(user.id, campaignDateFilterRange.startDate, campaignDateFilterRange.endDate);

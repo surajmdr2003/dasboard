@@ -4,12 +4,18 @@ import moment from 'moment';
  * For Initial start date and end date
  */
 const now = new Date();
-const start = moment(start).subtract(29, 'days').format('YYYY-MM-DD');
-const end = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate())).format('YYYY-MM-DD');
+
+const start = moment(
+  new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+);
+
+const end = moment(start)
+  .add(1, 'days')
+  .subtract(1, 'seconds');
 
 const dateRange = {
-  startDate: start,
-  endDate: end,
+  startDate: moment(start).subtract(1, 'months').format('YYYY-MM-DD'),
+  endDate: moment(end).format('YYYY-MM-DD'),
 };
 
 export default {dateRange: dateRange};
