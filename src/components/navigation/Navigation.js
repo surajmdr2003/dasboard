@@ -187,7 +187,7 @@ const Navigation = () => {
             <Dropdown>
               <Dropdown.Toggle id="dropdown-basic">
                 <div className="menu-profile media">
-                  <img src={(user.icon ? user.icon : '/assets/images/avatar.png')}
+                  <img src={(user.icon ? user.icon : '/assets/images/avatar.svg')}
                     className="profile-icon align-self-center mr-3"
                     alt={user.name}
                   />
