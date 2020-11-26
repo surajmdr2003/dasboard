@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
 const HeaderLogin = () => {
   return (
     <header className="main-header">
-      <Link to="/" className="home-link"><i className="icon-caret-left" /></Link>
+      <a href="https://rainlocal.com/" className="home-link"><i className="icon-caret-left" /></a>
       <nav className="navbar navbar-expand-lg container">
         <Logo />
       </nav>
