@@ -85,7 +85,7 @@ const campaignTabs = [
 
 const CampaignGraph = (props) => {
   const currentCampaign = window.$campaigns.find(item => item.id === parseInt(props.campaignId, 10));
-  const { user, campaignDateFilterRange, setCampaignDateFilterRange} = React.useContext(GlobalContext);
+  const { user, campaignDateFilterRange, setCampaignDateFilterRange } = React.useContext(GlobalContext);
   const [filterDateTitle, setFilterDateTitle] = useState(campaignDateFilterRange.label);
   const [chartDate, setChartDate] = useState((moment(campaignDateFilterRange.startDate).format('MMM DD YYYY') + ' - ' + moment(campaignDateFilterRange.endDate).format('MMM DD YYYY')).toString()); // For datepicker label
   const [state, setState] = useState({
@@ -103,7 +103,7 @@ const CampaignGraph = (props) => {
   const initialize = async() => {
     campaignDateFilterRange;
 
-    setState({...state, isLoading: true});
+    setState({ ...state, isLoading: true });
     const userInfo = await AdvertiserService.getAdvertiserProfile(user.id);
     const response = await loadAdvertiserPerformanceData(user.id, campaignDateFilterRange.startDate, campaignDateFilterRange.endDate);
     const formatedGraphData = reformatDataForGraph(response.data.data);
@@ -261,11 +261,11 @@ const CampaignGraph = (props) => {
   };
 
   const showChangeValue = (changeVal, activeTab) => {
-    const clickChange = changeVal.find(value => value.metricType === 'CLICK').change;
-    const conversionChange = changeVal.find(value => value.metricType === 'CONVERSION').change;
-    const impressionChange = changeVal.find(value => value.metricType === 'IMPRESSION').change;
-    const ctrChange = changeVal.find(value => value.metricType === 'CTR').change;
-    const conversionRateChange = changeVal.find(value => value.metricType === 'CONVERSION_RATE').change;
+    const clickChange = changeVal.find(value => value.metricType === 'CLICK');
+    const conversionChange = changeVal.find(value => value.metricType === 'CONVERSION');
+    const impressionChange = changeVal.find(value => value.metricType === 'IMPRESSION');
+    const ctrChange = changeVal.find(value => value.metricType === 'CTR');
+    const conversionRateChange = changeVal.find(value => value.metricType === 'CONVERSION_RATE');
 
     if (activeTab === 'impressions') {
       return showViewOf(impressionChange);
@@ -283,7 +283,9 @@ const CampaignGraph = (props) => {
   };
 
   const showViewOf = (val) => {
-    return <div className={'percent ' + ((val >= 0) ? 'up-percent' : 'down-percent')}>{Math.abs(val)}%</div>;
+    return (val)
+      ? <div className={'percent ' + ((val.change >= 0) ? 'up-percent' : 'down-percent')}>{Math.abs(val.change)}%</div>
+      : <div className="percent">N/A</div>;
   };
 
   return (
