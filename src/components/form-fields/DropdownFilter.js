@@ -6,7 +6,8 @@ const DropdownFilter = (props) => {
   const [isOpen, toggleDropdown] = useState(false);
   const [label, setLabel] = useState(props.label ? props.label : 'Filter By Campaign');
 
-  const showDropdown = () => {
+  const showDropdown = (event) => {
+    event.preventDefault();
     toggleDropdown(true);
     document.addEventListener('click', hideDropdown);
   };
@@ -22,15 +23,17 @@ const DropdownFilter = (props) => {
    */
   const loadViewOfItems = (items) => {
     return items.map(item => {
-      return <Link className="dropdown-item" to="#" key={item.id} onClick={() => setDropdown(item)} >{item.name === '' ? item.id : item.name}</Link>;
+      return <Link className="dropdown-item" to="#" key={item.id} onClick={(event) => setDropdown(event, item)} >{item.name === '' ? item.id : item.name}</Link>;
     });
   };
 
   /**
    * Set selected item name and pass item to callback
+   * @param {Object} event
    * @param {Object} item
    */
-  const setDropdown = (item) => {
+  const setDropdown = (event, item) => {
+    event.preventDefault();
     setLabel(item.name === '' ? item.id : item.name);
     props.dropwDownCallBack(item);
   };
@@ -41,7 +44,7 @@ const DropdownFilter = (props) => {
 
   return (
     <div className="dropdown dropdown-filter">
-      <button className="btn btn-outline-primary dropdown-toggle" onClick={() => showDropdown()}>{label}</button>
+      <button className="btn btn-outline-primary dropdown-toggle" onClick={(event) => showDropdown(event)}>{label}</button>
       <div className={`dropdown-menu ${(isOpen ? 'show' : 'hide')}`} aria-labelledby="dropdownMenuButton">
         {
           props.itemList.length

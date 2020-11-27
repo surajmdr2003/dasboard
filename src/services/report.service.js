@@ -3,7 +3,7 @@ import AuthService from './auth.service';
 
 class ReportService {
     apiRequest = {
-      headers: { accept: '*/*' },
+      headers: { accept: '*/*', 'Access-Control-Allow-Headers': '*' },
       response: true,
       queryStringParameters: {},
     };
@@ -44,6 +44,10 @@ class ReportService {
 
       // Setting up header info
       this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+      // Setting up Query Strings
+      this.apiRequest.queryStringParameters = {};
+      this.apiRequest.responseType = 'blob';
 
       return await API.get('emailReport', `/${monthId}/report`, this.apiRequest);
     }
