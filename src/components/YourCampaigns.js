@@ -20,7 +20,7 @@ const YourCampaigns = ({top}) => {
   const [filterDateTitle, setFilterDateTitle] = useState(CLDateFilterRange.label);
   const [filteredCampaginList, setFilteredCampaginList] = useState([]);
   const [activeStatusFilter, setActiveStatusFilter] = useState('Filter By Status');
-  const dropDownStatus = [{ id: 1, name: 'active' }, { id: 2, name: 'inactive' }, { id: 3, name: 'paused' }];
+  const dropDownStatus = [{ id: 1, name: 'active' }, { id: 2, name: 'inactive' }];
   const [dateFilter, setDateFilter] = useState({
     endDate: CLDateFilterRange.endDate,
     startDate: CLDateFilterRange.startDate,
