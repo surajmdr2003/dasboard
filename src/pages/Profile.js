@@ -11,8 +11,8 @@ import GlobalContext from '../context/GlobalContext';
 import AdvertiserService from '../services/advertiser.service';
 
 const Profile = () => {
-  const {user} = React.useContext(GlobalContext);
-  const [state, setState] =  useState({
+  const { user } = React.useContext(GlobalContext);
+  const [state, setState] = useState({
     isLoading: false,
     profile: {
       id: '',
@@ -30,21 +30,39 @@ const Profile = () => {
         paused: 0,
         total: 0,
       },
+      accountManager: {
+        name: '',
+        email: '',
+        phone: '+1 (XXX) XXX-XXXX',
+      },
       payments: [],
       billingHistory: null,
     },
   });
 
   useEffect(() => {
-    setState({...state, isLoading: true});
+    setState({ ...state, isLoading: true });
     AdvertiserService.getAdvertiserProfile(user.id)
-      .then(response => setState({...state, isLoading: false, profile: response.data}))
-      .catch(() => cogoToast.error('Unable to load user profile.', {position: 'bottom-left'}));
+      .then(response => setState({
+        ...state,
+        isLoading: false,
+        profile: {
+          ...response.data,
+          accountManager: response.data.accountManager
+            ? response.data.accountManager
+            : {
+              name: '',
+              email: '',
+              phone: '+1 (XXX) XXX-XXXX',
+            },
+        },
+      }))
+      .catch(() => cogoToast.error('Unable to load user profile.', { position: 'bottom-left' }));
   }, [user.id]);
 
   return (
     <Fragment>
-      <PageTitleWithOutFilter/>
+      <PageTitleWithOutFilter />
       <section className="profile-content">
         <div className="container">
           <div className="row">
@@ -63,11 +81,11 @@ const Profile = () => {
                         <li>
                           <div className="media">
                             <span className="icon-box md-box icon-profile">
-                              <img src={(state.profile.icon ? state.profile.icon : '/assets/images/avatar.png')} alt={user.name}/>
+                              <img src={(state.profile.icon ? state.profile.icon : '/assets/images/avatar.svg')} alt={user.name} />
                             </span>
                             <div className="media-body">
                               <h5>{state.profile.name}</h5>
-                              <p>{state.profile.email} | +1 (213) 393-3010 <br/> {state.profile.address} {(state.profile.city || state.profile.state) ? ', ' : ''} {state.profile.city} {state.profile.state}</p>
+                              <p>{state.profile.email} | {state.profile.phone || '+1 (XXX) XXX-XXXX'} <br /> {state.profile.address} {(state.profile.city || state.profile.state) ? ', ' : ''} {state.profile.city} {state.profile.state}</p>
                               {/* <a href="#" className="btn-link">Edit Info</a> */}
                             </div>
                           </div>
@@ -98,6 +116,19 @@ const Profile = () => {
                         </li>
                         <li>
                           <div className="media">
+                            <span className="icon-box md-box icon-profile">
+                              <img src="/assets/images/user.svg" alt="Account Manager" />
+                            </span>
+                            <div className="media-body">
+                              <h5>Account Manager</h5>
+                              <p className="mb-0">
+                                {state.profile.accountManager.name} <br/>
+                                {state.profile.accountManager.email || 'XXXXXXXX@XXXX.XXX'} | {state.profile.accountManager.phone || '+1 (XXX) XXX-XXXX'} | {state.profile.accountManager.address || 'XXXXX XXXXXXXX XXXXXXXX'}</p>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div className="media">
                             <span className="icon-box md-box">
                               <i className="icon-card" />
                             </span>
@@ -107,7 +138,7 @@ const Profile = () => {
                                 state.profile.payments.length
                                   ? state.profile.payments.map(() => {
                                     <p>
-                                      <img src="./assets/images/paypal-logo.png" className="paypal-logo" alt="paypal icon"/> <br/>
+                                      <img src="./assets/images/paypal-logo.png" className="paypal-logo" alt="paypal icon" /> <br />
                                         payment@midfirst.com | Added on 12th Jan 2020
                                     </p>;
                                   })

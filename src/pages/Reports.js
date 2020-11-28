@@ -121,7 +121,7 @@ const Reports = () => {
     (row.reportAvailable)
       ? <ul>
         <li><a href="#" onClick={(e) => sendEmail(e, row)}>Email</a></li>
-        <li><a href="#" onClick={(e) => downloadReport(e, row.id)}>Download</a></li>
+        <li><a href="#" onClick={(e) => downloadReport(e, row)}>Download</a></li>
       </ul>
       : <div className="no-report">Report is not available for this month</div>
   );
@@ -156,10 +156,8 @@ const Reports = () => {
     fetchCampaignReports(page);
   };
 
-  const downloadReport = (e, reportId) => {
+  const downloadReport = (e, report) => {
     e.preventDefault();
-
-    let reportWindow;
 
     setDownloadNotification({
       ...downloadNotification,
@@ -169,20 +167,30 @@ const Reports = () => {
       status: 'warning',
     });
 
-    ReportService.downloadReport(reportId)
+    ReportService.downloadReport(report.id)
       .then((response) => {
         setDownloadNotification({
           ...downloadNotification,
           isSending: false,
           show: true,
-          message: (response.data && response.data.value) ? 'Report is downloaded successfully!' : "Report can\'t be downloaded",
-          status: (response.data && response.data.value) ? 'success' : 'danger',
+          message: response.data ? 'Report is downloaded successfully!' : "Report can\'t be downloaded",
+          status: response.data ? 'success' : 'danger',
         });
 
-        if (response.data && response.data.value) {
+        if (response.data) {
+          // Convert the data into Respective Blob Object
+          const file = new Blob([response.data], {type: response.headers['content-type']});
+          const fileURL = URL.createObjectURL(file);
+
           // Redirect to the report url
-          reportWindow = window.open('', '_blank');
-          reportWindow.location = response.data.value;
+          const link = document.createElement('a');
+
+          link.href = fileURL;
+          link.download = `${report.monthName}_${report.startDate}_${report.endDate}_eom_report.pdf`;
+          link.click();
+
+          // Removes the node
+          link.remove();
         }
       })
       .catch((error) => {
@@ -206,13 +214,13 @@ const Reports = () => {
     });
 
     ReportService.emailReport(currentReport.id, formData)
-      .then(() => {
+      .then((response) => {
         setEmailNotification({
           ...setEmailNotification,
           isSending: false,
           show: true,
-          message: 'Report is emailed to your email!',
-          status: 'success',
+          message: response.data.message,
+          status: response.data.success ? 'success' : 'danger',
         });
         e.target.reset();
       })

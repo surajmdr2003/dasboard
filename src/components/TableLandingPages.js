@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import DataTable from 'react-data-table-component';
 
 const pageNotFound = '../assets/images/404.png';
 
 const TableLandingPages = ({landingPages}) => {
+  const ifRef = useRef();
+  const [isIframeError, setIframeError] = useState(false);
   const [pageUrl, setPageUrl] = useState((landingPages.length) ? landingPages[0].landingPageURL : '');
   const [activePageId, setActivePageId] = useState((landingPages.length) ? landingPages[0].id : '');
   const [columns] = useState([
@@ -47,6 +49,7 @@ const TableLandingPages = ({landingPages}) => {
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
   ]);
+
   /**
    * Handle NAN and Infinity value
    * @param {Int} fNum
@@ -90,6 +93,15 @@ const TableLandingPages = ({landingPages}) => {
     },
   ];
 
+  useEffect(() => {
+    if (ifRef.current) {
+      ifRef.current.onload = event => {
+        const isLoaded = event.target.contentWindow.window.length; // 0 or 1
+        setIframeError(isLoaded ? false : true);
+      };
+    }
+  }, []);
+
   return (
     <div className="card card-table">
       <div className="row">
@@ -107,7 +119,11 @@ const TableLandingPages = ({landingPages}) => {
         <div className="col-md-4">
           <div className="card-image ">
             <div className="page-on-phone-preview">
-              <object data={(pageUrl === null || pageUrl === '') ? pageNotFound : pageUrl} />
+              {
+                (pageUrl && !isIframeError)
+                  ? <iframe ref={ifRef} src={pageUrl} />
+                  : <object data={pageNotFound} />
+              }
             </div>
           </div>
         </div>
