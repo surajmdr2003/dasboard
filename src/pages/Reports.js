@@ -186,7 +186,7 @@ const Reports = () => {
           const link = document.createElement('a');
 
           link.href = fileURL;
-          link.download = `${report.monthName}_${report.startDate}_${report.endDate}_eom_monthly_report.pdf`;
+          link.download = `${report.monthName}_${report.startDate}_${report.endDate}_eom_report.pdf`;
           link.click();
 
           // Removes the node

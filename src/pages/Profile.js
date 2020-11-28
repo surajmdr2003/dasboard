@@ -123,7 +123,7 @@ const Profile = () => {
                               <h5>Account Manager</h5>
                               <p className="mb-0">
                                 {state.profile.accountManager.name} <br/>
-                                {state.profile.accountManager.email || 'XXXXXXXX@XXXX.XXX'} | {state.profile.accountManager.phone || '+1 (XXX) XXX-XXXXv'} | {state.profile.accountManager.address || 'XXXXX XXXXXXXX XXXXXXXX'}</p>
+                                {state.profile.accountManager.email || 'XXXXXXXX@XXXX.XXX'} | {state.profile.accountManager.phone || '+1 (XXX) XXX-XXXX'} | {state.profile.accountManager.address || 'XXXXX XXXXXXXX XXXXXXXX'}</p>
                             </div>
                           </div>
                         </li>
