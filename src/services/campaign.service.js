@@ -86,7 +86,7 @@ class CampaignService {
     this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
     this.apiRequest.queryStringParameters = {url: url || ''};
 
-    return await API.get('utils', '/urlUtils/getHeaders', this.apiRequest);
+    return await API.get('utils', '/urlUtils/getResponseParams', this.apiRequest);
   }
 }
 
