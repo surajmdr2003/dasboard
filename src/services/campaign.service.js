@@ -77,6 +77,17 @@ class CampaignService {
 
     return await API.post('canpaignGroup', `/${campaignId}/performance/asset`, this.apiRequest);
   }
+
+  async checkIfSiteCanBeLoaded(url) {
+    const userInfo = await AuthService.getSessionInfo();
+    const accessToken = userInfo.getAccessToken().getJwtToken();
+
+    // Setting up header info
+    this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+    this.apiRequest.queryStringParameters = {url: url || ''};
+
+    return await API.get('utils', '/urlUtils/getHeaders', this.apiRequest);
+  }
 }
 
 module.exports = new CampaignService();
