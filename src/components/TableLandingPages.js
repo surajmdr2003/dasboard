@@ -9,7 +9,7 @@ const pageNotFound = '../assets/images/404.png';
 // Services
 import CampaignService from '../services/campaign.service';
 
-const TableLandingPages = ({landingPages}) => {
+const TableLandingPages = ({ landingPages }) => {
   const [iframeState, setIframeState] = useState({
     isLoading: false,
     isLoadable: false,
@@ -22,8 +22,8 @@ const TableLandingPages = ({landingPages}) => {
       name: 'Page name',
       selector: 'name',
       sortable: true,
-      cell: row => (<div className={'page-name'} style={{'cursor': 'pointer'}} onClick={() => loadPageOnMobile(row)}>
-        {(row.params.name) ?  row.params.name : 'No Data'  }
+      cell: row => (<div className={'page-name'} style={{ 'cursor': 'pointer' }} onClick={() => loadPageOnMobile(row)}>
+        {(row.params.name) ? row.params.name : 'No Data'}
       </div>),
     },
     {
@@ -87,13 +87,13 @@ const TableLandingPages = ({landingPages}) => {
    * @param {Object} pageObj
    */
   const loadPageOnMobile = (pageObj) => {
-    setIframeState({...iframeState, isLoading: true, activePage: pageObj.id});
+    setIframeState({ ...iframeState, isLoading: true, activePage: pageObj.id });
     CampaignService.checkIfSiteCanBeLoaded(pageObj.params.url)
       .then(response => {
-        const isLoadable = response.data['X-Frame-Options'];
-        setIframeState({...iframeState, isLoading: false, isLoadable, loadView: (!isLoadable ? pageObj.params.url : pageNotFound)});
+        const isLoadable = response.data.headers['X-Frame-Options'] || response.data.responseCode !== 200;
+        setIframeState({ ...iframeState, isLoading: false, isLoadable, loadView: (!isLoadable ? pageObj.params.url : pageNotFound), activePage: pageObj.id });
       })
-      .catch(() => cogoToast.error('Coundn\'t verifiy the url can be loaded.', {position: 'bottom-left'}));
+      .catch(() => cogoToast.error('Coundn\'t verifiy the url can be loaded.', { position: 'bottom-left' }));
   };
 
   const conditionalRowStyles = [
@@ -126,19 +126,18 @@ const TableLandingPages = ({landingPages}) => {
         </div>
         <div className="col-md-4">
           <div className="card-image ">
-            {
-              iframeState.isLoading
+            <div className="page-on-phone-preview">
+              {iframeState.isLoading
                 ? <div className="text-center m-5">
                   <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
                 </div>
-                : <div className="page-on-phone-preview">
-                  {
-                    iframeState.isLoadable
-                      ? <iframe src={iframeState.loadView} />
-                      : <object data={iframeState.loadView} />
-                  }
-                </div>
-            }
+                : ''
+              }
+              { iframeState.isLoadable
+                ? <object data={iframeState.loadView} />
+                : <iframe src={iframeState.loadView} />
+              }
+            </div>
           </div>
         </div>
       </div>
