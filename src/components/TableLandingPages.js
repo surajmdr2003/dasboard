@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
+import cogoToast from 'cogo-toast';
 import DataTable from 'react-data-table-component';
 
+// Assets
 const pageNotFound = '../assets/images/404.png';
 
+// Services
+import CampaignService from '../services/campaign.service';
+
 const TableLandingPages = ({landingPages}) => {
-  const [pageUrl, setPageUrl] = useState((landingPages.length) ? landingPages[0].landingPageURL : '');
-  const [activePageId, setActivePageId] = useState((landingPages.length) ? landingPages[0].id : '');
+  const [iframeState, setIframeState] = useState({
+    isLoading: false,
+    isLoadable: false,
+    activePage: (landingPages.length) ? landingPages[0].id : '',
+    loadView: '../assets/images/404.png',
+  });
+
   const [columns] = useState([
     {
       name: 'Page name',
@@ -77,19 +87,28 @@ const TableLandingPages = ({landingPages}) => {
    * @param {Object} pageObj
    */
   const loadPageOnMobile = (pageObj) => {
-    setPageUrl(pageObj.params.url);
-    setActivePageId(pageObj.id);
+    setIframeState({...iframeState, isLoading: true, activePage: pageObj.id});
+    CampaignService.checkIfSiteCanBeLoaded(pageObj.params.url)
+      .then(response => {
+        const isLoadable = response.data['X-Frame-Options'];
+        setIframeState({...iframeState, isLoading: false, isLoadable, loadView: (!isLoadable ? pageObj.params.url : pageNotFound)});
+      })
+      .catch(() => cogoToast.error('Coundn\'t verifiy the url can be loaded.', {position: 'bottom-left'}));
   };
 
   const conditionalRowStyles = [
     {
-      when: row => row.id === activePageId,
+      when: row => row.id === iframeState.activePage,
       style: {
         color: '#22a6de',
         fontWeight: 'bold',
       },
     },
   ];
+
+  useEffect(() => {
+    landingPages.length ? loadPageOnMobile(landingPages[0]) : '';
+  }, []);
 
   return (
     <div className="card card-table">
@@ -107,9 +126,19 @@ const TableLandingPages = ({landingPages}) => {
         </div>
         <div className="col-md-4">
           <div className="card-image ">
-            <div className="page-on-phone-preview">
-              <iframe src={(pageUrl === null || pageUrl === '') ? pageNotFound : pageUrl} />
-            </div>
+            {
+              iframeState.isLoading
+                ? <div className="text-center m-5">
+                  <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+                </div>
+                : <div className="page-on-phone-preview">
+                  {
+                    iframeState.isLoadable
+                      ? <iframe src={iframeState.loadView} />
+                      : <object data={iframeState.loadView} />
+                  }
+                </div>
+            }
           </div>
         </div>
       </div>
