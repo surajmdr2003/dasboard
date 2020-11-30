@@ -31,10 +31,16 @@ const awsApiConfigs = {
       endpoint: `${Config.apiPath}/months`,
     },
 
-    // Notification Feature
+    // Notification Service
     {
       name: 'notifications',
       endpoint: `${Config.apiPath}/notification`,
+    },
+
+    // Utils Services
+    {
+      name: 'utils',
+      endpoint: `${Config.apiPath}/utils`,
     },
   ],
 };
