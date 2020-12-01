@@ -1,21 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
+
 import DataTable from 'react-data-table-component';
+import PagePreview from './common/PagePreview';
 
-const pageNotFound = '../assets/images/404.png';
+const TableLandingPages = ({ landingPages }) => {
+  const [state, setState] = useState({
+    activePage: '',
+    activeUrl: '',
+  });
 
-const TableLandingPages = ({landingPages}) => {
-  const ifRef = useRef();
-  const [isIframeError, setIframeError] = useState(false);
-  const [pageUrl, setPageUrl] = useState((landingPages.length) ? landingPages[0].landingPageURL : '');
-  const [activePageId, setActivePageId] = useState((landingPages.length) ? landingPages[0].id : '');
+  const updateState = ({id, params}) => {
+    setState({
+      activePage: id,
+      activeUrl: params.url,
+    });
+  };
+
   const [columns] = useState([
     {
       name: 'Page name',
       selector: 'name',
       sortable: true,
-      cell: row => (<div className={'page-name'} style={{'cursor': 'pointer'}} onClick={() => loadPageOnMobile(row)}>
-        {(row.params.name) ?  row.params.name : 'No Data'  }
+      cell: row => (<div className={'page-name'} style={{ 'cursor': 'pointer' }} onClick={() => updateState(row)}>
+        {(row.params.name) ? row.params.name : 'No Data'}
       </div>),
     },
     {
@@ -74,18 +82,9 @@ const TableLandingPages = ({landingPages}) => {
     return row;
   };
 
-  /**
-   * Load page url for mobile view
-   * @param {Object} pageObj
-   */
-  const loadPageOnMobile = (pageObj) => {
-    setPageUrl(pageObj.params.url);
-    setActivePageId(pageObj.id);
-  };
-
   const conditionalRowStyles = [
     {
-      when: row => row.id === activePageId,
+      when: row => row.id === state.activePage,
       style: {
         color: '#22a6de',
         fontWeight: 'bold',
@@ -94,12 +93,7 @@ const TableLandingPages = ({landingPages}) => {
   ];
 
   useEffect(() => {
-    if (ifRef.current) {
-      ifRef.current.onload = event => {
-        const isLoaded = event.target.contentWindow.window.length; // 0 or 1
-        setIframeError(isLoaded ? false : true);
-      };
-    }
+    landingPages.length && updateState(landingPages[0]);
   }, []);
 
   return (
@@ -118,13 +112,7 @@ const TableLandingPages = ({landingPages}) => {
         </div>
         <div className="col-md-4">
           <div className="card-image ">
-            <div className="page-on-phone-preview">
-              {
-                (pageUrl && !isIframeError)
-                  ? <iframe ref={ifRef} src={pageUrl} />
-                  : <object data={pageNotFound} />
-              }
-            </div>
+            <PagePreview pageUrl={state.activeUrl} />
           </div>
         </div>
       </div>

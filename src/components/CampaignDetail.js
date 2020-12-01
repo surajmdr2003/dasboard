@@ -7,7 +7,6 @@ import cogoToast from 'cogo-toast';
 import CampaignService from '../services/campaign.service';
 import NotificationService from '../services/notification.service';
 
-
 const CampaignDetail = ({ campaignDesp }) => {
   const [showRecommendation, setRecommendation] = useState(false);
   const [recommendationData, setRecommendationData] = useState([]);

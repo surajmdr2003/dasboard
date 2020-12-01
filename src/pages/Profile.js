@@ -122,28 +122,7 @@ const Profile = () => {
                             <div className="media-body">
                               <h5>Account Manager</h5>
                               <p className="mb-0">
-                                {state.profile.accountManager.name} <br/>
-                                {state.profile.accountManager.email || 'XXXXXXXX@XXXX.XXX'} | {state.profile.accountManager.phone || '+1 (XXX) XXX-XXXX'} | {state.profile.accountManager.address || 'XXXXX XXXXXXXX XXXXXXXX'}</p>
-                            </div>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="media">
-                            <span className="icon-box md-box">
-                              <i className="icon-card" />
-                            </span>
-                            <div className="media-body">
-                              <h5>Payments</h5>
-                              {
-                                state.profile.payments.length
-                                  ? state.profile.payments.map(() => {
-                                    <p>
-                                      <img src="./assets/images/paypal-logo.png" className="paypal-logo" alt="paypal icon" /> <br />
-                                        payment@midfirst.com | Added on 12th Jan 2020
-                                    </p>;
-                                  })
-                                  : (<p>No payments available.</p>)
-                              }
+                                {state.profile.accountManager.name} | {state.profile.accountManager.phone || '+1 (XXX) XXX-XXXX'} | {state.profile.accountManager.email || 'XXXXXXXX@XXXX.XXX'}</p>
                             </div>
                           </div>
                         </li>
