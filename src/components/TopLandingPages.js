@@ -39,7 +39,7 @@ const TopLandingPages = (props) => {
       : AdvertiserService.getAdvertiserPerformanceLandingPages(user.id, dateRangeFilter, campaignFilter);
 
     landingPageApiCall.then((response) => {
-      setLandingPagesList(response.data.summary.slice(0, 7));
+      setLandingPagesList(response.data.summary.splice(0, 7));
       setIsLoading(false);
     })
       .catch(() => false)
