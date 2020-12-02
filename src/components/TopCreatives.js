@@ -31,6 +31,7 @@ const settings = {
 const TopCreatives = (props) => {
   const { user, creativesDateFilterRange, setCreativesDateFilterRange } = React.useContext(GlobalContext);
   const [campaignId, setCampaignId] = useState(null);
+  const [lifeTimeCampaignDateRange, setLifeTimeCampaignDateRange] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(creativesDateFilterRange.label);
   const [creatives, setTopCreativeList] = useState([]);
@@ -87,6 +88,7 @@ const TopCreatives = (props) => {
 
   const loadCreativesByCampaign = (campaign) => {
     setCampaignId(campaign.id);
+    setLifeTimeCampaignDateRange({startDate: campaign.startDate, endDate: campaign.endDate});
   };
 
   useEffect(() => {
@@ -106,7 +108,7 @@ const TopCreatives = (props) => {
           <div className="col-md-7">
             <div className="block-filter">
               {!props.campaignId ? <DropdownFilter itemList={window.$campaigns} label="Filter By Campaign" dropwDownCallBack={loadCreativesByCampaign} /> : ''}
-              <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
+              <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} lifeTimeDateRange={lifeTimeCampaignDateRange} />
             </div>
           </div>
         </div>

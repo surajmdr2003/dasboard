@@ -147,6 +147,7 @@ const YourCampaigns = ({top}) => {
     campaignsData(dateFilter);
   }, [user.id]);
 
+
   return (
     <section className="your-campaigns-content">
       <div className="container">
@@ -173,7 +174,7 @@ const YourCampaigns = ({top}) => {
               </div>
               : <DataTable
                 columns={columns}
-                data={filteredCampaginList.splice(0, 5)}
+                data={filteredCampaginList}
                 persistTableHead
               />
           }
