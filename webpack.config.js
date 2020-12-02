@@ -40,7 +40,7 @@ module.exports = {
         },
       },
       {
-        test: /\.(jpe?g|png|svg|gif|woff|woff2|eot|ttf)$/,
+        test: /\.(jpe?g|png|svg|gif|woff|woff2|eot|ttf|ico)$/,
         use: {
           loader: 'url-loader',
           options: {
