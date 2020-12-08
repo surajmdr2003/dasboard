@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 
 // Contexts
 import GlobalContext from '../context/GlobalContext';
@@ -39,6 +39,10 @@ const Campaign = () => {
       .catch(() => false);
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <Fragment>
       <div className="main-container">
@@ -47,7 +51,7 @@ const Campaign = () => {
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-md-6">
-                  <PageTitleCampaignDropdown pageName="Campaign Detail Page" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
+                  <PageTitleCampaignDropdown pageName="Campaign Detail" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
                 </div>
                 <div className="col-md-6 text-right">
                   <a href="#" onClick={(e) => loadCampaignReport(e, activeCampaign.id)} className="btn" target="_blank">
@@ -64,7 +68,7 @@ const Campaign = () => {
               <CampaignGraph campaignId={activeCampaign.id} />
               <TopCreatives campaignId={activeCampaign.id + ''} />
               <TopLandingPages campaignId={activeCampaign.id + ''} />
-              <TopTargets campaignId={activeCampaign.id + ''} />
+              <TopTargets campaignId={activeCampaign.id + ''} showBlockTitle={true}/>
             </Fragment>
             : <div className="text-center m-5">
               <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>

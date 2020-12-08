@@ -37,7 +37,7 @@ const Reports = () => {
   const [downloadNotification, setDownloadNotification] = useState(notificationInit);
   const [columns] = useState([
     {
-      name: 'Months',
+      name: 'MONTH',
       selector: 'months',
       sortable: true,
       cell: row => getMonthBlock(row),
@@ -64,10 +64,10 @@ const Reports = () => {
       name: 'CTR',
       selector: 'ctr',
       sortable: true,
-      cell: row => (<div row={row}>{row.ctr}</div>),
+      cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      name: 'Conv rate',
+      name: 'Conv. rate',
       selector: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
@@ -123,7 +123,7 @@ const Reports = () => {
         <li><a href="#" onClick={(e) => sendEmail(e, row)}>Email</a></li>
         <li><a href="#" onClick={(e) => downloadReport(e, row)}>Download</a></li>
       </ul>
-      : <div className="no-report">Report is not available for this month</div>
+      : <div className="no-report">Not available</div>
   );
 
   const sendEmail = async(event, report) => {
@@ -242,7 +242,7 @@ const Reports = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageName="Reports Page" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageName="Reports" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 {/* <Link to="/dashboard/create-report" className="btn btn-primary btn-default">Create Custom Report</Link> */}

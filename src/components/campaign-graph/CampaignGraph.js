@@ -74,11 +74,11 @@ const campaignTabs = [
     slug: 'ctr',
   },
   {
-    label: 'Conversion',
+    label: 'Conversions',
     slug: 'conversions',
   },
   {
-    label: 'Conv rate',
+    label: 'Conv. rate',
     slug: 'convrate',
   },
 ];
@@ -87,7 +87,7 @@ const CampaignGraph = (props) => {
   const currentCampaign = window.$campaigns.find(item => item.id === parseInt(props.campaignId, 10));
   const { user, campaignDateFilterRange, setCampaignDateFilterRange } = React.useContext(GlobalContext);
   const [filterDateTitle, setFilterDateTitle] = useState(campaignDateFilterRange.label);
-  const [chartDate, setChartDate] = useState((moment(campaignDateFilterRange.startDate).format('MMM DD YYYY') + ' - ' + moment(campaignDateFilterRange.endDate).format('MMM DD YYYY')).toString()); // For datepicker label
+  const [chartDate, setChartDate] = useState((moment(campaignDateFilterRange.startDate).format('MMM DD, YYYY') + ' - ' + moment(campaignDateFilterRange.endDate).format('MMM DD, YYYY')).toString()); // For datepicker label
   const [state, setState] = useState({
     isLoading: true,
     activeTab: 'impressions',
@@ -221,7 +221,7 @@ const CampaignGraph = (props) => {
    * @param {date} endDate
    */
   const datepickerCallback = async(startDate, endDate) => {
-    const range = (moment(startDate).format('DD MMM YY') + ' - ' + moment(endDate).format('DD MMM YY')).toString();
+    const range = (moment(startDate).format('MMM DD, YYYY') + ' - ' + moment(endDate).format('MMM DD, YYYY')).toString();
     setFilterDateTitle(range);
     setCampaignDateFilterRange({
       label: range,
@@ -297,7 +297,7 @@ const CampaignGraph = (props) => {
               <div className="col-md-6">
                 {
                   (props.campaignId)
-                    ? <SingleCampaignInfo campaignDetail={currentCampaign} chartDate={state.summaryData.params ? (state.summaryData.params.startDate + ' - ' + state.summaryData.params.endDate) : (state.isLoading ? ' xxxx-xx-xx - xxxx-xx-xx' : chartDate)} />
+                    ? <SingleCampaignInfo campaignDetail={currentCampaign} chartDate={state.summaryData.params ? (moment(state.summaryData.params.startDate).format('MMM DD, YYYY') + ' - ' + moment(state.summaryData.params.endDate).format('MMM DD, YYYY')) : (state.isLoading ? ' xx-xx-xxxx - xx-xx-xxxx' : chartDate)} />
                     : <AllCampaignInfo campaigns={state.campaignInfo} />
                 }
               </div>

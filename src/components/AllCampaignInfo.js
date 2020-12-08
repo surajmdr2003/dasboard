@@ -7,9 +7,9 @@ import PropTypes from 'prop-types';
 const AllCampaignInfo = ({campaigns}) => {
   return (
     <Fragment>
-      <h4>All Campaigns data</h4>
+      <h4>All campaigns data</h4>
       <ul className="campaigns-datas nav">
-        <li>{campaigns.total} total campaigns</li>
+        <li>{campaigns.total} Total campaigns</li>
         <li className="active-campaign">{campaigns.active} Active</li>
         <li className="inactive-campaign">{campaigns.inactive} Inactive</li>
         <li className="paused-campaign">{campaigns.paused} Paused</li>

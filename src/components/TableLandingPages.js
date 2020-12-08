@@ -45,13 +45,13 @@ const TableLandingPages = ({ landingPages }) => {
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      name: 'Conversion',
+      name: 'Conversions',
       selector: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      name: 'Conv rate',
+      name: 'Conv. rate',
       selector: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),

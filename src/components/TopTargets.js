@@ -45,13 +45,17 @@ const TopTargets = (props) => {
   return (
     <section className="target-location-content">
       <div className="container">
-        <div className="row align-items-center filter-block">
-          <div className="col-md-5">
-            <div className="block-title">
-              Top Targets
+        {
+          (props.showBlockTitle)
+            ? <div className="row align-items-center filter-block">
+              <div className="col-md-5">
+                <div className="block-title">
+                  Top Targets
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+            : ''
+        }
         <div className="card card-map">
           <div className="row location-container">
             {
@@ -100,6 +104,7 @@ const TopTargets = (props) => {
 
 TopTargets.propTypes = {
   campaignId: PropTypes.any,
+  showBlockTitle: PropTypes.boolean,
 };
 
 export default TopTargets;

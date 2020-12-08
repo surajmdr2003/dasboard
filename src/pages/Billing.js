@@ -91,7 +91,7 @@ const Billing = () => {
   return (
     <Fragment>
       <div className="main-container">
-        <PageTitleWithOutFilter title="Billing Page" />
+        <PageTitleWithOutFilter title="Billing" />
         <section className="main-content-wrapper table-reports">
           <div className="container">
             <DataTable

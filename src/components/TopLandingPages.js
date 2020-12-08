@@ -52,7 +52,7 @@ const TopLandingPages = (props) => {
    * @param {End Date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
-    const label = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+    const label = (moment(startDate).format('MMM DD, YYYY') + ' to ' + moment(endDate).format('MMM DD, YYYY')).toString();
     setFilterDateTitle(label);
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
     setLandingDateFilterRange({
@@ -77,7 +77,7 @@ const TopLandingPages = (props) => {
         <div className="row align-items-center filter-block">
           <div className="col-md-5">
             <div className="block-title">
-              Top Landing Pages
+              Top landing pages
               <Link to={'/dashboard/landing-pages'} className="btn-link">See All</Link>
             </div>
           </div>
@@ -90,7 +90,7 @@ const TopLandingPages = (props) => {
         </div>
         {
           isLoading
-            ? <div className="col text-center m-5">
+            ? <div className="text-center m-5">
               <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
             </div>
             : <TableLandingPages landingPages={topLandingPageList} />

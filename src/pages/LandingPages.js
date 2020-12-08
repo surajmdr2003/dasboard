@@ -48,7 +48,7 @@ const LandingPages = () => {
    * @param {End Date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
-    const label = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+    const label = (moment(startDate).format('MMM DD, YYYY') + ' to ' + moment(endDate).format('MMM DD, YYYY')).toString();
 
     setFilterDateTitle(label);
     setDateFilter({startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')});

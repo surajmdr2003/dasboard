@@ -99,7 +99,7 @@ const Profile = () => {
                               <h5>Campaigns</h5>
                               <ul className="campaigns-datas nav">
                                 <li>
-                                  {state.profile.campaigns.total} total campaigns
+                                  {state.profile.campaigns.total} Total campaigns
                                 </li>
                                 <li className="active-campaigns">
                                   {state.profile.campaigns.active} Active
@@ -116,11 +116,11 @@ const Profile = () => {
                         </li>
                         <li>
                           <div className="media">
-                            <span className="icon-box md-box icon-profile">
+                            <span className="icon-box md-box">
                               <img src="/assets/images/user.svg" alt="Account Manager" />
                             </span>
                             <div className="media-body">
-                              <h5>Account Manager</h5>
+                              <h5>Account manager</h5>
                               <p className="mb-0">
                                 {state.profile.accountManager.name} | {state.profile.accountManager.phone || '+1 (XXX) XXX-XXXX'} | {state.profile.accountManager.email || 'XXXXXXXX@XXXX.XXX'}</p>
                             </div>
