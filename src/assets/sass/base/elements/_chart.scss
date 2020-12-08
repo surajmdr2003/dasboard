@@ -120,7 +120,16 @@ g.c3-axis text {
             }
         }
     }
+
+    .c3-tooltip-name--ctr .name {
+        text-transform: uppercase;
+    }
+
+    .c3-tooltip-name--convrate .name {
+        text-transform: initial;
+    }
 }
+
 
 .c3-legend-item-tile {
     shape-rendering: auto;

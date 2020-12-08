@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import c3 from 'c3';
 
-const C3Chart = ({holder, columns, axis, size, bar, legend}) => {
+const C3Chart = ({holder, columns, axis, size, bar, legend, tooltip}) => {
   useEffect(() => {
     const options = {};
 
@@ -10,6 +10,7 @@ const C3Chart = ({holder, columns, axis, size, bar, legend}) => {
     size ? options.size = size : '';
     bar ? options.bar = bar : '';
     legend ? options.legend = legend : '';
+    tooltip ? options.tooltip = tooltip : '';
 
     c3.generate({
       bindto: '#' + holder,
@@ -30,6 +31,7 @@ C3Chart.propTypes = {
   size: PropTypes.object,
   bar: PropTypes.object,
   legend: PropTypes.object,
+  tooltip: PropTypes.object,
   holder: PropTypes.string,
 };
 
