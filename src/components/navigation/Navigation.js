@@ -86,7 +86,7 @@ const Navigation = () => {
   const signOut = (event) => {
     event.preventDefault();
     Storage.removeItem('current:user');
-    cogoToast.success('You are signed out successsfully!', {position: 'bottom-center'});
+    cogoToast.success('You are signed out successsfully!', { position: 'bottom-center' });
     Auth.signOut();
   };
 
@@ -185,18 +185,19 @@ const Navigation = () => {
           </li>
           <li>
             <Dropdown>
-              <Dropdown.Toggle id="dropdown-basic">
-                <div className="menu-profile media">
-                  <img src={(user.icon ? user.icon : '/assets/images/avatar.svg')}
-                    className="profile-icon align-self-center mr-3"
-                    alt={user.name}
-                  />
+
+              <div className="menu-profile media">
+                <img onClick={() => history.push('/dashboard/profile')} src={(user.icon ? user.icon : '/assets/images/avatar.svg')}
+                  className="profile-icon align-self-center mr-3"
+                  alt={user.name}
+                />
+                <Dropdown.Toggle id="dropdown-profile">
                   <div className="media-body align-self-center">
-                    <span style={{'maxWidth': '120px'}} className="user-name mt-0">{user ? user.name : 'Guest'}</span>
+                    <span style={{ 'maxWidth': '120px' }} className="user-name mt-0">{user ? user.name : 'Guest'}</span>
                     <span className="mt-0 dropdown-icon">&nbsp;</span>
                   </div>
-                </div>
-              </Dropdown.Toggle>
+                </Dropdown.Toggle>
+              </div>
               <Dropdown.Menu alignRight="right" className="profile-dropdown-menu">
                 <Dropdown.Item onClick={() => history.push('/dashboard/profile')}>Profile</Dropdown.Item>
                 {/* <Dropdown.Item onClick={() => history.push('#')}>Payment setting</Dropdown.Item> */}

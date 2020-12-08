@@ -10,7 +10,7 @@ import { Auth } from 'aws-amplify';
 import HeaderLogin from '../components/HeaderLogin';
 
 // Required Assets
-const loginBanner = './assets/images/login-banner.jpg';
+const loginBanner = '/assets/images/login-banner.jpg';
 
 const Login = (props) => {
   const [isLoading, setIsLoading] = useState(false);

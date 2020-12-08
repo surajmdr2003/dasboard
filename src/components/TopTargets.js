@@ -104,7 +104,7 @@ const TopTargets = (props) => {
 
 TopTargets.propTypes = {
   campaignId: PropTypes.any,
-  showBlockTitle: PropTypes.boolean,
+  showBlockTitle: PropTypes.bool,
 };
 
 export default TopTargets;
