@@ -14,7 +14,7 @@ const Notifications = () => {
             <div className="offset-md-2 col-md-8">
               <div className="content-block">
                 <div className="content-block-title">
-                  All Campaigns Notifications
+                  All notifications
                 </div>
                 <div className="content-block-body">
                   <ul className="list-unstyled content-list">

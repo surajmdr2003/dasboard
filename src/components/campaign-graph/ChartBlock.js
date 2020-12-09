@@ -35,6 +35,21 @@ const axis = {
   },
 };
 
+const tooltip = {
+  format: {
+    value: function(value, ratio, id) {
+      return (id === 'ctr' || id === 'convrate')
+        ? value.toFixed(2) + '%'
+        : value.toLocaleString();
+    },
+    name: function(name) {
+      return (name === 'convrate')
+        ? 'Conv. rate'
+        : name;
+    },
+  },
+};
+
 const ChartBlock = ({ chartDate, selectedGraph }) => {
   const [chartData, setChartData] = useState(initialData);
 
@@ -46,7 +61,7 @@ const ChartBlock = ({ chartDate, selectedGraph }) => {
 
     <div className="chart-block">
       <div className="date-range">{chartDate}</div>
-      <C3Chart holder="campaignGraph" columns={chartData} axis={axis} bar={{ width: 10 }} size={{ height: 280 }} legend={{ show: false }}/>
+      <C3Chart holder="campaignGraph" columns={chartData} axis={axis} bar={{ width: 10 }} size={{ height: 280 }} legend={{ show: false }} tooltip={tooltip} />
     </div>
   );
 };

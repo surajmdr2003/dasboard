@@ -9,7 +9,10 @@ table {
 	font-size: size(13);
 	color: $color__table-maintext;
 	margin-bottom: 0;
-	text-transform: capitalize;
+
+	.kMXuPO {
+		min-width: 99px;
+	}
 	
 	.rdt_TableHead .rdt_TableCol {
 		@extend th ;
@@ -19,7 +22,6 @@ table {
 		font-size: size(13);
 		line-height: 2.5;
 		border-bottom: 0;
-        padding: 1.18rem 0.75rem;
         font-weight: 600;
 	}
 
@@ -29,18 +31,8 @@ table {
 
 	.rdt_TableRow {
 		vertical-align: middle;
-		padding: 1.9rem 0.75rem;
+		padding: 1.9rem 0;
         border-color: $color__table-border;
-        
-        > div {
-            &:first-child {
-                padding-left: 0;
-            }
-        
-            &:last-child {
-                padding-right: 0;
-            }
-        }
 
 		ul {
 			padding: 0;
@@ -87,7 +79,8 @@ table {
 
 .table-creatives, .table-reports {
     .rdt_TableRow {
-        padding: size(15);
+        padding-top: size(15);
+        padding-bottom: size(15);
     
         .campaign-media {
             align-items: center;
@@ -106,8 +99,7 @@ table {
         }
     
         > div:first-child {
-            padding-left: 0;
-            min-width: 230px;
+            min-width: 250px;
         }
     }
     .rdt_TableHeadRow > div:first-child {
@@ -118,8 +110,7 @@ table {
 .table-landingpage {
     .rdt_TableRow {
         > div:first-child {
-            padding-left: 0;
-            min-width: 160px;
+            min-width: 180px;
         }
     }
     .rdt_TableHeadRow > div:first-child {
@@ -160,3 +151,7 @@ table {
 		padding-left: 0;
 	}
 }
+
+.rdt_TableHeadRow .fJpndx {
+    opacity: 1;
+} 

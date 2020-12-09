@@ -158,14 +158,14 @@ section.all-campaigns-content {
 
         object,
         iframe {
-            height: 570px;
-            width: 280px;
+            height: 640px;
+            width: 330px;
             position: relative;
-            padding: 13px;
-            background-color: #f8f8f8;
+            padding: 98px 20px 80px 20px;
             object-fit: contain;
             display: block;
             border-radius: 40px;
+            border: 0;
         }
 
         &:before {
@@ -176,7 +176,7 @@ section.all-campaigns-content {
             height: 100%;
             width: 100%;
             z-index: 2;
-            background: url(../../assets/images/phone.png);
+            background: url(../../assets/images/new-phone.png);
             background-size: contain;
             background-repeat: no-repeat;
             pointer-events: none;

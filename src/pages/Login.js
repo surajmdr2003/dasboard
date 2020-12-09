@@ -10,7 +10,7 @@ import { Auth } from 'aws-amplify';
 import HeaderLogin from '../components/HeaderLogin';
 
 // Required Assets
-const loginBanner = './assets/images/login-banner.jpg';
+const loginBanner = '/assets/images/login-banner.jpg';
 
 const Login = (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +48,7 @@ const Login = (props) => {
                   {
                     isLoading
                       ? <div className="spinner-grow spinner-grow-sm" role="status"> <span className="sr-only">Loading...</span></div>
-                      : 'Sign IN!'
+                      : 'Sign IN'
                   }
                 </button>
               </div>

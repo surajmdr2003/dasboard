@@ -14,7 +14,7 @@ const CreativesTableData = () => {
                 <th scope="col">Clicks</th>
                 <th scope="col">CTR</th>
                 <th scope="col">Conversion</th>
-                <th scope="col">Conv rate</th>
+                <th scope="col">Conv. rate</th>
               </tr>
             </thead>
             <tbody>

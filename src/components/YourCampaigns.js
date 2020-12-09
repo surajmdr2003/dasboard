@@ -20,7 +20,7 @@ const YourCampaigns = ({top}) => {
   const [filterDateTitle, setFilterDateTitle] = useState(CLDateFilterRange.label);
   const [filteredCampaginList, setFilteredCampaginList] = useState([]);
   const [activeStatusFilter, setActiveStatusFilter] = useState('Filter By Status');
-  const dropDownStatus = [{ id: 1, name: 'active' }, { id: 2, name: 'inactive' }];
+  const dropDownStatus = [{id: 1, name: 'all'}, { id: 2, name: 'active' }, { id: 3, name: 'inactive' }];
   const [dateFilter, setDateFilter] = useState({
     endDate: CLDateFilterRange.endDate,
     startDate: CLDateFilterRange.startDate,
@@ -63,13 +63,13 @@ const YourCampaigns = ({top}) => {
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      name: 'Conversion',
+      name: 'Conversions',
       selector: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      name: 'Conv rate',
+      name: 'Conv. rate',
       selector: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
@@ -110,7 +110,7 @@ const YourCampaigns = ({top}) => {
    * @param {End Date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
-    const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+    const range = (moment(startDate).format('MMM DD, YYYY') + ' to ' + moment(endDate).format('MMM DD, YYYY')).toString();
     setFilterDateTitle(range);
     setCLDateFilterRange({
       label: range,
@@ -138,7 +138,12 @@ const YourCampaigns = ({top}) => {
   };
 
   const loadCampaignDataFilterByStatus = (status) => {
-    dateFilter.status = status.name.toUpperCase();
+    if (status.name === 'all') {
+      delete dateFilter.status;
+    } else {
+      dateFilter.status = status.name.toUpperCase();
+    }
+
     campaignsData(dateFilter);
     setActiveStatusFilter(status.name);
   };
@@ -154,7 +159,7 @@ const YourCampaigns = ({top}) => {
         <div className="row align-items-center filter-block">
           <div className="col-md-5">
             <div className="block-title">
-              Your Campaigns
+              Your campaigns
               <Link to="/dashboard/campaigns" className="btn-link">See All</Link>
             </div>
           </div>
