@@ -181,6 +181,8 @@ const YourCampaigns = ({top}) => {
                 columns={columns}
                 data={filteredCampaginList}
                 persistTableHead
+                defaultSortField="name"
+                defaultSortAsc={false}
               />
           }
         </div>
