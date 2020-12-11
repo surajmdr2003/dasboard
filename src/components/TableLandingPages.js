@@ -112,6 +112,8 @@ const TableLandingPages = ({ landingPages }) => {
               persistTableHead
               // conditionalRowStyles={conditionalRowStyles}
               pagination={landingPages.length > 10 ? true : false}
+              defaultSortField="name"
+              defaultSortAsc={false}
             />
           </div>
         </div>
