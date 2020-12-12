@@ -56,6 +56,12 @@ const TableLandingPages = ({ landingPages }) => {
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
+    {
+      name: '',
+      selector: 'conv-rate',
+      sortable: true,
+      cell: row => (<div row={row}><a target="_blank" href={row.params.url}>preview</a></div>),
+    },
   ]);
 
   /**
@@ -99,7 +105,7 @@ const TableLandingPages = ({ landingPages }) => {
   return (
     <div className="card card-table">
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-12">
           <div className="table-responsive table-landingpage">
             <DataTable
               columns={columns}
@@ -110,11 +116,11 @@ const TableLandingPages = ({ landingPages }) => {
             />
           </div>
         </div>
-        <div className="col-md-4">
+        {/* <div className="col-md-4">
           <div className="card-image ">
             <PagePreview pageUrl={state.activeUrl} />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
