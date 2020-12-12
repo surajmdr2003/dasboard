@@ -17,7 +17,7 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import CampaignService from '../services/campaign.service';
 
 const Creatives = () => {
-  const { activeCampaign, creativesDateFilterRange, setCreativesDateFilterRange} = React.useContext(GlobalContext);
+  const { activeCampaign, creativesDateFilterRange, setCreativesDateFilterRange } = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(creativesDateFilterRange.label);
   const [groupedCreatives, setGroupedCreatives] = useState(null);
@@ -37,11 +37,14 @@ const Creatives = () => {
       cell: row => (<div className="campaign-media media">
         {
           row.params.url.endsWith('mp4')
-            ? <video controls preload="none">
-              <source src={row.params.url} type="video/mp4"/>
-                Your browser does not support the video tag.
-            </video>
-            : <object data={row.params.url} />
+            ? <a target="_blank" href={row.params.url} title="Preview video" className="tooltip">
+              <span className="play-icon"><i className="icon-caret-left" /></span>
+              <span className="tooltiptext">Click to preview video</span>
+            </a>
+            : <a target="_blank" href={row.params.url} title="Preview image" className="tooltip">
+              <object data={row.params.url} />
+              <span className="tooltiptext">Click to preview image</span>
+            </a>
         }
         <div className="media-body">
           <p className="mt-0">{(row.params.name) ? row.params.name : 'No Data'}</p>
@@ -92,7 +95,7 @@ const Creatives = () => {
    */
   const loadCreativesData = (dateRangeFilter) => {
     if (activeCampaign && activeCampaign.id === null) {
-      return cogoToast.warn('No Active campaign selected!', {position: 'bottom-left'});
+      return cogoToast.warn('No Active campaign selected!', { position: 'bottom-left' });
     }
 
     setIsLoading(true);

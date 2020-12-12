@@ -95,7 +95,30 @@ table {
         
             p {
                 margin-bottom: 0;
-            }
+			}
+			
+			a {
+				span.play-icon {
+					display: inline-flex;
+					height: 38px;
+					width: 38px;
+					font-size: 15px;
+					border-radius: 50%;
+					margin-right: 10px;
+					vertical-align: middle;
+					align-items: center;
+					justify-content: center;
+					border: 2px solid $primary;
+
+					i {
+						transform: rotate(180deg) translateX(-2px);
+					}
+				}
+
+				&:hover {
+					text-decoration: none;
+				}
+			}
         }
     
         > div:first-child {
@@ -155,3 +178,4 @@ table {
 .rdt_TableHeadRow .fJpndx {
     opacity: 1;
 } 
+
