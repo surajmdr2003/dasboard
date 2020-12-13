@@ -37,7 +37,7 @@ const Reports = () => {
   const [downloadNotification, setDownloadNotification] = useState(notificationInit);
   const [columns] = useState([
     {
-      name: 'MONTH',
+      name: 'Time Frame',
       selector: 'months',
       sortable: true,
       cell: row => getMonthBlock(row),

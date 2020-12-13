@@ -13,9 +13,9 @@ const Notifications = () => {
           <div className="row">
             <div className="offset-md-2 col-md-8">
               <div className="content-block">
-                <div className="content-block-title">
+                {/* <div className="content-block-title">
                   All notifications
-                </div>
+                </div> */}
                 <div className="content-block-body">
                   <ul className="list-unstyled content-list">
                     <NotificationList displaySummary={false} />
