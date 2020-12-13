@@ -1,18 +1,15 @@
 import { Auth } from 'aws-amplify';
-import Storage from '../utilities/Storage';
+import cogoToast from 'cogo-toast';
 
 class AuthService {
-  isLoggedIn() {
-    const isUserLoggedIn = Storage.getItem('CognitoIdentityServiceProvider.6bs2nga1t9t9aqbqmot3qqb91k.admin.idToken');
-
-    if (!isUserLoggedIn) {
-      window.location.href = '/';
-    }
-  }
-
   async getSessionInfo() {
-    // this.isLoggedIn();
-    return await Auth.currentSession();
+    return await Auth.currentSession()
+      .catch(() => {
+        cogoToast.error('Session Expired! Please sign in again.', { position: 'bottom-left' });
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
+      });
   }
 }
 
