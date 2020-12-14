@@ -100,7 +100,7 @@ const TopCreatives = (props) => {
           <div className="col-md-5">
             <div className="block-title">
               Top creatives
-              <Link to="/dashboard/creatives" className="btn-link">See All</Link>
+              <Link to="/dashboard/creatives" className="btn-link">More Details</Link>
             </div>
           </div>
           <div className="col-md-7">

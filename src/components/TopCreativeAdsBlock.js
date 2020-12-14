@@ -49,7 +49,9 @@ const TopCreativeAdsBlock = ({creative}) => {
             <li><strong>Impressions</strong>{creative.impressions.toLocaleString()}</li>
             <li><strong>Clicks</strong>{creative.clicks.toLocaleString()}</li>
             <li><strong>CTR</strong>{handleNanValueWithCalculation(creative.clicks, creative.impressions)}%</li>
-            <li><strong>Conversion</strong>{creative.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</li>
+            <li><strong>Conversion{(creative.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString() === '1') ? '' : 's' }</strong>
+              {creative.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}
+            </li>
             <li><strong>Conv. rate</strong>{handleNanValueWithCalculation(creative.conversions.reduce((sum, next) => sum + next.count, 0), creative.clicks)}%</li>
           </ul>
         </div>

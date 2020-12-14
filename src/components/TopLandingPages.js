@@ -78,7 +78,7 @@ const TopLandingPages = (props) => {
           <div className="col-md-5">
             <div className="block-title">
               Top landing pages
-              <Link to={'/dashboard/landing-pages'} className="btn-link">See All</Link>
+              <Link to={'/dashboard/landing-pages'} className="btn-link">More Details</Link>
             </div>
           </div>
           <div className="col-md-7">

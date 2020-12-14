@@ -124,7 +124,7 @@ const LifeTimeSummary = ({ advertiserId }) => {
               <ul className="nav nav-fill">
                 <li className="nav-item">
                   <div className="data">
-                    <h5>Conversion{(summaryData.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString() === 1) ? '' : 's'}</h5>
+                    <h5>Conversion{(summaryData.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString() === '1') ? '' : 's'}</h5>
                     <p>{summaryData.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</p>
                   </div>
                 </li>
