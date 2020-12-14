@@ -35,7 +35,7 @@ const YourCampaigns = ({top}) => {
       cell: row => (<div className="campaign">
         <div className="c-name">{(row.params.name) ? row.params.name : 'No Data'}</div>
         <div className="c-date">
-          {row.params.startDate + ' - ' + row.params.endDate}</div>
+          {moment(row.params.startDate).format('MMM DD, YYYY') + ' - ' + moment(row.params.endDate).format('MMM DD, YYYY')}</div>
       </div>),
     },
     {
@@ -160,7 +160,7 @@ const YourCampaigns = ({top}) => {
           <div className="col-md-5">
             <div className="block-title">
               Your campaigns
-              <Link to="/dashboard/campaigns" className="btn-link">See All</Link>
+              <Link to="/dashboard/campaigns" className="btn-link">More Details</Link>
             </div>
           </div>
           <div className="col-md-7">
