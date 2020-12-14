@@ -17,13 +17,13 @@ const Targeting = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageName="Targeting Page" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageName="Targeting" campaignId={+activeCampaign.id} campaignList={window.$campaigns} />
               </div>
             </div>
           </div>
         </div>
       </section>
-      <TopTargets campaignId={+activeCampaign.id}/>
+      <TopTargets campaignId={+activeCampaign.id} showBlockTitle={false}/>
     </Fragment>
   );
 };

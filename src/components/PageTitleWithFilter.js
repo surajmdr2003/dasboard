@@ -17,7 +17,7 @@ const PageTitleWithFilter = ({reportUrl}) => {
    * @param {*} endDate
    */
   const handleFilterDateChange = (startDate, endDate) => {
-    const label = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+    const label = (moment(startDate).format('MMM DD, YYYY') + ' to ' + moment(endDate).format('MMM DD, YYYY')).toString();
 
     setFilterDateTitle(label);
     setPageDateFilterRange({

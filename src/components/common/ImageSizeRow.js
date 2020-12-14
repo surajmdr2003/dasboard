@@ -2,13 +2,13 @@ import React, {useState } from 'react';
 import PropTypes from 'prop-types';
 
 const ImageSizeRow = ({row}) => {
-  const [size, setSize] = useState('0*0');
+  const [size, setSize] = useState('0x0');
   const img = new Image();
 
   img.src = row.params.url;
   // Important to use function decleration for "this" scope
   img.onload = function calculateSize() {
-    setSize(this.width + '*' + this.height);
+    setSize(this.width + 'x' + this.height);
   };
 
   return <div row={row}>{size}</div>;

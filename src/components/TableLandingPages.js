@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 
 import DataTable from 'react-data-table-component';
-import PagePreview from './common/PagePreview';
 
 const TableLandingPages = ({ landingPages }) => {
   const [state, setState] = useState({
@@ -45,16 +44,22 @@ const TableLandingPages = ({ landingPages }) => {
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      name: 'Conversion',
+      name: 'Conversions',
       selector: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      name: 'Conv rate',
+      name: 'Conv. rate',
       selector: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
+    },
+    {
+      name: '',
+      selector: 'conv-rate',
+      sortable: true,
+      cell: row => (<div row={row}><a target="_blank" href={row.params.url}>preview</a></div>),
     },
   ]);
 
@@ -99,7 +104,7 @@ const TableLandingPages = ({ landingPages }) => {
   return (
     <div className="card card-table">
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-12">
           <div className="table-responsive table-landingpage">
             <DataTable
               columns={columns}
@@ -110,11 +115,11 @@ const TableLandingPages = ({ landingPages }) => {
             />
           </div>
         </div>
-        <div className="col-md-4">
+        {/* <div className="col-md-4">
           <div className="card-image ">
             <PagePreview pageUrl={state.activeUrl} />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

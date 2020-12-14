@@ -175,7 +175,7 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
                       </li>
                       <li className="nav-item">
                         <div className="number">{calculateConvRate(navCampaignSummary)}%</div>
-                        <div className="title">Conv rate</div>
+                        <div className="title">Conv. rate</div>
                       </li>
                     </ul>
                     <NavDropdown.Item className="btn-link" onClick={() => loadCampaignPage()}>View Performance</NavDropdown.Item>

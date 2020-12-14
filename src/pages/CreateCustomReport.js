@@ -7,7 +7,7 @@ import DatePickerField from '../components/form-fields/DatePickerField';
 const CreateCustomReport = () => {
   const handleDateChange = (/* startDate, endDate */) => {
     // TODO use these params as required
-    // const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+    // const range = (moment(startDate).format('MMM DD, YYYY') + ' to ' + moment(endDate).format('MMM DD, YYYY')).toString();
   };
 
   return (

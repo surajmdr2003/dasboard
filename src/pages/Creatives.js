@@ -17,13 +17,13 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 import CampaignService from '../services/campaign.service';
 
 const Creatives = () => {
-  const { activeCampaign, creativesDateFilterRange, setCreativesDateFilterRange} = React.useContext(GlobalContext);
+  const { activeCampaign, creativesDateFilterRange, setCreativesDateFilterRange } = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(creativesDateFilterRange.label);
   const [groupedCreatives, setGroupedCreatives] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [filterLabel, setFilterLabel] = useState('Filter By Size');
-  const [sizeFilters, setSizeFilters] = useState(['All Size']);
+  const [sizeFilters, setSizeFilters] = useState(['All Sizes']);
   const [dateFilter, setDateFilter] = useState({
     endDate: creativesDateFilterRange.endDate,
     startDate: creativesDateFilterRange.startDate,
@@ -37,11 +37,14 @@ const Creatives = () => {
       cell: row => (<div className="campaign-media media">
         {
           row.params.url.endsWith('mp4')
-            ? <video controls preload="none">
-              <source src={row.params.url} type="video/mp4"/>
-                Your browser does not support the video tag.
-            </video>
-            : <object data={row.params.url} />
+            ? <a target="_blank" href={row.params.url} title="Preview video" className="tooltip">
+              <span className="play-icon"><i className="icon-caret-left" /></span>
+              <span className="tooltiptext">Click to preview video</span>
+            </a>
+            : <a target="_blank" href={row.params.url} title="Preview image" className="tooltip">
+              <object data={row.params.url} />
+              <span className="tooltiptext">Click to preview image</span>
+            </a>
         }
         <div className="media-body">
           <p className="mt-0">{(row.params.name) ? row.params.name : 'No Data'}</p>
@@ -73,13 +76,13 @@ const Creatives = () => {
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      name: 'Conversion',
+      name: 'Conversions',
       selector: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      name: 'Conv rate',
+      name: 'Conv. rate',
       selector: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
@@ -92,14 +95,14 @@ const Creatives = () => {
    */
   const loadCreativesData = (dateRangeFilter) => {
     if (activeCampaign && activeCampaign.id === null) {
-      return cogoToast.warn('No Active campaign selected!', {position: 'bottom-left'});
+      return cogoToast.warn('No Active campaign selected!', { position: 'bottom-left' });
     }
 
     setIsLoading(true);
     return CampaignService.getCampaignCreatives(activeCampaign.id, dateRangeFilter)
       .then(response => {
         const gCreatives = groupBy(response.data.summary.map(summary => ({ ...summary, size: calculateAssetDimensional(summary.params.url) })), 'size');
-        setSizeFilters(['All Size', ...Object.keys(gCreatives)]);
+        setSizeFilters(['All Sizes', ...Object.keys(gCreatives)]);
         setGroupedCreatives(gCreatives);
         setIsLoading(false);
       })
@@ -125,7 +128,7 @@ const Creatives = () => {
    * @param {End Date} endDate
    */
   const datepickerCallback = (startDate, endDate) => {
-    const label = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+    const label = (moment(startDate).format('MMM DD, YYYY') + ' to ' + moment(endDate).format('MMM DD, YYYY')).toString();
 
     setFilterDateTitle(label);
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
@@ -153,13 +156,13 @@ const Creatives = () => {
     const img = new Image();
     img.src = asset;
     img.onload;
-    return (img.width + '*' + img.height);
+    return (img.width + 'x' + img.height);
   };
 
   const getFilteredOrAllCreatives = (size) => {
     let list = [];
 
-    if (size && size !== 'All Size') {
+    if (size && size !== 'All Sizes') {
       list = groupedCreatives[size];
     } else {
       for (const creativeGroup in groupedCreatives) {
@@ -180,7 +183,7 @@ const Creatives = () => {
         persistTableHead
         pagination={creatives.length > 10 ? true : false}
       />
-      : <div className="text-center">No creative in this campaign</div>;
+      : <div className="text-center">No creatives for this campaign.</div>;
   };
 
   useEffect(() => {
@@ -199,7 +202,7 @@ const Creatives = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
-                <PageTitleCampaignDropdown pageName="Creatives Page" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
+                <PageTitleCampaignDropdown pageName="Creatives" campaignId={activeCampaign.id} campaignList={window.$campaigns} />
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">

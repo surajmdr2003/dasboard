@@ -81,7 +81,7 @@ const LifeTimeSummary = ({ advertiserId }) => {
       <div className={'campiagns-info ' + ((!showRecommendation) ? '' : 'd-none')}>
         <div className="campiagns-info-title bb">
           <h4>Lifetime Data</h4>
-          <p>Based on campaigns performance</p>
+          <p>Based on campaign's performance: </p>
         </div>
         <ul className="campiagns-info-data list-unstyled ">
           <li className="media bb">
@@ -124,13 +124,13 @@ const LifeTimeSummary = ({ advertiserId }) => {
               <ul className="nav nav-fill">
                 <li className="nav-item">
                   <div className="data">
-                    <h5>Conversion</h5>
+                    <h5>Conversion{(summaryData.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString() === 1) ? '' : 's'}</h5>
                     <p>{summaryData.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</p>
                   </div>
                 </li>
                 <li className="nav-item">
                   <div className="data">
-                    <h5>Con rate</h5>
+                    <h5>Conv. rate</h5>
                     <p>{handleNanValueWithCalculation(summaryData.conversions.reduce((sum, next) => sum + next.count, 0), summaryData.clicks)} %</p>
                   </div>
                 </li>

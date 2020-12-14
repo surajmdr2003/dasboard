@@ -10,10 +10,19 @@ import { Auth } from 'aws-amplify';
 import HeaderLogin from '../components/HeaderLogin';
 
 // Required Assets
-const loginBanner = './assets/images/login-banner.jpg';
+const loginBanner = '/assets/images/login-banner.jpg';
 
 const Login = (props) => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const showGreetingMessage = () => {
+    const hrs = new Date().getHours();
+    let greet;
+
+    if (hrs < 12) {greet = 'Good Morning!';} else if (hrs >= 12 && hrs <= 17) {greet = 'Good Afternoon!';} else if (hrs >= 17 && hrs <= 24) {greet = 'Good Evening!';}
+
+    return greet;
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -26,7 +35,7 @@ const Login = (props) => {
         props.history.push('/dashboard');
       })
       .catch(() => {
-        cogoToast.warn('User Not Signed In!', {position: 'bottom-left'});
+        cogoToast.warn('User Not Signed In!', { position: 'bottom-left' });
         setIsLoading(false);
       });
   }, []);
@@ -40,7 +49,7 @@ const Login = (props) => {
             <div className="col-md-5 col-sm-6">
               <div className="login-form-block">
                 <div className="greeting-title">
-                  <h3><span>Good evening!</span> <br /> Welcome back.</h3>
+                  <h3><span>{showGreetingMessage()}</span> <br /> Welcome back.</h3>
                 </div>
                 <button type="button"
                   className="btn btn-primary btn-lg btn-block"
@@ -48,7 +57,7 @@ const Login = (props) => {
                   {
                     isLoading
                       ? <div className="spinner-grow spinner-grow-sm" role="status"> <span className="sr-only">Loading...</span></div>
-                      : 'Sign IN!'
+                      : 'Sign IN'
                   }
                 </button>
               </div>

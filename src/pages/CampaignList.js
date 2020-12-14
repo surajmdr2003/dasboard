@@ -58,13 +58,13 @@ const CampaignList = () => {
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      name: 'Conversion',
+      name: 'Conversions',
       selector: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      name: 'Conv rate',
+      name: 'Conv. rate',
       selector: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
@@ -109,7 +109,7 @@ const CampaignList = () => {
    * @param {End Date} endDate
    */
   const datePickerCallback = (startDate, endDate) => {
-    const range = (moment(startDate).format('DD MMM YY') + ' to ' + moment(endDate).format('DD MMM YY')).toString();
+    const range = (moment(startDate).format('MMM DD, YYYY') + ' to ' + moment(endDate).format('MMM DD, YYYY')).toString();
     setFilterDateTitle(range);
     setCLDateFilterRange({
       label: range,

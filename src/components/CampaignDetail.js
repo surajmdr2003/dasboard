@@ -51,7 +51,7 @@ const CampaignDetail = ({ campaignDesp }) => {
       <div className={'campiagns-info ' + ((!showRecommendation) ? '' : 'd-none')}>
         <div className="campiagns-info-title bb">
           <h4>CAMPAIGN DETAILS</h4>
-          <p>Based on campaigns performance</p>
+          <p>Based on campaign's performance: </p>
         </div>
         <ul className="campiagns-info-data list-unstyled ">
           <li className="media bb">

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 const TopCreativeAdsBlock = ({creative}) => {
-  const [heightWidth, setHeightWidth] = useState('0*0');
+  const [heightWidth, setHeightWidth] = useState('0x0');
   /**
    * Handle NAN and Infinity value
    * @param {Int} fNum
@@ -20,9 +20,9 @@ const TopCreativeAdsBlock = ({creative}) => {
     img.src = asset;
     // Important to use function decleration for "this" scope
     img.onload = function calculateSize() {
-      setHeightWidth(this.width + '*' + this.height);
+      setHeightWidth(this.width + 'x' + this.height);
     };
-    return (img.width + '*' + img.height);
+    return (img.width + 'x' + img.height);
   };
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const TopCreativeAdsBlock = ({creative}) => {
             <li><strong>Clicks</strong>{creative.clicks.toLocaleString()}</li>
             <li><strong>CTR</strong>{handleNanValueWithCalculation(creative.clicks, creative.impressions)}%</li>
             <li><strong>Conversion</strong>{creative.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString()}</li>
-            <li><strong>Conv rate</strong>{handleNanValueWithCalculation(creative.conversions.reduce((sum, next) => sum + next.count, 0), creative.clicks)}%</li>
+            <li><strong>Conv. rate</strong>{handleNanValueWithCalculation(creative.conversions.reduce((sum, next) => sum + next.count, 0), creative.clicks)}%</li>
           </ul>
         </div>
       </div>
