@@ -3,13 +3,15 @@ import Storage from '../utilities/Storage';
 
 class AuthService {
   isLoggedIn() {
-    Storage.getItem('CognitoIdentityServiceProvider.6bs2nga1t9t9aqbqmot3qqb91k.admin.idToken')
-      ? ''
-      : window.location.href = '/';
+    const isUserLoggedIn = Storage.getItem('CognitoIdentityServiceProvider.6bs2nga1t9t9aqbqmot3qqb91k.admin.idToken');
+
+    if (!isUserLoggedIn) {
+      window.location.href = '/';
+    }
   }
 
   async getSessionInfo() {
-    this.isLoggedIn();
+    // this.isLoggedIn();
     return await Auth.currentSession();
   }
 }
