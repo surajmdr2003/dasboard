@@ -35,17 +35,34 @@ const axis = {
   },
 };
 
+let tooltipValue = null;
+
 const tooltip = {
   format: {
+    check: null,
     value: function(value, ratio, id) {
+      tooltipValue = value;
+
       return (id === 'ctr' || id === 'convrate')
         ? value.toFixed(2) + '%'
         : value.toLocaleString();
     },
     name: function(name) {
-      return (name === 'convrate')
-        ? 'Conv. rate'
-        : name;
+      let label = '';
+
+      switch (name) {
+        case 'convrate':
+          label = 'Conv. rate';
+          break;
+
+        case 'conversions':
+          label = tooltipValue === 1 ? 'Conversion' : 'Conversions';
+          break;
+        default:
+          label = name;
+      }
+
+      return label;
     },
   },
 };
