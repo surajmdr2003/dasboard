@@ -168,6 +168,8 @@ const CampaignList = () => {
                   data={campaigns.map(prepareTableRow)}
                   persistTableHead
                   pagination={campaigns.length > 10 ? true : false}
+                  defaultSortField="name"
+                  defaultSortAsc={false}
                 />
             }
           </div>

@@ -14,6 +14,7 @@ class ReportService {
 
       // Setting up header info
       this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+      this.apiRequest.responseType = 'json';
 
       // Setting up Query Strings
       this.apiRequest.queryStringParameters = {};
@@ -29,6 +30,7 @@ class ReportService {
 
       // Setting up header info
       this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+      this.apiRequest.responseType = 'json';
 
       // Setting up Query Strings
       this.apiRequest.queryStringParameters = {};

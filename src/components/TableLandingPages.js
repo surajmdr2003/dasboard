@@ -4,24 +4,24 @@ import { PropTypes } from 'prop-types';
 import DataTable from 'react-data-table-component';
 
 const TableLandingPages = ({ landingPages }) => {
-  const [state, setState] = useState({
-    activePage: '',
-    activeUrl: '',
-  });
+  // const [state, setState] = useState({
+  //   activePage: '',
+  //   activeUrl: '',
+  // });
 
-  const updateState = ({id, params}) => {
-    setState({
-      activePage: id,
-      activeUrl: params.url,
-    });
-  };
+  // const updateState = ({id, params}) => {
+  //   setState({
+  //     activePage: id,
+  //     activeUrl: params.url,
+  //   });
+  // };
 
   const [columns] = useState([
     {
       name: 'Page name',
       selector: 'name',
       sortable: true,
-      cell: row => (<div className={'page-name'} style={{ 'cursor': 'pointer' }} onClick={() => updateState(row)}>
+      cell: row => (<div className={'page-name'} style={{ 'cursor': 'pointer' }} >
         {(row.params.name) ? row.params.name : 'No Data'}
       </div>),
     },
@@ -87,18 +87,18 @@ const TableLandingPages = ({ landingPages }) => {
     return row;
   };
 
-  const conditionalRowStyles = [
-    {
-      when: row => row.id === state.activePage,
-      style: {
-        color: '#22a6de',
-        fontWeight: 'bold',
-      },
-    },
-  ];
+  // const conditionalRowStyles = [
+  //   {
+  //     when: row => row.id === state.activePage,
+  //     style: {
+  //       color: '#22a6de',
+  //       fontWeight: 'bold',
+  //     },
+  //   },
+  // ];
 
   useEffect(() => {
-    landingPages.length && updateState(landingPages[0]);
+    landingPages.length;
   }, []);
 
   return (
@@ -110,8 +110,10 @@ const TableLandingPages = ({ landingPages }) => {
               columns={columns}
               data={landingPages.map(prepareTableRow)}
               persistTableHead
-              conditionalRowStyles={conditionalRowStyles}
+              // conditionalRowStyles={conditionalRowStyles}
               pagination={landingPages.length > 10 ? true : false}
+              defaultSortField="name"
+              defaultSortAsc={false}
             />
           </div>
         </div>

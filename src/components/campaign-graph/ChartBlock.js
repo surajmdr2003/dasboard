@@ -35,13 +35,30 @@ const axis = {
   },
 };
 
-let tooltipValue = null;
+const tooltipValue = {
+  click: 0,
+  impression: 0,
+  conversion: 0,
+};
 
 const tooltip = {
   format: {
-    check: null,
     value: function(value, ratio, id) {
-      tooltipValue = value;
+      switch (id) {
+        case 'clicks':
+          tooltipValue.click = value;
+          break;
+
+        case 'impressions':
+          tooltipValue.impression = value;
+          break;
+
+        case 'conversions':
+          tooltipValue.conversion = value;
+          break;
+        default:
+          // Do Nothing
+      }
 
       return (id === 'ctr' || id === 'convrate')
         ? value.toFixed(2) + '%'
@@ -55,8 +72,16 @@ const tooltip = {
           label = 'Conv. rate';
           break;
 
+        case 'clicks':
+          label = tooltipValue.click === 1 ? 'Click' : 'Clicks';
+          break;
+
+        case 'impressions':
+          label = tooltipValue.impression === 1 ? 'Impression' : 'Impressions';
+          break;
+
         case 'conversions':
-          label = tooltipValue === 1 ? 'Conversion' : 'Conversions';
+          label = tooltipValue.conversion === 1 ? 'Conversion' : 'Conversions';
           break;
         default:
           label = name;

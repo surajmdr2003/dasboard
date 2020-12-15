@@ -150,7 +150,7 @@ const Reports = () => {
   const downloadReport = (e, report) => {
     e.preventDefault();
 
-    const { hide } = cogoToast.loading('Report is being downloaded...', {hideAfter: 0, position: 'bottom-center'});
+    const { hide } = cogoToast.loading('Report is being downloaded ...', {hideAfter: 0, position: 'bottom-center'});
     ReportService.downloadReport(report.id)
       .then((response) => {
         if (response.data) {
@@ -171,25 +171,23 @@ const Reports = () => {
           cogoToast.success('Report is downloaded successfully!', {position: 'bottom-center'});
         }
       })
-      .catch((error) => {
+      .catch(() => {
         hide();
-        cogoToast.error(error.message, {position: 'bottom-center'});
+        cogoToast.error('Error downloading the report.', {position: 'bottom-center'});
       });
   };
 
   const onSubmit = (formData, e) => {
-    const { hide } = cogoToast.loading('Email is being sent...', {hideAfter: 0, position: 'bottom-center'});
+    const { hide } = cogoToast.loading('Email is being sent ...', {hideAfter: 0, position: 'bottom-center'});
     ReportService.emailReport(currentReport.id, formData)
       .then((response) => {
         hide();
-        response.data.success
-          ? cogoToast.success(response.data.message, {position: 'bottom-center'})
-          : cogoToast.error(response.data.message, {position: 'bottom-center'});
         e.target.reset();
-      })
-      .catch((error) => {
-        hide();
-        cogoToast.error(error.message, {position: 'bottom-center'});
+        if (response.data.success) {
+          cogoToast.success(response.data.message, {position: 'bottom-center'});
+        } else {
+          cogoToast.error(response.data.message, {position: 'bottom-center'});
+        }
       });
   };
 
@@ -221,6 +219,8 @@ const Reports = () => {
             paginationTotalRows={data.totalElements}
             onChangeRowsPerPage={handlePerRowsChange}
             onChangePage={handlePageChange}
+            defaultSortField="impressions"
+            defaultSortAsc={false}
           />
           <div className={`custom-modal ${(isModalOpen ? 'show' : 'hide')}`}>
             <div className="modal-block">

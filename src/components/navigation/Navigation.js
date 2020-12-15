@@ -87,7 +87,9 @@ const Navigation = () => {
     event.preventDefault();
     Storage.removeItem('current:user');
     cogoToast.success('You are signed out successsfully!', { position: 'bottom-center' });
-    Auth.signOut();
+    setTimeout(() => {
+      Auth.signOut();
+    }, 1500);
   };
 
   useEffect(() => {
