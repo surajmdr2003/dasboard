@@ -160,7 +160,7 @@ const YourCampaigns = ({top}) => {
           <div className="col-md-5">
             <div className="block-title">
               Your campaigns
-              <Link to="/dashboard/campaigns" className="btn-link">More Details</Link>
+              <Link to="/dashboard/campaigns" className="btn-link">See All</Link>
             </div>
           </div>
           <div className="col-md-7">
