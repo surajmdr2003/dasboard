@@ -22,12 +22,14 @@ import Reports from './pages/Reports';
 import Billing from './pages/Billing';
 import PageNotFound from './pages/NotFound';
 import CampaignList from './pages/CampaignList';
+import UnAuthorized from './pages/Unauthorized';
 
 const Routes = () => {
   return (
     <Switch>
       <Route path={'/'} component={Login} exact />
       <Route exact path={'/login'} component={Login} />
+      <Route exact path={'/unauthorized'} component={UnAuthorized} />
       <Route
         path={'/dashboard'}
         render={({ match: { path } }) => (
