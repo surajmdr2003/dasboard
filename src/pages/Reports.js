@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import cogoToast from 'cogo-toast';
 import DataTable from 'react-data-table-component';
 
 // Context
@@ -10,16 +11,8 @@ import GlobalContext from '../context/GlobalContext';
 import ReportService from '../services/report.service';
 
 /** Components */
-import AlertComponent from '../components/AlertComponent';
 import ErrorMessage from '../components/common/ErrorMessage.component';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
-
-const notificationInit = {
-  isSending: false,
-  show: false,
-  message: '',
-  status: 'light',
-};
 
 const Reports = () => {
   const { activeCampaign } = React.useContext(GlobalContext);
@@ -33,8 +26,6 @@ const Reports = () => {
     startDate: '',
     endDate: '',
   });
-  const [emailNotification, setEmailNotification] = useState(notificationInit);
-  const [downloadNotification, setDownloadNotification] = useState(notificationInit);
   const [columns] = useState([
     {
       name: 'Time Frame',
@@ -159,24 +150,9 @@ const Reports = () => {
   const downloadReport = (e, report) => {
     e.preventDefault();
 
-    setDownloadNotification({
-      ...downloadNotification,
-      isSending: true,
-      show: true,
-      message: 'Report is being downloaded...',
-      status: 'warning',
-    });
-
+    const { hide } = cogoToast.loading('Report is being downloaded...', {hideAfter: 0, position: 'bottom-center'});
     ReportService.downloadReport(report.id)
       .then((response) => {
-        setDownloadNotification({
-          ...downloadNotification,
-          isSending: false,
-          show: true,
-          message: response.data ? 'Report is downloaded successfully!' : "Report can\'t be downloaded",
-          status: response.data ? 'success' : 'danger',
-        });
-
         if (response.data) {
           // Convert the data into Respective Blob Object
           const file = new Blob([response.data], {type: response.headers['content-type']});
@@ -191,47 +167,29 @@ const Reports = () => {
 
           // Removes the node
           link.remove();
+          hide();
+          cogoToast.success('Report is downloaded successfully!', {position: 'bottom-center'});
         }
       })
       .catch((error) => {
-        setDownloadNotification({
-          ...downloadNotification,
-          isSending: false,
-          show: true,
-          message: error.message,
-          status: 'danger',
-        });
+        hide();
+        cogoToast.error(error.message, {position: 'bottom-center'});
       });
   };
 
   const onSubmit = (formData, e) => {
-    setEmailNotification({
-      ...setEmailNotification,
-      isSending: true,
-      show: true,
-      message: 'Email is being sent...',
-      status: 'warning',
-    });
-
+    const { hide } = cogoToast.loading('Email is being sent...', {hideAfter: 0, position: 'bottom-center'});
     ReportService.emailReport(currentReport.id, formData)
       .then((response) => {
-        setEmailNotification({
-          ...setEmailNotification,
-          isSending: false,
-          show: true,
-          message: response.data.message,
-          status: response.data.success ? 'success' : 'danger',
-        });
+        hide();
+        response.data.success
+          ? cogoToast.success(response.data.message, {position: 'bottom-center'})
+          : cogoToast.error(response.data.message, {position: 'bottom-center'});
         e.target.reset();
       })
       .catch((error) => {
-        setEmailNotification({
-          ...setEmailNotification,
-          isSending: false,
-          show: true,
-          message: error.message,
-          status: 'danger',
-        });
+        hide();
+        cogoToast.error(error.message, {position: 'bottom-center'});
       });
   };
 
@@ -253,7 +211,6 @@ const Reports = () => {
       </section>
       <section className="main-content-wrapper table-reports">
         <div className="container">
-          <AlertComponent message={downloadNotification.message} alert={downloadNotification.status} show={downloadNotification.show} isLoading={downloadNotification.isSending} />
           <DataTable
             columns={columns}
             data={data.content ? data.content.map(prepareTableRow) : []}
@@ -279,7 +236,6 @@ const Reports = () => {
                 </span>
               </div>
               <div className="modal-body">
-                <AlertComponent message={emailNotification.message} alert={emailNotification.status} show={emailNotification.show} isLoading={emailNotification.isSending} />
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-group">
                     <label htmlFor="emailAddress" className="label">Email address</label>
