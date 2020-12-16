@@ -35,7 +35,7 @@ const YourCampaigns = ({top}) => {
       cell: row => (<div className="campaign">
         <div className="c-name">{(row.params.name) ? row.params.name : 'No Data'}</div>
         <div className="c-date">
-          {row.params.startDate + ' - ' + row.params.endDate}</div>
+          {moment(row.params.startDate).format('MMM DD, YYYY') + ' - ' + moment(row.params.endDate).format('MMM DD, YYYY')}</div>
       </div>),
     },
     {
@@ -181,6 +181,8 @@ const YourCampaigns = ({top}) => {
                 columns={columns}
                 data={filteredCampaginList}
                 persistTableHead
+                defaultSortField="name"
+                defaultSortAsc={false}
               />
           }
         </div>

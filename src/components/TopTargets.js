@@ -31,6 +31,12 @@ const TopTargets = (props) => {
       .finally(() => setIsLoading(false));
   };
 
+  const noTargetsView = () => {
+    return (<div className="col m-5 text-center">
+      <p className="text-md">No Available Targets!</p>
+    </div>);
+  };
+
   useEffect(() => {
     if (props.campaignId) {
       getCampaignTargets(props.campaignId);
@@ -65,35 +71,39 @@ const TopTargets = (props) => {
                 </div>
                 : props.campaignId
                   ? <Fragment>
-                    <div className="locations col-sm-3 pr-0">
-                      <div className="card border-0">
-                        <div className="card-header">
-                          Target Locations
-                        </div>
-                        <ul className="list-group list-group-flush">
-                          {
-                            targetInfo.allTargets.length
-                              ? targetInfo.allTargets.map(target => {
-                                return (
-                                  <li key={target.id} style={{ cursor: 'pointer' }}
-                                    className={'list-group-item ' + (targetInfo.selectedTarget && targetInfo.selectedTarget.id === target.id ? 'active' : '')}
-                                    onClick={(e) => { e.preventDefault(); setTargetInfo({ ...targetInfo, selectedTarget: target }); }}>
-                                    {target.name}
-                                  </li>
-                                );
-                              })
-                              : <li className="list-group-item">No Location</li>
-                          }
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="col-sm-9 pl-0">
-                      <MapComponent target={targetInfo.selectedTarget} />
-                    </div>
+                    {
+                      targetInfo.allTargets.length
+                        ? <Fragment>
+                          <div className="locations col-sm-3 pr-0">
+                            <div className="card border-0">
+                              <div className="card-header">
+                                Target Locations
+                              </div>
+                              <ul className="list-group list-group-flush">
+                                {
+                                  targetInfo.allTargets.length
+                                    ? targetInfo.allTargets.map(target => {
+                                      return (
+                                        <li key={target.id} style={{ cursor: 'pointer' }}
+                                          className={'list-group-item ' + (targetInfo.selectedTarget && targetInfo.selectedTarget.id === target.id ? 'active' : '')}
+                                          onClick={(e) => { e.preventDefault(); setTargetInfo({ ...targetInfo, selectedTarget: target }); }}>
+                                          {target.name}
+                                        </li>
+                                      );
+                                    })
+                                    : <li className="list-group-item">No Location</li>
+                                }
+                              </ul>
+                            </div>
+                          </div>
+                          <div className="col-sm-9 pl-0">
+                            <MapComponent target={targetInfo.selectedTarget} />
+                          </div>
+                        </Fragment>
+                        : noTargetsView()
+                    }
                   </Fragment>
-                  : <div className="col m-5 text-center">
-                    <p className="text-md">No Available Targets!</p>
-                  </div>
+                  : noTargetsView()
             }
           </div>
         </div>
