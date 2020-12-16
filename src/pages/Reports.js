@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import cogoToast from 'cogo-toast';
+import moment from 'moment';
 import DataTable from 'react-data-table-component';
 
 // Context
@@ -104,7 +105,7 @@ const Reports = () => {
   const getMonthBlock = (row) => (
     <div className="campaign">
       <div className="c-name">{row.monthName}</div>
-      <div className="c-date">{row.startDate} - {row.endDate}</div>
+      <div className="c-date">{moment(row.startDate).format('MMM DD, YYYY')} - { moment(row.endDate).format('MMM DD, YYYY')}</div>
     </div>
   );
 
