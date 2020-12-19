@@ -36,7 +36,7 @@ const CampaignList = () => {
     {
       title: 'Status',
       prop: 'status',
-      sortable: false,
+      sortable: true,
       cell: row => (<div className={`status ${row.params.status.toLowerCase()}-campaign`}>{row.params.status.toLowerCase()}</div>),
     },
     {
@@ -82,6 +82,7 @@ const CampaignList = () => {
    */
   const prepareTableRow = (row) => {
     row.name = row.params.name;
+    row.status = row.params.status;
     row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
     row.conversions = Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString() : row.conversions.toLocaleString();
     row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
