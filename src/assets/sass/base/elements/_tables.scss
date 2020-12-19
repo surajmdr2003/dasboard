@@ -54,6 +54,7 @@ table {
 	.campaign, .page-name {
 		font-weight: normal;
 		cursor: pointer;
+		max-width: 200px;
 	
 		.c-date {
 			font-size: size(11);
@@ -73,7 +74,6 @@ table {
 }
 
 .table-creatives table tr td {
-	padding: size(15);
 
 	.campaign-media {
 		align-items: center;
@@ -90,4 +90,53 @@ table {
 			margin-bottom: 0;
 		}
 	}
+}
+
+
+.thead-th.sortable {
+	position: relative;
+	
+	span.pull-right {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		transform: translateY(-50%);
+	}
+}
+
+.table-landingpage, .table-CampaignList, .table-creatives  {
+	display: flex;
+	flex-direction: column-reverse;
+	
+	table {
+		margin-bottom: 20px;
+	}
+}
+
+.table-creatives .campaign-media {
+	max-width: 250px;
+}
+
+tr.thead-tr {
+    background: #fcfcfc;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.ButtonGroup__root {
+	.btn-primary.disabled, .btn-primary:disabled {
+		color: #4a4a4a;
+		background-color: #ffffff;
+		border-color: #afafaf;
+	}
+
+	.btn-primary {
+		border-left-color: #1b85b4;
+		font-size: 13px;
+	}
+}
+
+
+.table td:first-child {
+    width: 26%;
 }

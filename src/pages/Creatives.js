@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
-import DataTable from 'react-data-table-component';
+import Datatable from 'react-bs-datatable';
 import cogoToast from 'cogo-toast';
 
 // Context
@@ -31,8 +31,8 @@ const Creatives = () => {
 
   const [columns] = useState([
     {
-      name: 'Ad name',
-      selector: 'name',
+      title: 'Ad name',
+      prop: 'name',
       sortable: true,
       cell: row => (<div className="campaign-media media">
         {
@@ -52,38 +52,38 @@ const Creatives = () => {
       </div>),
     },
     {
-      name: 'Size',
-      selector: 'size',
+      title: 'Size',
+      prop: 'size',
       sortable: false,
       cell: row => (<ImageSizeRow row={row} />),
     },
     {
-      name: 'Impressions',
-      selector: 'impressions',
+      title: 'Impressions',
+      prop: 'impressions',
       sortable: true,
       cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
-      name: 'Clicks',
-      selector: 'clicks',
+      title: 'Clicks',
+      prop: 'clicks',
       sortable: true,
       cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
-      name: 'CTR',
-      selector: 'ctr',
+      title: 'CTR',
+      prop: 'ctr',
       sortable: true,
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      name: 'Conversions',
-      selector: 'conversion',
+      title: 'Conversions',
+      prop: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      name: 'Conv. rate',
-      selector: 'conv-rate',
+      title: 'Conv. rate',
+      prop: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
@@ -115,6 +115,7 @@ const Creatives = () => {
    * @param {*} row
    */
   const prepareTableRow = (row) => {
+    row.name = row.params.name;
     row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
     row.conversions = Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString() : row.conversions.toLocaleString();
     row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
@@ -173,16 +174,21 @@ const Creatives = () => {
     return list;
   };
 
+  const customLabels = {
+    first: '<<',
+    last: '>>',
+    prev: '<',
+    next: '>',
+    show: 'Display',
+    entries: 'rows',
+    noResults: 'No creatives for this campaign.',
+  };
+
   const loadViewOfCreative = () => {
     const creatives = getFilteredOrAllCreatives(selectedSize) || [];
 
     return creatives && creatives.length
-      ? <DataTable
-        columns={columns}
-        data={creatives.map(prepareTableRow)}
-        persistTableHead
-        pagination={creatives.length > 10 ? true : false}
-      />
+      ? <Datatable tableHeaders={columns} tableBody={creatives.map(prepareTableRow)} rowsPerPage={(creatives.length > 10) ? 10 : false} labels={customLabels}/>
       : <div className="text-center">No creatives for this campaign.</div>;
   };
 
@@ -206,7 +212,7 @@ const Creatives = () => {
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
-                  {sizeFilters.length ? <DropdownFilter itemList={sizeFilters.map((item) => ({ id: item, name: item }))} label={filterLabel} dropwDownCallBack={loadDataByMonth} /> : ''}
+                  {sizeFilters.length ? <DropdownFilter itemList={sizeFilters.map((item) => ({ id: item, title: item }))} label={filterLabel} dropwDownCallBack={loadDataByMonth} /> : ''}
                   <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
                 </div>
               </div>
@@ -214,14 +220,14 @@ const Creatives = () => {
           </div>
         </div>
       </section>
-      <section className="main-content-wrapper table-creatives">
+      <section className="main-content-wrapper">
         <div className="container">
           {
             isLoading
               ? <div className="text-center m-5">
                 <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
               </div>
-              : loadViewOfCreative()
+              : <div className="table-creatives">{loadViewOfCreative()}</div>
           }
         </div>
       </section>

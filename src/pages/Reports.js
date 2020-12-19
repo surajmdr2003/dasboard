@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import cogoToast from 'cogo-toast';
 import moment from 'moment';
-import DataTable from 'react-data-table-component';
+import Datatable from 'react-bs-datatable';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -18,7 +18,7 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 const Reports = () => {
   const { activeCampaign } = React.useContext(GlobalContext);
   const [isModalOpen, toggleModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
@@ -29,44 +29,44 @@ const Reports = () => {
   });
   const [columns] = useState([
     {
-      name: 'Time Frame',
-      selector: 'months',
+      title: 'Time Frame',
+      prop: 'monthName',
       sortable: true,
       cell: row => getMonthBlock(row),
     },
     {
-      name: 'Status',
-      selector: 'status',
+      title: 'Status',
+      prop: 'status',
       sortable: true,
       cell: (row) => getReportStatus(row),
     },
     {
-      name: 'Impressions',
-      selector: 'impressions',
+      title: 'Impressions',
+      prop: 'impressions',
       sortable: true,
       cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
-      name: 'Clicks',
-      selector: 'clicks',
+      title: 'Clicks',
+      prop: 'clicks',
       sortable: true,
       cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
-      name: 'CTR',
-      selector: 'ctr',
+      title: 'CTR',
+      prop: 'ctr',
       sortable: true,
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      name: 'Conv. rate',
-      selector: 'conv-rate',
+      title: 'Conv. rate',
+      prop: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
     {
-      name: '',
-      selector: 'id',
+      title: '',
+      prop: 'id',
       sortable: false,
       cell: row => getActionBlock(row),
     },
@@ -97,7 +97,7 @@ const Reports = () => {
   const getReportStatus = (row) => {
     return (
       <div className={'status ' + (row.status === 'ACTIVE' ? 'active' : 'inactive') + '-campaign'}>
-        {row.status}
+        {row.status.toLowerCase()}
       </div>
     );
   };
@@ -105,7 +105,7 @@ const Reports = () => {
   const getMonthBlock = (row) => (
     <div className="campaign">
       <div className="c-name">{row.monthName}</div>
-      <div className="c-date">{moment(row.startDate).format('MMM DD, YYYY')} - { moment(row.endDate).format('MMM DD, YYYY')}</div>
+      <div className="c-date">{moment(row.startDate).format('MMM DD, YYYY')} - {moment(row.endDate).format('MMM DD, YYYY')}</div>
     </div>
   );
 
@@ -151,12 +151,12 @@ const Reports = () => {
   const downloadReport = (e, report) => {
     e.preventDefault();
 
-    const { hide } = cogoToast.loading('Report is being downloaded ...', {hideAfter: 0, position: 'bottom-center'});
+    const { hide } = cogoToast.loading('Report is being downloaded ...', { hideAfter: 0, position: 'bottom-center' });
     ReportService.downloadReport(report.id)
       .then((response) => {
         if (response.data) {
           // Convert the data into Respective Blob Object
-          const file = new Blob([response.data], {type: response.headers['content-type']});
+          const file = new Blob([response.data], { type: response.headers['content-type'] });
           const fileURL = URL.createObjectURL(file);
 
           // Redirect to the report url
@@ -169,27 +169,37 @@ const Reports = () => {
           // Removes the node
           link.remove();
           hide();
-          cogoToast.success('Report is downloaded successfully!', {position: 'bottom-center'});
+          cogoToast.success('Report is downloaded successfully!', { position: 'bottom-center' });
         }
       })
       .catch(() => {
         hide();
-        cogoToast.error('Error downloading the report.', {position: 'bottom-center'});
+        cogoToast.error('Error downloading the report.', { position: 'bottom-center' });
       });
   };
 
   const onSubmit = (formData, e) => {
-    const { hide } = cogoToast.loading('Email is being sent ...', {hideAfter: 0, position: 'bottom-center'});
+    const { hide } = cogoToast.loading('Email is being sent ...', { hideAfter: 0, position: 'bottom-center' });
     ReportService.emailReport(currentReport.id, formData)
       .then((response) => {
         hide();
         e.target.reset();
         if (response.data.success) {
-          cogoToast.success(response.data.message, {position: 'bottom-center'});
+          cogoToast.success(response.data.message, { position: 'bottom-center' });
         } else {
-          cogoToast.error(response.data.message, {position: 'bottom-center'});
+          cogoToast.error(response.data.message, { position: 'bottom-center' });
         }
       });
+  };
+
+  const customLabels = {
+    first: '<<',
+    last: '>>',
+    prev: '<',
+    next: '>',
+    show: 'Display',
+    entries: 'rows',
+    noResults: 'There are no data to be displayed',
   };
 
   return (
@@ -210,7 +220,7 @@ const Reports = () => {
       </section>
       <section className="main-content-wrapper table-reports">
         <div className="container">
-          <DataTable
+          {/* <DataTable
             columns={columns}
             data={data.content ? data.content.map(prepareTableRow) : []}
             progressPending={loading}
@@ -222,7 +232,16 @@ const Reports = () => {
             onChangePage={handlePageChange}
             defaultSortField="impressions"
             defaultSortAsc={false}
-          />
+          /> */}
+          <Datatable tableHeaders={columns}
+            tableBody={data.content ? data.content.map(prepareTableRow) : []}
+            // rowsPerPage={(data.content.length > 10) ? 10 : false}
+            paginationServer
+            paginationTotalRows={data.totalElements}
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
+            labels={customLabels} />
+
           <div className={`custom-modal ${(isModalOpen ? 'show' : 'hide')}`}>
             <div className="modal-block">
               <div className="modal-header">
