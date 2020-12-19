@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-
-import DataTable from 'react-data-table-component';
+import Datatable from 'react-bs-datatable';
 
 const TableLandingPages = ({ landingPages }) => {
   // const [state, setState] = useState({
@@ -18,48 +17,46 @@ const TableLandingPages = ({ landingPages }) => {
 
   const [columns] = useState([
     {
-      name: 'Page name',
-      selector: 'name',
+      title: 'Page name',
+      prop: 'name',
       sortable: true,
       cell: row => (<div className={'page-name'} style={{ 'cursor': 'pointer' }} >
         {(row.params.name) ? row.params.name : 'No Data'}
       </div>),
     },
     {
-      name: 'Impressions',
-      selector: 'impressions',
+      title: 'Impressions',
+      prop: 'impressions',
       sortable: true,
       cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
-      name: 'Clicks',
-      selector: 'clicks',
+      title: 'Clicks',
+      prop: 'clicks',
       sortable: true,
       cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
-      name: 'CTR',
-      selector: 'ctr',
+      title: 'CTR',
+      prop: 'ctr',
       sortable: true,
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      name: 'Conversions',
-      selector: 'conversion',
+      title: 'Conversions',
+      prop: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      name: 'Conv. rate',
-      selector: 'conv-rate',
+      title: 'Conv. rate',
+      prop: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
     {
-      name: '',
-      selector: 'conv-rate',
-      sortable: true,
-      cell: row => (<div row={row}><a target="_blank" href={row.params.url}>preview</a></div>),
+      title: '',
+      cell: row => (<div row={row}><a target="_blank" href={row.params.url}>Preview</a></div>),
     },
   ]);
 
@@ -80,6 +77,7 @@ const TableLandingPages = ({ landingPages }) => {
    * @param {*} row
    */
   const prepareTableRow = (row) => {
+    row.name = row.params.name;
     row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
     row.conversions = (Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0) : row.conversions).toLocaleString();
     row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
@@ -97,6 +95,16 @@ const TableLandingPages = ({ landingPages }) => {
   //   },
   // ];
 
+  const customLabels = {
+    first: '<<',
+    last: '>>',
+    prev: '<',
+    next: '>',
+    show: 'Display',
+    entries: 'rows',
+    noResults: 'There are no data to be displayed',
+  };
+
   useEffect(() => {
     landingPages.length;
   }, []);
@@ -105,16 +113,8 @@ const TableLandingPages = ({ landingPages }) => {
     <div className="card card-table">
       <div className="row">
         <div className="col-md-12">
-          <div className="table-responsive table-landingpage">
-            <DataTable
-              columns={columns}
-              data={landingPages.map(prepareTableRow)}
-              persistTableHead
-              // conditionalRowStyles={conditionalRowStyles}
-              pagination={landingPages.length > 10 ? true : false}
-              defaultSortField="name"
-              defaultSortAsc={false}
-            />
+          <div className="table-landingpage">
+            <Datatable tableHeaders={columns} tableBody={landingPages.map(prepareTableRow)}  rowsPerPage={(landingPages.length > 10) ? 10 : false} labels={customLabels} />
           </div>
         </div>
         {/* <div className="col-md-4">

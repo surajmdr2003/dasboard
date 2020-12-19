@@ -78,7 +78,7 @@ table {
 }
 
 .table-creatives, .table-reports {
-    .rdt_TableRow {
+    .rdt_TableRow, .table-datatable__root {
         padding-top: size(15);
         padding-bottom: size(15);
     
@@ -173,4 +173,25 @@ table {
 	.guAIKK {
 		padding-left: 0;
 	}
+}
+
+
+.fa-fw {
+	height: 20px;
+	width: 20px;
+	background-repeat: no-repeat;
+	background-position: center;
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 10px;
+
+	&.fa-sort {
+		background-image: url(../images/sort_both.png);
+	}
+	&.fa-sort-asc {
+		background-image: url(../images/sort_asc.png);
+	}
+	&.fa-sort-desc {
+		background-image: url(../images/sort_desc.png);
+	}	
 }
