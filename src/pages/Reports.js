@@ -18,7 +18,7 @@ import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
 const Reports = () => {
   const { activeCampaign } = React.useContext(GlobalContext);
   const [isModalOpen, toggleModal] = useState(false);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
@@ -220,28 +220,20 @@ const Reports = () => {
       </section>
       <section className="main-content-wrapper table-reports">
         <div className="container">
-          {/* <DataTable
-            columns={columns}
-            data={data.content ? data.content.map(prepareTableRow) : []}
-            progressPending={loading}
-            pagination
-            persistTableHead
-            paginationServer
-            paginationTotalRows={data.totalElements}
-            onChangeRowsPerPage={handlePerRowsChange}
-            onChangePage={handlePageChange}
-            defaultSortField="impressions"
-            defaultSortAsc={false}
-          /> */}
-          <Datatable tableHeaders={columns}
-            tableBody={data.content ? data.content.map(prepareTableRow) : []}
-            // rowsPerPage={(data.content.length > 10) ? 10 : false}
-            paginationServer
-            paginationTotalRows={data.totalElements}
-            onChangeRowsPerPage={handlePerRowsChange}
-            onChangePage={handlePageChange}
-            labels={customLabels} />
-
+          {
+            loading
+              ? <div className="text-center m-5">
+                <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+              </div>
+              : <Datatable tableHeaders={columns}
+                tableBody={data.content ? data.content.map(prepareTableRow) : []}
+                paginationServer
+                paginationTotalRows={data.totalElements}
+                onChangeRowsPerPage={handlePerRowsChange}
+                onChangePage={handlePageChange}
+                labels={customLabels}
+              />
+          }
           <div className={`custom-modal ${(isModalOpen ? 'show' : 'hide')}`}>
             <div className="modal-block">
               <div className="modal-header">
