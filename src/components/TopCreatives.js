@@ -82,7 +82,7 @@ const TopCreatives = (props) => {
       ? tFiveCreatives.map(creative => {
         return <TopCreativeAdsBlock key={creative.campaignAssetId} creative={creative} />;
       })
-      : <div className="col">No Creative found</div>;
+      : <div className="col text-center not-found">No creative found</div>;
   };
 
   const loadCreativesByCampaign = (campaign) => {

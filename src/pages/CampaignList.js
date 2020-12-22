@@ -141,7 +141,7 @@ const CampaignList = () => {
     next: '>',
     show: 'Display',
     entries: 'rows',
-    noResults: 'There are no data to be displayed',
+    noResults: (<div className="text-center">There are no data to be displayed</div>),
   };
 
   useEffect(() => {
