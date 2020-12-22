@@ -212,7 +212,7 @@ const Creatives = () => {
               </div>
               <div className="col-md-6 text-right">
                 <div className="block-filter">
-                  {sizeFilters.length ? <DropdownFilter itemList={sizeFilters.map((item) => ({ id: item, title: item }))} label={filterLabel} dropwDownCallBack={loadDataByMonth} /> : ''}
+                  {sizeFilters.length ? <DropdownFilter itemList={sizeFilters.map((item) => ({ id: item, name: item }))} label={filterLabel} dropwDownCallBack={loadDataByMonth} /> : ''}
                   <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
                 </div>
               </div>
