@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import DataTable from 'react-data-table-component';
+import Datatable from 'react-bs-datatable';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -24,8 +24,8 @@ const CampaignList = () => {
 
   const [columns] = useState([
     {
-      name: 'Campaign name',
-      selector: 'name',
+      title: 'Campaign name',
+      prop: 'name',
       sortable: true,
       cell: row => (<div className="campaign">
         <div className="c-name">{(row.params.name) ? row.params.name : 'No Data'}</div>
@@ -34,43 +34,43 @@ const CampaignList = () => {
       </div>),
     },
     {
-      name: 'Status',
-      selector: 'status',
-      sortable: false,
+      title: 'Status',
+      prop: 'status',
+      sortable: true,
       cell: row => (<div className={`status ${row.params.status.toLowerCase()}-campaign`}>{row.params.status.toLowerCase()}</div>),
     },
     {
-      name: 'Impressions',
-      selector: 'impressions',
+      title: 'Impressions',
+      prop: 'impressions',
       sortable: true,
       cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
-      name: 'Clicks',
-      selector: 'clicks',
+      title: 'Clicks',
+      prop: 'clicks',
       sortable: true,
       cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
-      name: 'CTR',
-      selector: 'ctr',
+      title: 'CTR',
+      prop: 'ctr',
       sortable: true,
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      name: 'Conversions',
-      selector: 'conversion',
+      title: 'Conversions',
+      prop: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      name: 'Conv. rate',
-      selector: 'conv-rate',
+      title: 'Conv. rate',
+      prop: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
     {
-      name: '',
+      title: '',
       sortable: false,
       cell: row => (<div row={row}><Link onClick={() => setActiveCampaign(row)} to={'/dashboard/campaign'}>See details</Link></div>),
     },
@@ -81,6 +81,8 @@ const CampaignList = () => {
    * @param {*} row
    */
   const prepareTableRow = (row) => {
+    row.name = row.params.name;
+    row.status = row.params.status;
     row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
     row.conversions = Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString() : row.conversions.toLocaleString();
     row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
@@ -132,6 +134,16 @@ const CampaignList = () => {
     return ((fNum / sNum) * 100).toFixed(2);
   };
 
+  const customLabels = {
+    first: '<<',
+    last: '>>',
+    prev: '<',
+    next: '>',
+    show: 'Display',
+    entries: 'rows',
+    noResults: (<div className="text-center">There are no data to be displayed</div>),
+  };
+
   useEffect(() => {
     loadCampaignListData(user.id, dateFilter);
   }, [user.id]);
@@ -156,21 +168,14 @@ const CampaignList = () => {
       </section>
       <section className="main-content-wrapper table-CampaignList">
         <div className="container">
-          <div className="table-responsive table-CampaignList">
+          <div className="table-CampaignList">
             {
               isLoading
                 ?
                 <div className="text-center m-5">
                   <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
                 </div>
-                : <DataTable
-                  columns={columns}
-                  data={campaigns.map(prepareTableRow)}
-                  persistTableHead
-                  pagination={campaigns.length > 10 ? true : false}
-                  defaultSortField="name"
-                  defaultSortAsc={false}
-                />
+                : <Datatable tableHeaders={columns} tableBody={campaigns.map(prepareTableRow)} rowsPerPage={(campaigns.length > 10) ? 10 : false} labels={customLabels}/>
             }
           </div>
         </div>

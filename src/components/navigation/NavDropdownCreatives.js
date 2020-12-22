@@ -59,7 +59,7 @@ const NavDropdownCreatives = ({campaignNavItems}) => {
           </div>
         </li>);
       })
-      : <div className="col">No Creative found</div>;
+      : <div className="col text-center not-found">No creative found</div>;
   };
 
   const calculateAssetDimensional = (asset) => {

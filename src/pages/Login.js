@@ -31,7 +31,7 @@ const Login = (props) => {
     Auth.currentAuthenticatedUser()
       .then((response) => {
         const permissions = response.signInUserSession.accessToken.payload['cognito:groups'];
-        const isAuthorized = permissions.includes('ROLE_USER') || permissions.includes('ROLE_ADMIN') || permissions.includes('ROLE_ADVERTISER');
+        const isAuthorized = permissions && (permissions.includes('ROLE_USER') || permissions.includes('ROLE_ADMIN') || permissions.includes('ROLE_ADVERTISER'));
 
         // Hide loader/spinner
         setIsLoading(false);

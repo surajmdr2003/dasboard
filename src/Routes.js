@@ -19,7 +19,6 @@ import Notifications from './pages/Notifications';
 import EditProfile from './pages/EditProfile';
 import CreateCustomReport from './pages/CreateCustomReport';
 import Reports from './pages/Reports';
-import Billing from './pages/Billing';
 import PageNotFound from './pages/NotFound';
 import CampaignList from './pages/CampaignList';
 import UnAuthorized from './pages/Unauthorized';
@@ -47,7 +46,6 @@ const Routes = () => {
               <PrivateRoute exact path={path + '/landing-pages'} component={LandingPages} />
               <PrivateRoute exact path={path + '/targeting'} component={Targeting} />
               <PrivateRoute exact path={path + '/reports'} component={Reports} />
-              <PrivateRoute exact path={path + '/billing'} component={Billing} />
 
               {/* If no matching routes are requested */}
               <Redirect exact from={path + '/*'} to={path} />

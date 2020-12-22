@@ -35,7 +35,7 @@ const LandingPages = () => {
     setIsLoading(true);
     return CampaignService.getCampaignLandingPages(activeCampaign.id, dateRangeFilter)
       .then((response) => {
-        setLandingPagesList(response.data.summary.splice(0, 7));
+        setLandingPagesList(response.data.summary);
         setIsLoading(false);
       })
       .catch(() => false)

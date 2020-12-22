@@ -108,7 +108,7 @@ const NavDropdownCampaign = ({campaignNavItems}) => {
           </Link>
         </li>);
       })
-      : <li className="nav-item"><Link to="#" className="nav-link">No Campaign</Link></li>;
+      : <li className="nav-item"><Link to="#" className="nav-link">No Campaigns</Link></li>;
   };
 
   const loadCampaignPage = () => {

@@ -61,7 +61,7 @@ const PageTitleCampaignDropdown = (props) => {
           }
         </li>);
       })
-      : <li className="nav-item no-campaign">No Campaign</li>;
+      : <li className="nav-item no-campaign">No Campaigns</li>;
   };
 
   /**

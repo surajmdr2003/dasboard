@@ -110,9 +110,10 @@
 }
 
 .card-table {
+    border: 0;
     .table {
-        border: 0;
         border-right: 1px solid $color__table-border;
+        margin-bottom: 15px;
 
         .thead-light th {
             border-top: 0;
@@ -142,4 +143,6 @@
     }
 }
 
-
+.not-found {
+    font-size: 14px;
+}
