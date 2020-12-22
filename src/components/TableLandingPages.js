@@ -54,10 +54,10 @@ const TableLandingPages = ({ landingPages }) => {
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
-    {
-      title: '',
-      cell: row => (<div row={row}><a target="_blank" href={row.params.url}>Preview</a></div>),
-    },
+    // {
+    //   title: '',
+    //   cell: row => (<div row={row}><a target="_blank" href={row.params.url}>Preview</a></div>),
+    // },
   ]);
 
   /**
@@ -102,7 +102,7 @@ const TableLandingPages = ({ landingPages }) => {
     next: '>',
     show: 'Display',
     entries: 'rows',
-    noResults: 'There are no data to be displayed',
+    noResults: (<div className="text-center">There are no data to be displayed</div>),
   };
 
   useEffect(() => {

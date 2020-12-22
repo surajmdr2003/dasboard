@@ -199,7 +199,7 @@ const Reports = () => {
     next: '>',
     show: 'Display',
     entries: 'rows',
-    noResults: 'There are no data to be displayed',
+    noResults: (<div className="text-center">There are no data to be displayed</div>),
   };
 
   return (
@@ -239,7 +239,8 @@ const Reports = () => {
               <div className="modal-header">
                 <header>
                   <h4>Email Report</h4>
-                  <div>From {currentReport.startDate} to {currentReport.endDate}</div>
+
+                  <div>From {moment(currentReport.startDate).format('MMM DD, YYYY')} to {moment(currentReport.endDate).format('MMM DD, YYYY')}</div>
                 </header>
                 <span className="icon-close" onClick={() => toggleModal(false)}>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 492 492">
@@ -265,7 +266,7 @@ const Reports = () => {
                     <ErrorMessage error={errors.emailAddress} />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="message" className="label">Leave a message</label>
+                    <label htmlFor="message" className="label">Add notes to this email</label>
                     <textarea
                       rows="5"
                       id="message"

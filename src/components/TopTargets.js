@@ -33,7 +33,7 @@ const TopTargets = (props) => {
 
   const noTargetsView = () => {
     return (<div className="col m-5 text-center">
-      <p className="text-md">No Available Targets</p>
+      <p className="text-md not-found">No available targets</p>
     </div>);
   };
 
