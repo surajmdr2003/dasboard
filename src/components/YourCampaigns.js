@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProtoTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import Datatable from 'react-bs-datatable';
+import ReactDatatable from '@ashvin27/react-datatable';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -14,13 +14,13 @@ import AdvertiserService from '../services/advertiser.service';
 import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 
-const YourCampaigns = ({top}) => {
+const YourCampaigns = ({ top }) => {
   const { user, setActiveCampaign, CLDateFilterRange, setCLDateFilterRange } = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(CLDateFilterRange.label);
   const [filteredCampaginList, setFilteredCampaginList] = useState([]);
   const [activeStatusFilter, setActiveStatusFilter] = useState('Filter By Status');
-  const dropDownStatus = [{id: 1, name: 'all'}, { id: 2, name: 'active' }, { id: 3, name: 'inactive' }];
+  const dropDownStatus = [{ id: 1, name: 'all' }, { id: 2, name: 'active' }, { id: 3, name: 'inactive' }];
   const [dateFilter, setDateFilter] = useState({
     endDate: CLDateFilterRange.endDate,
     startDate: CLDateFilterRange.startDate,
@@ -29,8 +29,8 @@ const YourCampaigns = ({top}) => {
 
   const [columns] = useState([
     {
-      title: 'Campaign name',
-      prop: 'name',
+      text: 'Campaign name',
+      key: 'name',
       sortable: true,
       cell: row => (<div className="campaign">
         <div className="c-name">{(row.params.name) ? row.params.name : 'No Data'}</div>
@@ -39,43 +39,43 @@ const YourCampaigns = ({top}) => {
       </div>),
     },
     {
-      title: 'Status',
-      prop: 'status',
+      text: 'Status',
+      key: 'status',
       sortable: true,
       cell: row => (<div className={`status ${row.params.status.toLowerCase()}-campaign`}>{row.params.status.toLowerCase()}</div>),
     },
     {
-      title: 'Impressions',
-      prop: 'impressions',
+      text: 'Impressions',
+      key: 'impressions',
       sortable: true,
       cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
-      title: 'Clicks',
-      prop: 'clicks',
+      text: 'Clicks',
+      key: 'clicks',
       sortable: true,
       cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
-      title: 'CTR',
-      prop: 'ctr',
+      text: 'CTR',
+      key: 'ctr',
       sortable: true,
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      title: 'Conversions',
-      prop: 'conversion',
+      text: 'Conversions',
+      key: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      title: 'Conv. rate',
+      text: 'Conv. rate',
       prop: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
     {
-      title: '',
+      text: '',
       sortable: false,
       cell: row => (<div row={row}><Link onClick={() => setActiveCampaign(row)} to={'/dashboard/campaign'}>See details</Link></div>),
     },
@@ -150,6 +150,22 @@ const YourCampaigns = ({top}) => {
     setActiveStatusFilter(status.name);
   };
 
+  const config = {
+    page_size: 10,
+    length_menu: [10, 20, 50],
+    show_filter: false,
+    show_pagination: false,
+    pagination: 'advance',
+    key_column: 'id',
+    button: {
+      excel: false,
+      print: false,
+    },
+    language: {
+      no_data_text: 'No campaign found',
+    },
+  };
+
   useEffect(() => {
     campaignsData(dateFilter);
   }, [user.id]);
@@ -179,7 +195,10 @@ const YourCampaigns = ({top}) => {
               ? <div className="text-center m-5">
                 <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
               </div>
-              :  <Datatable tableHeaders={columns} tableBody={filteredCampaginList} />
+              : <ReactDatatable
+                config={config}
+                columns={columns}
+                records={filteredCampaginList} />
           }
         </div>
       </div>

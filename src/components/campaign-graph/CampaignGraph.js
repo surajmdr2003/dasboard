@@ -1,6 +1,8 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { PropTypes } from 'prop-types';
 import moment from 'moment';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 // Contexts
 import GlobalContext from '../../context/GlobalContext';
@@ -37,7 +39,9 @@ const initialData = {
     impressions: 0,
     conversions: [],
     change: [],
-    params: null,
+    params: {
+      hasConversions: true,
+    },
   },
   campaignInfo: {
     active: 0,
@@ -250,15 +254,32 @@ const CampaignGraph = (props) => {
 
   const tabData = (slug) => {
     if (slug === 'conversions') {
-      return state.summaryData.conversions.reduce((sum, next) => sum + next.count, 0);
+      return (state.summaryData.params !== null && !state.summaryData.params.hasConversions)
+        ? hasNoConversionView()
+        : state.summaryData.conversions.reduce((sum, next) => sum + next.count, 0);
     } else if (slug === 'convrate') {
       return handleNanValueWithCalculation(state.summaryData.conversions.reduce((sum, next) => sum + next.count, 0), state.summaryData.clicks) + '%';
     } else if (slug === 'ctr') {
       return handleNanValueWithCalculation(state.summaryData.clicks, state.summaryData.impressions) + '%';
     }
-
-    return state.summaryData[slug];
+    return state.summaryData[slug].toLocaleString();
   };
+
+  const hasNoConversionView = () => {
+    return (<OverlayTrigger
+      placement="right"
+      delay={{ show: 250, hide: 400 }}
+      overlay={renderTooltip}
+    >
+      <span className="icon">- <img src="/assets/images/question-circular.svg" /></span>
+    </OverlayTrigger>);
+  };
+
+  const renderTooltip = (propsInfo) => (
+    <Tooltip id="button-tooltip" {...propsInfo}>
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+    </Tooltip>
+  );
 
   const showChangeValue = (changeVal, activeTab) => {
     const clickChange = changeVal.find(value => value.metricType === 'CLICK');
@@ -321,9 +342,12 @@ const CampaignGraph = (props) => {
                             return (
                               <li key={tab.slug} className={'nav-item ' + ((state.activeTab === tab.slug) ? 'active' : '')}
                                 onClick={() => setState({ ...state, activeTab: tab.slug })}>
-                                <div className="number">{tabData(tab.slug).toLocaleString()}</div>
+                                <div className="number">{tabData(tab.slug)}</div>
                                 <div className="title">{tab.label}</div>
-                                { state.summaryData.change !== null && state.summaryData.change.length ? showChangeValue(state.summaryData.change, tab.slug) : ''}
+                                {(state.summaryData.params !== null && !state.summaryData.params.hasConversions && tab.slug === 'conversions')
+                                  ? <div className="percent text-primary">Set Up Conversion</div>
+                                  : state.summaryData.change !== null && state.summaryData.change.length ? showChangeValue(state.summaryData.change, tab.slug) : ''
+                                }
                               </li>);
                           })
                           }

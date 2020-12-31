@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import Datatable from 'react-bs-datatable';
+import ReactDatatable from '@ashvin27/react-datatable';
 
 const TableLandingPages = ({ landingPages }) => {
   // const [state, setState] = useState({
@@ -17,48 +17,64 @@ const TableLandingPages = ({ landingPages }) => {
 
   const [columns] = useState([
     {
-      title: 'Page name',
-      prop: 'name',
+      text: 'Page name',
+      key: 'name',
       sortable: true,
       cell: row => (<div className={'page-name'} style={{ 'cursor': 'pointer' }} >
         {(row.params.name) ? row.params.name : 'No Data'}
       </div>),
     },
     {
-      title: 'Impressions',
-      prop: 'impressions',
+      text: 'Impressions',
+      key: 'impressions',
       sortable: true,
       cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
-      title: 'Clicks',
-      prop: 'clicks',
+      text: 'Clicks',
+      key: 'clicks',
       sortable: true,
       cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
-      title: 'CTR',
-      prop: 'ctr',
+      text: 'CTR',
+      key: 'ctr',
       sortable: true,
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      title: 'Conversions',
-      prop: 'conversion',
+      text: 'Conversions',
+      key: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      title: 'Conv. rate',
-      prop: 'conv-rate',
+      text: 'Conv. rate',
+      key: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
     // {
-    //   title: '',
+    //   text: '',
     //   cell: row => (<div row={row}><a target="_blank" href={row.params.url}>Preview</a></div>),
     // },
   ]);
+
+  const config = {
+    page_size: 10,
+    length_menu: [10, 20, 50],
+    show_filter: false,
+    show_pagination: (landingPages.length > 10) ? true : false,
+    pagination: 'advance',
+    key_column: 'id',
+    button: {
+      excel: false,
+      print: false,
+    },
+    language: {
+      no_data_text: 'No landingpages for this campaign.',
+    },
+  };
 
   /**
    * Handle NAN and Infinity value
@@ -95,16 +111,6 @@ const TableLandingPages = ({ landingPages }) => {
   //   },
   // ];
 
-  const customLabels = {
-    first: '<<',
-    last: '>>',
-    prev: '<',
-    next: '>',
-    show: 'Display',
-    entries: 'rows',
-    noResults: (<div className="text-center">There are no data to be displayed</div>),
-  };
-
   useEffect(() => {
     landingPages.length;
   }, []);
@@ -114,7 +120,11 @@ const TableLandingPages = ({ landingPages }) => {
       <div className="row">
         <div className="col-md-12">
           <div className="table-landingpage">
-            <Datatable tableHeaders={columns} tableBody={landingPages.map(prepareTableRow)}  rowsPerPage={(landingPages.length > 10) ? 10 : false} labels={customLabels} />
+            {/* <Datatable tableHeaders={columns} tableBody={landingPages.map(prepareTableRow)}  rowsPerPage={(landingPages.length > 10) ? 10 : false} labels={customLabels} /> */}
+            <ReactDatatable
+              config={config}
+              columns={columns}
+              records={landingPages.map(prepareTableRow)} />
           </div>
         </div>
         {/* <div className="col-md-4">
