@@ -110,6 +110,20 @@ class AdvertiserService {
     return await API.post('advertiser', `/${advertiserId}/performance/campaigns`, this.apiRequest);
   }
 
+  async getAdvertiserPerformanceInactiveCampaigns(advertiserId) {
+    const userInfo = await AuthService.getSessionInfo();
+    const accessToken = userInfo.getAccessToken().getJwtToken();
+
+    // Setting up header info
+    this.apiRequest.headers.authorization = `Bearer ${accessToken}`;
+
+    // Setting up Query Strings
+    this.apiRequest.queryStringParameters = {};
+    Object.assign(this.apiRequest.queryStringParameters, {status: 'INACTIVE'});
+
+    return await API.post('advertiser', `/${advertiserId}/performance/campaigns/lifetime`, this.apiRequest);
+  }
+
   async getAdvertiserPerformanceLandingPages(advertiserId, dateRangeFilter = null, campaignFilter = null) {
     const userInfo = await AuthService.getSessionInfo();
     const accessToken = userInfo.getAccessToken().getJwtToken();

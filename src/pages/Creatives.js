@@ -1,8 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
-import Datatable from 'react-bs-datatable';
+import ReactDatatable from '@ashvin27/react-datatable';
 import cogoToast from 'cogo-toast';
+import Modal from 'react-bootstrap/Modal';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -24,24 +25,37 @@ const Creatives = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [filterLabel, setFilterLabel] = useState('Filter By Size');
   const [sizeFilters, setSizeFilters] = useState(['All Sizes']);
+  const [creativeOnModal, setCreativeOnModal] = useState({
+    params: {
+      name: '',
+      url: '',
+    },
+  });
   const [dateFilter, setDateFilter] = useState({
     endDate: creativesDateFilterRange.endDate,
     startDate: creativesDateFilterRange.startDate,
   });
 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = (event, data) => {
+    setShow(true);
+    setCreativeOnModal(data);
+  };
+
   const [columns] = useState([
     {
-      title: 'Ad name',
-      prop: 'name',
+      text: 'Ad name',
+      key: 'name',
       sortable: true,
       cell: row => (<div className="campaign-media media">
         {
           row.params.url.endsWith('mp4')
-            ? <a target="_blank" href={row.params.url} title="Preview video" className="tooltip">
+            ? <a title="Preview video" className="tooltip">
               <span className="play-icon"><i className="icon-caret-left" /></span>
               <span className="tooltiptext">Click to preview video</span>
             </a>
-            : <a target="_blank" href={row.params.url} title="Preview image" className="tooltip">
+            : <a title="Preview image" className="tooltip">
               <object data={row.params.url} />
               <span className="tooltiptext">Click to preview image</span>
             </a>
@@ -52,38 +66,40 @@ const Creatives = () => {
       </div>),
     },
     {
-      title: 'Size',
-      prop: 'size',
+      text: 'Size',
+      key: 'size',
       sortable: false,
+      className: 'size-column',
+      TrOnlyClassName: 'size-column',
       cell: row => (<ImageSizeRow row={row} />),
     },
     {
-      title: 'Impressions',
-      prop: 'impressions',
+      text: 'Impressions',
+      key: 'impressions',
       sortable: true,
       cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
-      title: 'Clicks',
-      prop: 'clicks',
+      text: 'Clicks',
+      key: 'clicks',
       sortable: true,
       cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
-      title: 'CTR',
-      prop: 'ctr',
+      text: 'CTR',
+      key: 'ctr',
       sortable: true,
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      title: 'Conversions',
-      prop: 'conversion',
+      text: 'Conversions',
+      key: 'conversion',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions}</div>),
     },
     {
-      title: 'Conv. rate',
-      prop: 'conv-rate',
+      text: 'Conv. rate',
+      key: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
@@ -174,22 +190,30 @@ const Creatives = () => {
     return list;
   };
 
-  const customLabels = {
-    first: '<<',
-    last: '>>',
-    prev: '<',
-    next: '>',
-    show: 'Display',
-    entries: 'rows',
-    noResults: 'No creatives for this campaign.',
-  };
-
   const loadViewOfCreative = () => {
     const creatives = getFilteredOrAllCreatives(selectedSize) || [];
 
-    return creatives && creatives.length
-      ? <Datatable tableHeaders={columns} tableBody={creatives.map(prepareTableRow)} rowsPerPage={(creatives.length > 10) ? 10 : false} labels={customLabels}/>
-      : <div className="text-center">No creatives for this campaign.</div>;
+    const config = {
+      page_size: 10,
+      length_menu: [10, 20, 50],
+      show_filter: false,
+      show_pagination: (creatives.length > 10) ? true : false,
+      pagination: 'advance',
+      key_column: 'campaignAssetId',
+      button: {
+        excel: false,
+        print: false,
+      },
+      language: {
+        no_data_text: 'No creatives for this campaign.',
+      },
+    };
+
+    return (<ReactDatatable
+      config={config}
+      columns={columns}
+      records={creatives.map(prepareTableRow)}
+      onRowClicked={handleShow} />);
   };
 
   useEffect(() => {
@@ -231,6 +255,21 @@ const Creatives = () => {
           }
         </div>
       </section>
+      <Modal show={show} onHide={handleClose} size="lg" dialogClassName="creative-modal">
+        <Modal.Header closeButton>
+          {creativeOnModal.params.name}
+        </Modal.Header>
+        <Modal.Body>
+          {
+            creativeOnModal.params.url.endsWith('mp4')
+              ? <video controls preload="none">
+                <source src={creativeOnModal.params.url} type="video/mp4" />
+                  Your browser does not support the video tag.
+              </video>
+              : <img src={creativeOnModal.params.url} />
+          }
+        </Modal.Body>
+      </Modal>
     </Fragment>
   );
 };

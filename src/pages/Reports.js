@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import cogoToast from 'cogo-toast';
 import moment from 'moment';
-import Datatable from 'react-bs-datatable';
+import ReactDatatable from '@ashvin27/react-datatable';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -19,8 +19,8 @@ const Reports = () => {
   const { activeCampaign } = React.useContext(GlobalContext);
   const [isModalOpen, toggleModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [perPage, setPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(500);
+  const [currentPage] = useState(1);
   const [data, setData] = useState([]);
   const { register, handleSubmit, errors, isSubmitting } = useForm();
   const [currentReport, setCurrentReport] = useState({
@@ -29,43 +29,43 @@ const Reports = () => {
   });
   const [columns] = useState([
     {
-      title: 'Time Frame',
-      prop: 'monthName',
+      text: 'Time Frame',
+      key: 'monthName',
       sortable: true,
       cell: row => getMonthBlock(row),
     },
     {
-      title: 'Status',
-      prop: 'status',
+      text: 'Status',
+      key: 'status',
       sortable: true,
       cell: (row) => getReportStatus(row),
     },
     {
-      title: 'Impressions',
-      prop: 'impressions',
+      text: 'Impressions',
+      key: 'impressions',
       sortable: true,
       cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
-      title: 'Clicks',
-      prop: 'clicks',
+      text: 'Clicks',
+      key: 'clicks',
       sortable: true,
       cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
-      title: 'CTR',
-      prop: 'ctr',
+      text: 'CTR',
+      key: 'ctr',
       sortable: true,
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      title: 'Conv. rate',
-      prop: 'conv-rate',
+      text: 'Conv. rate',
+      key: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
     {
-      title: '',
+      text: '',
       prop: 'id',
       sortable: false,
       cell: row => getActionBlock(row),
@@ -138,15 +138,15 @@ const Reports = () => {
       .finally(() => setLoading(false));
   };
 
-  const handlePageChange = page => {
-    setCurrentPage(page);
-    fetchCampaignReports(page);
-  };
+  // const tableChangeHandler = page => {
+  //   setCurrentPage(page);
+  //   fetchCampaignReports(page);
+  // };
 
-  const handlePerRowsChange = async(newPerPage, page) => {
-    setPerPage(newPerPage);
-    fetchCampaignReports(page);
-  };
+  // const handlePerRowsChange = async(newPerPage, page) => {
+  //   setPerPage(newPerPage);
+  //   fetchCampaignReports(page);
+  // };
 
   const downloadReport = (e, report) => {
     e.preventDefault();
@@ -192,14 +192,20 @@ const Reports = () => {
       });
   };
 
-  const customLabels = {
-    first: '<<',
-    last: '>>',
-    prev: '<',
-    next: '>',
-    show: 'Display',
-    entries: 'rows',
-    noResults: (<div className="text-center">There are no data to be displayed</div>),
+  const config = {
+    page_size: 10,
+    length_menu: [10, 20, 50],
+    show_filter: false,
+    show_pagination: (data.totalElements > 10) ? true : false,
+    pagination: 'advance',
+    key_column: 'id',
+    button: {
+      excel: false,
+      print: false,
+    },
+    language: {
+      no_data_text: 'No reports available',
+    },
   };
 
   return (
@@ -225,13 +231,11 @@ const Reports = () => {
               ? <div className="text-center m-5">
                 <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
               </div>
-              : <Datatable tableHeaders={columns}
-                tableBody={data.content ? data.content.map(prepareTableRow) : []}
-                paginationServer
-                paginationTotalRows={data.totalElements}
-                onChangeRowsPerPage={handlePerRowsChange}
-                onChangePage={handlePageChange}
-                labels={customLabels}
+              : <ReactDatatable
+                config={config}
+                columns={columns}
+                records={data.content ? data.content.map(prepareTableRow) : []}
+                total_record={data.totalElements}
               />
           }
           <div className={`custom-modal ${(isModalOpen ? 'show' : 'hide')}`}>

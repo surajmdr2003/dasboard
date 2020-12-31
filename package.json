@@ -5,6 +5,7 @@
   "repository": "",
   "description": "Rain Web Application",
   "dependencies": {
+    "@ashvin27/react-datatable": "^1.5.3",
     "ajv": "^6.9.1",
     "aws-amplify": "^3.3.2",
     "aws-amplify-react": "^4.2.6",
@@ -25,7 +26,6 @@
     "react": "^16.13.1",
     "react-advanced-datetimerange-picker": "^1.0.11",
     "react-bootstrap": "^1.4.0",
-    "react-bs-datatable": "^2.1.2",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.8.4",
     "react-leaflet": "^2.7.0",
