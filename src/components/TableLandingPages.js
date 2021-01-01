@@ -46,7 +46,7 @@ const TableLandingPages = ({ landingPages }) => {
       text: 'Conversions',
       key: 'conversion',
       sortable: true,
-      cell: row => (<div row={row}>{row.conversions}</div>),
+      cell: row => (<div row={row}>{row.conversions.toLocaleString()}</div>),
     },
     {
       text: 'Conv. rate',
@@ -95,7 +95,7 @@ const TableLandingPages = ({ landingPages }) => {
   const prepareTableRow = (row) => {
     row.name = row.params.name;
     row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
-    row.conversions = (Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0) : row.conversions).toLocaleString();
+    row.conversions = Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0) : row.conversions;
     row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
 
     return row;
