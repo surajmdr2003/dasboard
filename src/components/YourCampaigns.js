@@ -66,7 +66,7 @@ const YourCampaigns = ({ top }) => {
       text: 'Conversions',
       key: 'conversion',
       sortable: true,
-      cell: row => (<div row={row}>{row.conversions}</div>),
+      cell: row => (<div row={row}>{row.conversions.toLocaleString()}</div>),
     },
     {
       text: 'Conv. rate',
@@ -85,7 +85,7 @@ const YourCampaigns = ({ top }) => {
     row.name = row.params.name;
     row.status = row.params.status;
     row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
-    row.conversions = Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString() : row.conversions.toLocaleString();
+    row.conversions = Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0) : row.conversions;
     row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
 
     return row;
@@ -160,7 +160,8 @@ const YourCampaigns = ({ top }) => {
     button: {
       excel: false,
       print: false,
-    },
+    },
+
     language: {
       no_data_text: 'No campaign found',
     },
