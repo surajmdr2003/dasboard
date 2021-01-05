@@ -108,7 +108,7 @@ table {
 	}
 }
 
-.table-landingpage, .table-CampaignList, .table-creatives  {
+.table-landingpage, .table-CampaignList, .table-creatives, .table-reports  {
 	display: flex;
 	flex-direction: column-reverse;
 	
@@ -138,9 +138,4 @@ tr.thead-tr {
 		border-left-color: #1b85b4;
 		font-size: 13px;
 	}
-}
-
-
-.table td:first-child {
-    width: 26%;
 }

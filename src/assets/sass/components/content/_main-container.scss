@@ -184,6 +184,12 @@ section.all-campaigns-content {
     }
 }
 
+.top-landingpage-section, .your-campaigns-content {
+    .asrt-table-foot {
+        display: none;
+    }
+}
+
 .main-content-wrapper {
     padding: size(70) 0;
 }

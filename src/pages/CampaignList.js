@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import Datatable from 'react-bs-datatable';
+import ReactDatatable from '@ashvin27/react-datatable';
 
 // Context
 import GlobalContext from '../context/GlobalContext';
@@ -13,19 +13,22 @@ import AdvertiserService from '../services/advertiser.service';
 import DatePickerField from '../components/form-fields/DatePickerField';
 
 const CampaignList = () => {
-  const { user, setActiveCampaign, CLDateFilterRange, setCLDateFilterRange} = React.useContext(GlobalContext);
+  const { user, setActiveCampaign, CLDateFilterRange, setCLDateFilterRange } = React.useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInactiveCampaginLoading, setIsInactiveCampaginLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(CLDateFilterRange.label);
   const [campaigns, setCampaigns] = useState([]);
+  const [inActiveCampaigns, setInactiveCampaigns] = useState([]);
   const [dateFilter, setDateFilter] = useState({
     endDate: CLDateFilterRange.endDate,
     startDate: CLDateFilterRange.startDate,
+    status: 'ACTIVE',
   });
 
   const [columns] = useState([
     {
-      title: 'Campaign name',
-      prop: 'name',
+      text: 'Campaign name',
+      key: 'name',
       sortable: true,
       cell: row => (<div className="campaign">
         <div className="c-name">{(row.params.name) ? row.params.name : 'No Data'}</div>
@@ -34,43 +37,43 @@ const CampaignList = () => {
       </div>),
     },
     {
-      title: 'Status',
-      prop: 'status',
+      text: 'Status',
+      key: 'status',
       sortable: true,
       cell: row => (<div className={`status ${row.params.status.toLowerCase()}-campaign`}>{row.params.status.toLowerCase()}</div>),
     },
     {
-      title: 'Impressions',
-      prop: 'impressions',
+      text: 'Impressions',
+      key: 'impressions',
       sortable: true,
       cell: row => (<div row={row}>{row.impressions.toLocaleString()}</div>),
     },
     {
-      title: 'Clicks',
-      prop: 'clicks',
+      text: 'Clicks',
+      key: 'clicks',
       sortable: true,
       cell: row => (<div row={row}>{row.clicks.toLocaleString()}</div>),
     },
     {
-      title: 'CTR',
-      prop: 'ctr',
+      text: 'CTR',
+      key: 'ctr',
       sortable: true,
       cell: row => (<div row={row}>{row.ctr}%</div>),
     },
     {
-      title: 'Conversions',
-      prop: 'conversion',
+      text: 'Conversions',
+      key: 'conversion',
       sortable: true,
-      cell: row => (<div row={row}>{row.conversions}</div>),
+      cell: row => (<div row={row}>{row.conversions.toLocaleString()}</div>),
     },
     {
-      title: 'Conv. rate',
-      prop: 'conv-rate',
+      text: 'Conv. rate',
+      key: 'conv-rate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
     {
-      title: '',
+      text: '',
       sortable: false,
       cell: row => (<div row={row}><Link onClick={() => setActiveCampaign(row)} to={'/dashboard/campaign'}>See details</Link></div>),
     },
@@ -84,14 +87,14 @@ const CampaignList = () => {
     row.name = row.params.name;
     row.status = row.params.status;
     row.ctr = handleNanValueWithCalculation(row.clicks, row.impressions);
-    row.conversions = Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0).toLocaleString() : row.conversions.toLocaleString();
+    row.conversions = Array.isArray(row.conversions) ? row.conversions.reduce((sum, next) => sum + next.count, 0) : row.conversions;
     row.convRate = handleNanValueWithCalculation(+row.conversions, row.clicks);
 
     return row;
   };
 
   /**
-   * Call API and generate graphs correspond to data
+   * Call API and generate data
    * @param {Integer} userId
    * @param {object} dateRangeFilter
    */
@@ -103,6 +106,20 @@ const CampaignList = () => {
       })
       .catch(() => false)
       .finally(() => setIsLoading(false));
+  };
+
+  /**
+ * Call API and generate data
+ * @param {Integer} userId
+ */
+  const loadInactiveCampaignListData = (userId) => {
+    setIsInactiveCampaginLoading(true);
+    AdvertiserService.getAdvertiserPerformanceInactiveCampaigns(userId)
+      .then((response) => {
+        setInactiveCampaigns(response.data.summary);
+      })
+      .catch(() => false)
+      .finally(() => setIsInactiveCampaginLoading(false));
   };
 
   /**
@@ -119,7 +136,7 @@ const CampaignList = () => {
       endDate: moment(endDate).format('YYYY-MM-DD'),
     });
     setDateFilter({ startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
-    loadCampaignListData(user.id, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
+    loadCampaignListData(user.id, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD'), status: 'ACTIVE' });
   };
 
   /**
@@ -134,18 +151,27 @@ const CampaignList = () => {
     return ((fNum / sNum) * 100).toFixed(2);
   };
 
-  const customLabels = {
-    first: '<<',
-    last: '>>',
-    prev: '<',
-    next: '>',
-    show: 'Display',
-    entries: 'rows',
-    noResults: (<div className="text-center">There are no data to be displayed</div>),
+  const config = {
+    page_size: 10,
+    length_menu: [10, 20, 50],
+    show_filter: false,
+    pagination: 'advance',
+    key_column: 'id',
+    button: {
+      excel: false,
+      print: false,
+    },
+    language: {
+      no_data_text: 'No campaigns found',
+    },
   };
+
+  const configActiveCampaign = { ...config, show_pagination: ((campaigns.length > 10) ? true : false) };
+  const configInactiveCampaign = { ...config, show_pagination: ((inActiveCampaigns.length > 10) ? true : false) };
 
   useEffect(() => {
     loadCampaignListData(user.id, dateFilter);
+    loadInactiveCampaignListData(user.id);
   }, [user.id]);
 
   return (
@@ -168,14 +194,33 @@ const CampaignList = () => {
       </section>
       <section className="main-content-wrapper table-CampaignList">
         <div className="container">
-          <div className="table-CampaignList">
+          <h6>Active campaigns</h6>
+          <div className="table-CampaignList mb-5">
             {
               isLoading
                 ?
                 <div className="text-center m-5">
                   <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
                 </div>
-                : <Datatable tableHeaders={columns} tableBody={campaigns.map(prepareTableRow)} rowsPerPage={(campaigns.length > 10) ? 10 : false} labels={customLabels}/>
+                : <ReactDatatable
+                  config={configActiveCampaign}
+                  columns={columns}
+                  records={campaigns.map(prepareTableRow)} />
+            }
+          </div>
+
+          <h6>Inactive campaigns</h6>
+          <div className="table-CampaignList">
+            {
+              isInactiveCampaginLoading
+                ?
+                <div className="text-center m-5">
+                  <div className="spinner-grow spinner-grow-lg" role="status"> <span className="sr-only">Loading...</span></div>
+                </div>
+                : <ReactDatatable
+                  config={configInactiveCampaign}
+                  columns={columns}
+                  records={inActiveCampaigns.map(prepareTableRow)} />
             }
           </div>
         </div>

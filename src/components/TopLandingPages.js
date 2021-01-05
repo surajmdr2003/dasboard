@@ -20,6 +20,7 @@ const TopLandingPages = (props) => {
   const [campaignId, setCampaignId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(landingDateFilterRange.label);
+  const [campaignFilterTitle, setcampaignFilterTitle] = useState('Filter by campaign');
   const [topLandingPageList, setLandingPagesList] = useState([]);
   const [dateFilter, setDateFilter] = useState({
     endDate: landingDateFilterRange.endDate,
@@ -65,6 +66,7 @@ const TopLandingPages = (props) => {
 
   const loadLandingPagesByCampaign = (campaign) => {
     setCampaignId(campaign.id);
+    setcampaignFilterTitle(campaign.name);
   };
 
   useEffect(() => {
@@ -72,7 +74,7 @@ const TopLandingPages = (props) => {
   }, [props.campaignId, campaignId, user.id]);
 
   return (
-    <section className="top-landingpage-content">
+    <section className="top-landingpage-content top-landingpage-section">
       <div className="container">
         <div className="row align-items-center filter-block">
           <div className="col-md-5">
@@ -83,7 +85,7 @@ const TopLandingPages = (props) => {
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              {!props.campaignId ? <DropdownFilter itemList={[{id: '', name: 'See All Pages'}, ...window.$campaigns]} label="Filter By Campaign" dropwDownCallBack={loadLandingPagesByCampaign} /> : ''}
+              {!props.campaignId ? <DropdownFilter itemList={[{id: '', name: 'See All Pages'}, ...window.$campaigns]} label={campaignFilterTitle} dropwDownCallBack={loadLandingPagesByCampaign} /> : ''}
               <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
             </div>
           </div>

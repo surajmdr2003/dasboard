@@ -16,7 +16,7 @@ table {
 	
 	.rdt_TableHead .rdt_TableCol {
 		@extend th ;
-		color: $color__table-maintext;
+		
 		border-color: $color__table-border;
 		background-color: $color__tablehead-bg;
 		font-size: size(13);
@@ -81,45 +81,6 @@ table {
     .rdt_TableRow, .table-datatable__root {
         padding-top: size(15);
         padding-bottom: size(15);
-    
-        .campaign-media {
-            align-items: center;
-        
-            .table-campaign-image, object {
-                width: size(40);
-                height: size(50);
-				object-fit: contain;
-				border: 1px solid #ddd;
-				margin-right: 5px;
-            }
-        
-            p {
-                margin-bottom: 0;
-			}
-			
-			a {
-				span.play-icon {
-					display: inline-flex;
-					height: 38px;
-					width: 38px;
-					font-size: 15px;
-					border-radius: 50%;
-					margin-right: 10px;
-					vertical-align: middle;
-					align-items: center;
-					justify-content: center;
-					border: 2px solid $primary;
-
-					i {
-						transform: rotate(180deg) translateX(-2px);
-					}
-				}
-
-				&:hover {
-					text-decoration: none;
-				}
-			}
-        }
     
         > div:first-child {
             min-width: 250px;
@@ -194,4 +155,103 @@ table {
 	&.fa-sort-desc {
 		background-image: url(../images/sort_desc.png);
 	}	
+}
+
+.as-react-table {
+
+	.table-striped tbody tr:nth-of-type(odd) {
+		background-color: transparent;
+	}
+
+	.table td {
+		border-right: 0px !important;
+		border-left: 0px !important;
+	}
+
+	.asrt-table-head {
+		display: none;
+	}
+
+	.asrt-table-foot {
+		font-size: 13px;
+	}
+
+	th.text- {
+		background-color: #fcfcfc;
+		color: $color__table-maintext;
+		padding-top: 1.9rem;
+		padding-bottom: 1.9rem;
+		border: 0 !important;
+	}
+
+	.campaign-media {
+		align-items: center;
+	
+		.table-campaign-image, object {
+			width: size(40);
+			height: size(50);
+			object-fit: contain;
+			border: 1px solid #ddd;
+			margin-right: 5px;
+		}
+	
+		p { 
+			margin-bottom: 0;
+		}
+		
+		a {
+			cursor: pointer;
+
+			span.play-icon {
+				display: inline-flex;
+				height: 38px;
+				width: 38px;
+				font-size: 15px;
+				border-radius: 50%;
+				margin-right: 10px;
+				vertical-align: middle;
+				align-items: center;
+				justify-content: center;
+				border: 2px solid $primary;
+
+				i {
+					transform: rotate(180deg) translateX(-2px);
+				}
+			}
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
+	}
+}
+
+
+.sortable.text- {
+	background-image: none !important;
+	&:after {
+		content: "";
+		display: inline-block;
+		height: 20px;
+		width: 20px;
+		background-image: url(../images/sort_both.png);
+		background-repeat: no-repeat;
+		background-position: center;
+		vertical-align: middle;
+		margin-left: 10px;	
+	}
+	&.asc:after  {
+		background-image: url(../images/sort_asc.png);
+	}
+	&.desc:after {
+		background-image: url(../images/sort_desc.png);
+	}	
+}
+
+.table-creatives .table td {
+    padding: 1.2rem 0.75rem;
+}
+
+th.text-.size-column {
+    width: 100px;
 }

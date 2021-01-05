@@ -33,10 +33,12 @@ const TopCreatives = (props) => {
   const [campaignId, setCampaignId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [filterDateTitle, setFilterDateTitle] = useState(creativesDateFilterRange.label);
+  const [campaignFilterTitle, setcampaignFilterTitle] = useState('Filter by campaign');
   const [creatives, setTopCreativeList] = useState([]);
   const [dateFilter, setDateFilter] = useState({
     endDate: creativesDateFilterRange.endDate,
     startDate: creativesDateFilterRange.startDate,
+    top: 12,
   });
 
   /**
@@ -74,7 +76,7 @@ const TopCreatives = (props) => {
       startDate: moment(startDate).format('YYYY-MM-DD'),
       endDate: moment(endDate).format('YYYY-MM-DD'),
     });
-    loadCreativeData(campaignId || props.campaignId, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD') });
+    loadCreativeData(campaignId || props.campaignId, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')});
   };
 
   const loadCreativeList = (tFiveCreatives) => {
@@ -87,6 +89,7 @@ const TopCreatives = (props) => {
 
   const loadCreativesByCampaign = (campaign) => {
     setCampaignId(campaign.id);
+    setcampaignFilterTitle(campaign.name);
   };
 
   useEffect(() => {
@@ -105,7 +108,7 @@ const TopCreatives = (props) => {
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              {!props.campaignId ? <DropdownFilter itemList={[{id: '', name: 'See All Creatives'}, ...window.$campaigns]} label="Filter By Campaign" dropwDownCallBack={loadCreativesByCampaign} /> : ''}
+              {!props.campaignId ? <DropdownFilter itemList={[{id: '', name: 'See All Creatives'}, ...window.$campaigns]} label={campaignFilterTitle} dropwDownCallBack={loadCreativesByCampaign} /> : ''}
               <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
             </div>
           </div>
