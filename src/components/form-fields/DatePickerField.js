@@ -5,16 +5,20 @@ import moment from 'moment';
 
 const DatePickerField = (props) => {
   const now = new Date();
+  const start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
+  const end = moment(start).add(1, 'days').subtract(1, 'seconds');
 
-  const start = moment(
-    new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
-  );
+  // For Lifetime Preset
+  // const lstart = props.lifetime.start
+  //   ? moment(props.lifetime.start)
+  //   : null;
 
-  const end = moment(start)
-    .add(1, 'days')
-    .subtract(1, 'seconds');
+  // const lend = props.lifetime.end
+  //   ? moment(props.lifetime.end)
+  //   : null;
 
   const ranges = {
+    // 'Lifetime': [lstart, lend],
     'Today': [moment(start), moment(end)],
     'Yesterday': [
       moment(start).subtract(1, 'days'),
@@ -47,13 +51,16 @@ const DatePickerField = (props) => {
   return (
     <DateTimeRangeContainer
       ranges={ranges}
-      start={moment(start).subtract(1, 'months')}
-      end={moment(end)}
+      // start={props.selectedPreset === 'Lifetime' ? lstart : start}
+      // end={props.selectedPreset === 'Lifetime' ? lend : end}
+      start={start}
+      end={end}
       local={local}
       style={datePickerStyle}
       noMobileMode={true}
       screenWidthToTheRight={true}
       applyCallback={props.applyCallback}
+      rangeCallback={props.rangeCallback}
       smartMode
     >
       <button type="button" className="btn btn-outline-primary btn-date-picker">{props.label}</button>

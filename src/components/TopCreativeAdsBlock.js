@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import { Fragment } from 'react';
 
 const TopCreativeAdsBlock = ({ creative }) => {
-  const [heightWidth, setHeightWidth] = useState('0x0');
   const [creativeOnModal, setCreativeOnModal] = useState({
     params: {
       name: '',
@@ -23,16 +22,6 @@ const TopCreativeAdsBlock = ({ creative }) => {
     return ((fNum / sNum) * 100).toFixed(2);
   };
 
-  const calculateAssetDimensional = (asset) => {
-    const img = new Image();
-    img.src = asset;
-    // Important to use function decleration for "this" scope
-    img.onload = function calculateSize() {
-      setHeightWidth(this.width + 'x' + this.height);
-    };
-    return (img.width + 'x' + img.height);
-  };
-
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = (data) => {
@@ -40,16 +29,12 @@ const TopCreativeAdsBlock = ({ creative }) => {
     setCreativeOnModal(data);
   };
 
-  useEffect(() => {
-    calculateAssetDimensional(creative.params.url);
-  }, [creative]);
-
   return (
     <Fragment>
       <div className="p-2">
         <div className="card card-creative">
           <div className="card-creative-thumb" onClick={() => handleShow(creative)}>
-            <span className="badge badge-secondary">{heightWidth}</span>
+            <span className="badge badge-secondary">{creative.params.dimension}</span>
             {
               creative.params.url && creative.params.url.endsWith('mp4')
                 ? <video>

@@ -117,7 +117,7 @@ const Creatives = () => {
     setIsLoading(true);
     return CampaignService.getCampaignCreatives(activeCampaign.id, dateRangeFilter)
       .then(response => {
-        const gCreatives = groupBy(response.data.summary.map(summary => ({ ...summary, size: calculateAssetDimensional(summary.params.url) })), 'size');
+        const gCreatives = groupBy(response.data.summary.map(summary => ({ ...summary, size: summary.params.dimension })), 'size');
         setSizeFilters(['All Sizes', ...Object.keys(gCreatives)]);
         setGroupedCreatives(gCreatives);
         setIsLoading(false);

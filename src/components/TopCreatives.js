@@ -40,6 +40,11 @@ const TopCreatives = (props) => {
     startDate: creativesDateFilterRange.startDate,
     top: 12,
   });
+  const [selectedPreset, setSelectedPreset] = useState('');
+  const [lifeTimeDR, setLifeTimeDR] = useState({
+    end: '',
+    start: '',
+  });
 
   /**
    * Call API and generate graphs correspond to data
@@ -79,6 +84,10 @@ const TopCreatives = (props) => {
     loadCreativeData(campaignId || props.campaignId, { startDate: moment(startDate).format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')});
   };
 
+  const handlePresetChange = (index, name) => {
+    setSelectedPreset(name);
+  };
+
   const loadCreativeList = (tFiveCreatives) => {
     return tFiveCreatives.length
       ? tFiveCreatives.map(creative => {
@@ -90,6 +99,7 @@ const TopCreatives = (props) => {
   const loadCreativesByCampaign = (campaign) => {
     setCampaignId(campaign.id);
     setcampaignFilterTitle(campaign.name);
+    setLifeTimeDR({start: campaign.startDate, end: campaign.endDate});
   };
 
   useEffect(() => {
@@ -108,8 +118,15 @@ const TopCreatives = (props) => {
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              {!props.campaignId ? <DropdownFilter itemList={[{id: '', name: 'See All Creatives'}, ...window.$campaigns]} label={campaignFilterTitle} dropwDownCallBack={loadCreativesByCampaign} /> : ''}
-              <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
+              {!props.campaignId ? <DropdownFilter itemList={[{id: '', name: 'See All Creatives'}, ...window.$campaigns]} label="Filter By Campaign" dropwDownCallBack={loadCreativesByCampaign} /> : ''}
+              <DatePickerField
+                applyCallback={datepickerCallback}
+                label={filterDateTitle}
+                rangeCallback={handlePresetChange}
+                selectedPreset={selectedPreset}
+                start={lifeTimeDR.start}
+                end={lifeTimeDR.end}
+              />
             </div>
           </div>
         </div>
