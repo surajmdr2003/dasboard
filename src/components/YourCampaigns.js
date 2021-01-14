@@ -185,7 +185,7 @@ const YourCampaigns = ({ top }) => {
           <div className="col-md-7">
             <div className="block-filter">
               <DropdownFilter itemList={dropDownStatus} label={activeStatusFilter} dropwDownCallBack={loadCampaignDataFilterByStatus} />
-              <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
+              <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} rangeCallback={() => {}} selectedPreset={''} start={CLDateFilterRange.startDate} end={CLDateFilterRange.endDate}/>
             </div>
           </div>
         </div>

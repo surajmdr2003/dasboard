@@ -86,7 +86,7 @@ const TopLandingPages = (props) => {
           <div className="col-md-7">
             <div className="block-filter">
               {!props.campaignId ? <DropdownFilter itemList={[{id: '', name: 'See All Pages'}, ...window.$campaigns]} label={campaignFilterTitle} dropwDownCallBack={loadLandingPagesByCampaign} /> : ''}
-              <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
+              <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} rangeCallback={() => {}} selectedPreset={''} start={landingDateFilterRange.startDate} end={landingDateFilterRange.endDate}/>
             </div>
           </div>
         </div>

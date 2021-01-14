@@ -98,6 +98,11 @@ const CampaignGraph = (props) => {
     summaryData: initialData.summaryData,
     campaignInfo: initialData.campaignInfo,
     graphData: initialData.graphData,
+    selectedPreset: '',
+    lifetime: {
+      start: '',
+      end: '',
+    },
   });
 
   useEffect(() => {
@@ -118,6 +123,10 @@ const CampaignGraph = (props) => {
       graphData: formatedGraphData,
       campaignInfo: userInfo.data.campaigns,
       summaryData: response.data.summary.length ? response.data.summary[0] : initialData.summaryData,
+      lifetime: {
+        start: response.data.summary.length ? response.data.summary[0].startDate : '',
+        end: response.data.summary.length ? response.data.summary[0].endDate : '',
+      },
     });
   };
 
@@ -202,6 +211,10 @@ const CampaignGraph = (props) => {
     return (sNum === 0) ? (fNum * 100).toFixed(2) : ((fNum / sNum) * 100).toFixed(2);
   };
 
+  const handlePresetChange = (index, name) => {
+    setState({...state, selectedPreset: name});
+  };
+
   /**
    * Update Bar graph correspond active tab
    * @param {String} label
@@ -237,7 +250,6 @@ const CampaignGraph = (props) => {
 
     const response = await loadAdvertiserPerformanceData(user.id, moment(startDate).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD'));
     const formatedGraphData = reformatDataForGraph(response.data.data);
-
     setState({
       ...state,
       isLoading: false,
@@ -323,7 +335,7 @@ const CampaignGraph = (props) => {
                 }
               </div>
               <div className="col-md-6 text-right">
-                <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} />
+                <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} rangeCallback={handlePresetChange} selectedPreset={state.selectedPreset} lifetime={state.lifetime}/>
               </div>
             </div>
           </div>
