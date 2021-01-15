@@ -60,7 +60,7 @@ const Reports = () => {
     },
     {
       text: 'Conv. rate',
-      key: 'conv-rate',
+      key: 'convRate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
