@@ -62,13 +62,13 @@ const CampaignList = () => {
     },
     {
       text: 'Conversions',
-      key: 'conversion',
+      key: 'conversions',
       sortable: true,
       cell: row => (<div row={row}>{row.conversions.toLocaleString()}</div>),
     },
     {
       text: 'Conv. rate',
-      key: 'conv-rate',
+      key: 'convRate',
       sortable: true,
       cell: row => (<div row={row}>{row.convRate}%</div>),
     },
