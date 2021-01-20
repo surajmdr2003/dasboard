@@ -36,12 +36,12 @@ const CampaignList = () => {
           {row.params.startDate + ' - ' + row.params.endDate}</div>
       </div>),
     },
-    {
-      text: 'Status',
-      key: 'status',
-      sortable: true,
-      cell: row => (<div className={`status ${row.params.status.toLowerCase()}-campaign`}>{row.params.status.toLowerCase()}</div>),
-    },
+    // {
+    //   text: 'Status',
+    //   key: 'status',
+    //   sortable: true,
+    //   cell: row => (<div className={`status ${row.params.status.toLowerCase()}-campaign`}>{row.params.status.toLowerCase()}</div>),
+    // },
     {
       text: 'Impressions',
       key: 'impressions',
