@@ -70,6 +70,7 @@ const DatePickerField = (props) => {
 
 DatePickerField.propTypes = {
   applyCallback: PropTypes.func,
+  rangeCallback: PropTypes.func,
   label: PropTypes.string,
 };
 

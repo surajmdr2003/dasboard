@@ -169,12 +169,12 @@ const Creatives = () => {
     return ((fNum / sNum) * 100).toFixed(2);
   };
 
-  const calculateAssetDimensional = (asset) => {
-    const img = new Image();
-    img.src = asset;
-    img.onload;
-    return (img.width + 'x' + img.height);
-  };
+  // const calculateAssetDimensional = (asset) => {
+  //   const img = new Image();
+  //   img.src = asset;
+  //   img.onload;
+  //   return (img.width + 'x' + img.height);
+  // };
 
   const getFilteredOrAllCreatives = (size) => {
     let list = [];

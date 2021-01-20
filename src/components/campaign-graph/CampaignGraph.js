@@ -29,7 +29,7 @@ const initialData = {
       ['x'],
       ['Impression'],
     ],
-    type: 'bar',
+    type: 'spline',
     colors: {
       impression: '#22a6de',
     },

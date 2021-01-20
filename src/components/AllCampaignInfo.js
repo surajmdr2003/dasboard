@@ -1,6 +1,5 @@
 import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
-
 /**
  * Returns view of All Campaigns Data
  */
@@ -17,6 +16,7 @@ const AllCampaignInfo = ({campaigns}) => {
     </Fragment>
   );
 };
+
 
 AllCampaignInfo.propTypes = {
   campaigns: PropTypes.object,
