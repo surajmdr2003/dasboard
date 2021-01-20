@@ -11,7 +11,7 @@ const AllCampaignInfo = ({campaigns}) => {
         <li>{campaigns.total} Total campaigns</li>
         <li className="active-campaign">{campaigns.active} Active</li>
         <li className="inactive-campaign">{campaigns.inactive} Inactive</li>
-        <li className="paused-campaign">{campaigns.paused} Paused</li>
+        {/* <li className="paused-campaign">{campaigns.paused} Paused</li> */}
       </ul>
     </Fragment>
   );
