@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Map, TileLayer, Circle, Popup, Polygon, FeatureGroup, ScaleControl } from 'react-leaflet';
 import Config from '../../app.config';
 
-const leafURL = `https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${Config.mapboxAccessToken}`;
+const leafURL = `https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${Config.mapboxAccessToken}`;
 
 const MapComponent = (props) => {
   const mapRef = useRef();
@@ -74,7 +74,7 @@ const MapComponent = (props) => {
   return (
     <div className="map leaflet-container">
       <Map center={state.latlng} zoom={state.zoom} className="custom-map--light" ref={mapRef}>
-        <TileLayer id="mapbox.streets" url={leafURL} attribution="<attribution>" />
+        <TileLayer id="mapbox/streets-v11" url={leafURL} attribution="<attribution>" />
         <FeatureGroup ref={groupRef}>
           {state.drawings}
         </FeatureGroup>
