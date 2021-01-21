@@ -107,9 +107,9 @@ const Profile = () => {
                                 <li className="inactive-campaigns">
                                   {state.profile.campaigns.inactive} Inactive
                                 </li>
-                                <li className="paused-campaigns">
+                                {/* <li className="paused-campaigns">
                                   {state.profile.campaigns.paused} Paused
-                                </li>
+                                </li> */}
                               </ul>
                             </div>
                           </div>

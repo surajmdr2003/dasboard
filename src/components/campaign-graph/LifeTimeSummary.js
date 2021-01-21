@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 import cogoToast from 'cogo-toast';
+import moment from 'moment';
 
 // Services
 import AdvertiserService from '../../services/advertiser.service';
@@ -14,6 +15,7 @@ const LifeTimeSummary = ({ advertiserId }) => {
     clicks: 0,
     impressions: 0,
     conversions: [],
+    startDate: '',
   });
 
   const makeApiCall = (event, notificationId, actionType) => {
@@ -49,6 +51,7 @@ const LifeTimeSummary = ({ advertiserId }) => {
           clicks: 0,
           impressions: 0,
           conversions: [],
+          startDate: '',
         });
       })
       .catch(() => cogoToast.error('No Summary Data Available', {position: 'bottom-left'}));
@@ -79,6 +82,9 @@ const LifeTimeSummary = ({ advertiserId }) => {
   return (
     <Fragment>
       <div className={'campiagns-info ' + ((!showRecommendation) ? '' : 'd-none')}>
+        <div className="custom-tooltip">
+          The data is from {moment(summaryData.startDate).format('MMM DD, YYYY')}
+        </div>
         <div className="campiagns-info-title bb">
           <h4>Lifetime Data</h4>
           <p>Based on campaign's performance: </p>

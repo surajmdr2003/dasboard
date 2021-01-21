@@ -11,7 +11,7 @@ import GlobalContext from '../../context/GlobalContext';
 import DatePickerField from '../form-fields/DatePickerField';
 import SingleCampaignInfo from '../SingleCompanyInfo';
 import AllCampaignInfo from '../AllCampaignInfo';
-import CampaignDetail from '../CampaignDetail';
+// import CampaignDetail from '../CampaignDetail';
 import ChartBlock from './ChartBlock';
 import LifeTimeSummary from './LifeTimeSummary';
 
@@ -29,7 +29,7 @@ const initialData = {
       ['x'],
       ['Impression'],
     ],
-    type: 'bar',
+    type: 'spline',
     colors: {
       impression: '#22a6de',
     },
@@ -212,7 +212,7 @@ const CampaignGraph = (props) => {
   };
 
   const handlePresetChange = (index, name) => {
-    setState({...state, selectedPreset: name});
+    setState({ ...state, selectedPreset: name });
   };
 
   /**
@@ -335,13 +335,13 @@ const CampaignGraph = (props) => {
                 }
               </div>
               <div className="col-md-6 text-right">
-                <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} rangeCallback={handlePresetChange} selectedPreset={state.selectedPreset} lifetime={state.lifetime}/>
+                <DatePickerField applyCallback={datepickerCallback} label={filterDateTitle} rangeCallback={handlePresetChange} selectedPreset={state.selectedPreset} lifetime={state.lifetime} />
               </div>
             </div>
           </div>
           <div className="card-body">
             <div className="row">
-              <div className="col-md-8 pr-0 br">
+              <div className={(props.campaignId ? 'col-md-12' : 'col-md-8 br pr-0')}>
                 <div className="campaigns-chart">
                   {
                     state.isLoading
@@ -369,9 +369,14 @@ const CampaignGraph = (props) => {
                   }
                 </div>
               </div>
-              <div className="col-md-4">
+              {!props.campaignId
+                ? <div className="col-md-4">
+                  <LifeTimeSummary advertiserId={user.id} />
+                </div>
+                : ''  }
+              {/* <div className="col-md-4">
                 {props.campaignId ? <CampaignDetail campaignDesp={currentCampaign} /> : <LifeTimeSummary advertiserId={user.id} />}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

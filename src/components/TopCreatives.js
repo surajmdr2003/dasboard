@@ -118,7 +118,7 @@ const TopCreatives = (props) => {
           </div>
           <div className="col-md-7">
             <div className="block-filter">
-              {!props.campaignId ? <DropdownFilter itemList={[{id: '', name: 'See All Creatives'}, ...window.$campaigns]} label="Filter By Campaign" dropwDownCallBack={loadCreativesByCampaign} /> : ''}
+              {!props.campaignId ? <DropdownFilter itemList={[{id: '', name: 'See All Creatives'}, ...window.$campaigns]} label={campaignFilterTitle} dropwDownCallBack={loadCreativesByCampaign} /> : ''}
               <DatePickerField
                 applyCallback={datepickerCallback}
                 label={filterDateTitle}

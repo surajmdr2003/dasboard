@@ -33,15 +33,16 @@ const CampaignList = () => {
       cell: row => (<div className="campaign">
         <div className="c-name">{(row.params.name) ? row.params.name : 'No Data'}</div>
         <div className="c-date">
-          {row.params.startDate + ' - ' + row.params.endDate}</div>
+          {moment(row.params.startDate).format('MMM DD, YYYY') + ' - ' + moment(row.params.endDate).format('MMM DD, YYYY')}
+        </div>
       </div>),
     },
-    {
-      text: 'Status',
-      key: 'status',
-      sortable: true,
-      cell: row => (<div className={`status ${row.params.status.toLowerCase()}-campaign`}>{row.params.status.toLowerCase()}</div>),
-    },
+    // {
+    //   text: 'Status',
+    //   key: 'status',
+    //   sortable: true,
+    //   cell: row => (<div className={`status ${row.params.status.toLowerCase()}-campaign`}>{row.params.status.toLowerCase()}</div>),
+    // },
     {
       text: 'Impressions',
       key: 'impressions',

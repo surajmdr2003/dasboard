@@ -173,3 +173,26 @@ ul.campaign-list {
 .slick-dots li.slick-active button:before {
     color: $primary;
 }
+
+.slick-prev:before {
+	content: ' ';
+	background-image: url(../images/left-arrow.svg);
+	background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+}
+
+.slick-next:before {
+	content: ' ';
+	background-image: url(../images/left-arrow.svg);
+	background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    height: 20px;
+    width: 20px;
+	display: inline-block;
+	transform: rotate(180deg);
+}

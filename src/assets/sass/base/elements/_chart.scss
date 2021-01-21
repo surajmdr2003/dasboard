@@ -143,3 +143,20 @@ g.c3-axis text {
     line-height: normal;
     color: #909090;
 }
+
+
+.c3-line {
+    stroke-width: 2px;
+}
+
+.c3-circle {
+    fill: currentColor;
+    opacity: 0 !important;
+
+    &._expanded_ {
+        stroke-width: 8px;
+        stroke: rgba($primary, 0.45);
+        r: 5.5;
+        opacity: 1 !important;
+    }
+}
