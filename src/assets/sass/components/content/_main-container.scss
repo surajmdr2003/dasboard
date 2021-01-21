@@ -63,6 +63,8 @@ section.all-campaigns-content {
 
 .campiagns-info {
     padding: size(30) size(30) size(18) size(15);
+    position: relative;
+
     .campiagns-info-title { 
         padding-bottom: size(20);
 
@@ -73,6 +75,31 @@ section.all-campaigns-content {
         }
         p {
             font-size: size(12);
+        }
+    }
+
+    .custom-tooltip {
+        background-color: #101010;
+        -webkit-box-shadow: 7px 7px 12px -9px #777777;
+        -moz-box-shadow: 7px 7px 12px -9px #777777;
+        box-shadow: 7px 7px 12px -9px #777777;
+        opacity: 0;
+        transform: translateY(-40px);
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 5px;
+        max-width: 160px;
+        position: absolute;
+        top: 65px;
+        right: -60px;
+        font-size: 14px;
+        transition: all ease-in .2s;
+    }
+
+    &:hover {
+        .custom-tooltip { 
+            opacity: .9;
+            transform: translateY(10px);
         }
     }
 }
@@ -308,3 +335,4 @@ section.all-campaigns-content {
 .no-report {
     text-transform: initial;
 }
+
