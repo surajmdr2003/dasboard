@@ -27,6 +27,7 @@ const Reports = () => {
     startDate: '',
     endDate: '',
   });
+  const [formSubmitting, setFormSubmitting] = useState(false);
   const [columns] = useState([
     {
       text: 'Time Frame',
@@ -179,6 +180,7 @@ const Reports = () => {
   };
 
   const onSubmit = (formData, e) => {
+    setFormSubmitting(true);
     const { hide } = cogoToast.loading('Email is being sent ...', { hideAfter: 0, position: 'bottom-center' });
     ReportService.emailReport(currentReport.id, formData)
       .then((response) => {
@@ -189,6 +191,8 @@ const Reports = () => {
         } else {
           cogoToast.error(response.data.message, { position: 'bottom-center' });
         }
+        setFormSubmitting(false);
+        toggleModal(false);
       });
   };
 
@@ -259,12 +263,16 @@ const Reports = () => {
                     <input
                       id="emailAddress"
                       name="emailAddress"
-                      type="text"
+                      type="email"
                       className="form-control"
                       placeholder="you@example.com"
                       autoFocus
                       ref={register({
                         required: 'Please enter email address.',
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: 'Invalid email address',
+                        },
                       })}
                     />
                     <ErrorMessage error={errors.emailAddress} />
@@ -282,7 +290,7 @@ const Reports = () => {
                     />
                   </div>
                   <div className="form-group mb-0">
-                    <button disabled={isSubmitting} type="submit" className="mt-3 btn btn-default btn-primary">Email Report</button>
+                    <button disabled={formSubmitting} alt={isSubmitting} type="submit" className="mt-3 btn btn-default btn-primary">Email Report</button>
                   </div>
                 </form>
               </div>
