@@ -9,7 +9,7 @@ import Modal from 'react-bootstrap/Modal';
 import GlobalContext from '../context/GlobalContext';
 
 /** Components */
-import ImageSizeRow from '../components/common/ImageSizeRow';
+// import ImageSizeRow from '../components/common/ImageSizeRow';
 import DatePickerField from '../components/form-fields/DatePickerField';
 import DropdownFilter from '../components/form-fields/DropdownFilter';
 import PageTitleCampaignDropdown from '../components/PageTitleCampaignDropdown';
@@ -71,7 +71,7 @@ const Creatives = () => {
       sortable: false,
       className: 'size-column',
       TrOnlyClassName: 'size-column',
-      cell: row => (<ImageSizeRow row={row} />),
+      cell: row => (<div row={row}>{row.params.dimension}</div>),
     },
     {
       text: 'Impressions',
