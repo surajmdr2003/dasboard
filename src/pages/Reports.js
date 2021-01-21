@@ -22,7 +22,7 @@ const Reports = () => {
   const [perPage] = useState(500);
   const [currentPage] = useState(1);
   const [data, setData] = useState([]);
-  const { register, handleSubmit, errors, isSubmitting } = useForm();
+  const { register, handleSubmit, errors, isSubmitting, reset } = useForm();
   const [currentReport, setCurrentReport] = useState({
     startDate: '',
     endDate: '',
@@ -121,6 +121,7 @@ const Reports = () => {
 
   const sendEmail = async(event, report) => {
     event.preventDefault();
+    reset();
     setCurrentReport(report);
     toggleModal(true);
   };
@@ -257,18 +258,18 @@ const Reports = () => {
                 </span>
               </div>
               <div className="modal-body">
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)} noValidate>
                   <div className="form-group">
                     <label htmlFor="emailAddress" className="label">Email address</label>
                     <input
                       id="emailAddress"
                       name="emailAddress"
-                      type="email"
                       className="form-control"
                       placeholder="you@example.com"
+                      mode="all"
                       autoFocus
                       ref={register({
-                        required: 'Please enter email address.',
+                        required: 'Please enter a valid email address.',
                         pattern: {
                           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                           message: 'Invalid email address',

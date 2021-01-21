@@ -19,15 +19,23 @@ module.exports = {
   },
   cache: true,
   optimization: {
-    minimizer: [new TerserJSPlugin({})],
+    minimizer: [new TerserJSPlugin({
+      terserOptions: {
+        sourceMap: false,
+        compress: {
+          warnings: false,
+          drop_console: true
+        }
+      }
+    })],
   },
   module: {
     rules: [{
       test: /.s?css$/,
       use: [
         MiniCssExtractPlugin.loader,
-        { loader: 'css-loader', options: { sourceMap: true } },
-        { loader: 'sass-loader', options: { sourceMap: true } },
+        { loader: 'css-loader', options: { sourceMap: false } },
+        { loader: 'sass-loader', options: { sourceMap: false } },
       ],
     },
     {
